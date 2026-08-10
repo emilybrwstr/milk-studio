@@ -29,7 +29,9 @@ if ('IntersectionObserver' in window) {
 }
 
 // Mobile only: once the splash intro animation finishes, auto-advance to the
-// hero. Cancelled if the visitor starts scrolling on their own first.
+// hero with a slow, deliberate scroll — giving time to enjoy the shader
+// background rather than snapping away from it. Cancelled if the visitor
+// starts scrolling on their own first.
 const isMobile = window.matchMedia('(max-width: 760px)').matches;
 const reducesMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 if (isMobile && !reducesMotion) {
@@ -39,11 +41,26 @@ if (isMobile && !reducesMotion) {
   window.addEventListener('touchmove', markScrolled, { once: true, passive: true });
   window.addEventListener('keydown', markScrolled, { once: true });
 
+  const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+  const slowScrollTo = (target, duration) => {
+    const start = window.scrollY;
+    const distance = target - start;
+    const startTime = performance.now();
+    const step = (now) => {
+      if (userScrolled) return;
+      const elapsed = Math.min((now - startTime) / duration, 1);
+      window.scrollTo(0, start + distance * easeInOutCubic(elapsed));
+      if (elapsed < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+
   setTimeout(() => {
     if (userScrolled || window.scrollY > 40) return;
     const hero = document.querySelector('.hero');
-    if (hero) hero.scrollIntoView({ behavior: 'smooth' });
-  }, 2000);
+    if (hero) slowScrollTo(hero.getBoundingClientRect().top + window.scrollY, 2600);
+  }, 3400);
 }
 
 // Footer year
