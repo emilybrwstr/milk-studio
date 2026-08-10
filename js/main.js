@@ -47,3 +47,15 @@ if ('IntersectionObserver' in window) {
 // Footer year
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+// Booking buttons open the Calendly popup instead of navigating away;
+// falls back to a normal link if the Calendly widget fails to load.
+document.querySelectorAll('[data-book-link]').forEach((link) => {
+  link.addEventListener('click', (e) => {
+    if (typeof Calendly === 'undefined') return;
+    e.preventDefault();
+    Calendly.initPopupWidget({
+      url: 'https://calendly.com/emily-milkstudio/appointment?hide_event_type_details=1&hide_gdpr_banner=1',
+    });
+  });
+});
