@@ -144,6 +144,23 @@ p { line-height: 1.7; color: var(--ink-soft); }
   padding: 10px 0;
   box-shadow: 0 2px 24px -8px rgba(125, 21, 29, 0.2);
 }
+
+/* Subpages only: while the header sits over the shader page-hero (visible
+   but not yet scrolled/blurred), the logo and nav read white for contrast;
+   once blurred they go back to the usual maroon. */
+.site-header.header-visible:not(.header-blurred) .logo-img {
+  filter: brightness(0) invert(1);
+}
+.site-header.header-visible:not(.header-blurred) .main-nav a {
+  color: #fff;
+}
+.site-header.header-visible:not(.header-blurred) .main-nav a::after {
+  background: #fff;
+}
+.site-header.header-visible:not(.header-blurred) .logo-img,
+.site-header.header-visible:not(.header-blurred) .main-nav a {
+  transition: filter 0.35s ease, color 0.35s ease;
+}
 .header-inner {
   display: flex;
   align-items: center;
@@ -286,15 +303,14 @@ p { line-height: 1.7; color: var(--ink-soft); }
 /* ---------- Page hero (subpage banner, same shader language as the intro) ---------- */
 .page-hero {
   position: relative;
-  height: clamp(340px, 50vh, 560px);
-  min-height: 320px;
+  height: clamp(220px, 32vh, 340px);
+  min-height: 200px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 100px 24px 40px;
-  text-align: center;
+  padding: 90px clamp(24px, 6vw, 64px) 32px;
   background: var(--blush-soft);
 }
 .page-hero-bg {
@@ -303,17 +319,6 @@ p { line-height: 1.7; color: var(--ink-soft); }
   z-index: 0;
   background: var(--blush-soft);
 }
-.page-hero-kicker {
-  position: relative;
-  z-index: 1;
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  font-size: 0.75rem;
-  font-weight: 500;
-  margin: 0 0 16px;
-  opacity: 0.9;
-}
 .page-hero-title {
   position: relative;
   z-index: 1;
@@ -321,7 +326,7 @@ p { line-height: 1.7; color: var(--ink-soft); }
   font-family: var(--font-flip);
   font-weight: 400;
   text-transform: lowercase;
-  font-size: clamp(3rem, 8vw, 6.5rem);
+  font-size: clamp(2.6rem, 7vw, 5.5rem);
   line-height: 1;
   margin: 0;
 }
@@ -330,9 +335,9 @@ p { line-height: 1.7; color: var(--ink-soft); }
   z-index: 1;
   color: rgba(255, 255, 255, 0.92);
   font-family: var(--font-sans);
-  font-size: 1.02rem;
+  font-size: 1rem;
   max-width: 46ch;
-  margin: 20px 0 0;
+  margin: 16px 0 0;
 }
 
 /* ---------- Section shared ---------- */
@@ -603,7 +608,21 @@ section { padding: 110px 0; }
 }
 
 @media (max-width: 760px) {
-  .main-nav { display: none; }
+  /* Logo centered, nav links flanking it left/right (nav dissolves via
+     display:contents so its links become direct flex items of header-inner
+     alongside the logo, letting order place them on either side). */
+  .header-inner { justify-content: space-between; }
+  .main-nav { display: contents; }
+  .main-nav a {
+    font-size: 0.68rem;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+  .main-nav a:nth-child(1) { order: 1; }
+  .main-nav a:nth-child(2) { order: 2; }
+  .logo { order: 3; }
+  .main-nav a:nth-child(3) { order: 4; }
+  .main-nav a:nth-child(4) { order: 5; }
   .header-actions { display: none; }
   .menu-category { padding: 28px 22px; }
   .gallery-grid { grid-template-columns: 1fr 1fr; }
