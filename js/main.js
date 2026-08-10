@@ -9,22 +9,6 @@ onScroll();
 window.addEventListener('scroll', onScroll, { passive: true });
 window.addEventListener('resize', onScroll);
 
-// Mobile nav toggle
-const navToggle = document.getElementById('navToggle');
-const mainNav = document.getElementById('mainNav');
-
-navToggle.addEventListener('click', () => {
-  const isOpen = mainNav.classList.toggle('open');
-  navToggle.setAttribute('aria-expanded', String(isOpen));
-});
-
-mainNav.querySelectorAll('a').forEach((link) => {
-  link.addEventListener('click', () => {
-    mainNav.classList.remove('open');
-    navToggle.setAttribute('aria-expanded', 'false');
-  });
-});
-
 // Scroll reveal
 const revealEls = document.querySelectorAll('.reveal');
 if ('IntersectionObserver' in window) {
@@ -42,6 +26,24 @@ if ('IntersectionObserver' in window) {
   revealEls.forEach((el) => observer.observe(el));
 } else {
   revealEls.forEach((el) => el.classList.add('in-view'));
+}
+
+// Mobile only: once the splash intro animation finishes, auto-advance to the
+// hero. Cancelled if the visitor starts scrolling on their own first.
+const isMobile = window.matchMedia('(max-width: 760px)').matches;
+const reducesMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (isMobile && !reducesMotion) {
+  let userScrolled = false;
+  const markScrolled = () => { userScrolled = true; };
+  window.addEventListener('wheel', markScrolled, { once: true, passive: true });
+  window.addEventListener('touchmove', markScrolled, { once: true, passive: true });
+  window.addEventListener('keydown', markScrolled, { once: true });
+
+  setTimeout(() => {
+    if (userScrolled || window.scrollY > 40) return;
+    const hero = document.querySelector('.hero');
+    if (hero) hero.scrollIntoView({ behavior: 'smooth' });
+  }, 2000);
 }
 
 // Footer year
