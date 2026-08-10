@@ -1,10 +1,14 @@
-// Sticky header state — stays hidden until the intro (logo/menu) screen has
-// been scrolled past.
+// Sticky header state. On the homepage it stays hidden until the intro
+// (logo/menu) screen has been scrolled past; on subpages (no .intro) it's
+// shown right away, switching to its scrolled/blurred style once past the
+// page-hero banner.
 const header = document.getElementById('siteHeader');
 const intro = document.getElementById('intro');
+const heroAnchor = intro || document.querySelector('.page-hero');
+if (!intro) header.classList.add('header-visible');
 const onScroll = () => {
-  const threshold = Math.max(intro.offsetHeight - 120, 80);
-  header.classList.toggle('scrolled', window.scrollY > threshold);
+  const threshold = heroAnchor ? Math.max(heroAnchor.offsetHeight - 120, 80) : 0;
+  header.classList.toggle(intro ? 'scrolled' : 'header-blurred', window.scrollY > threshold);
 };
 onScroll();
 window.addEventListener('scroll', onScroll, { passive: true });
@@ -30,13 +34,15 @@ if ('IntersectionObserver' in window) {
 }
 
 // ---------------------------------------------------------------------------
-// Intro swipe: the logo and menu occupy the same fixed screen. Scrolling (or
-// swiping, or arrow keys) swipes the logo up and off, and the menu up and
-// in — it never looks like the page itself is scrolling. Scrolling further
-// does nothing once the menu is showing — the rest of the site is only
-// reached by clicking a menu item, which releases the capture so normal
-// scrolling works on whatever section you land on.
+// Intro swipe (homepage only — subpages have no #intro). The logo and menu
+// occupy the same fixed screen. Scrolling (or swiping, or arrow keys) swipes
+// the logo up and off, and the menu up and in — it never looks like the page
+// itself is scrolling. Scrolling further does nothing once the menu is
+// showing — the rest of the site is only reached by clicking a menu item,
+// which releases the capture so normal scrolling works on whatever section
+// (or page) you land on.
 // ---------------------------------------------------------------------------
+if (intro) {
 const reducesMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let introState = 'logo'; // 'logo' | 'menu'
 let introLocked = false;
@@ -136,6 +142,7 @@ if (reducesMotion) {
       if (!userActed) showMenu();
     }, 3400);
   }
+}
 }
 
 // Size the flip-menu text to fill the available width as much as possible
