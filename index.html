@@ -7,7 +7,7 @@
 <meta name="description" content="milk studio is a home nail studio in North York offering gel manicures, builder gel/BIAB, custom nail art, and full sets.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Fraunces:opsz,wght,SOFT,WONK@9..144,100..900,0..100,0..1&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
 <script type="importmap">
@@ -35,6 +35,7 @@
       <a href="#about">About</a>
       <a href="#services">Services</a>
       <a href="#gallery">Gallery</a>
+      <a href="#presets">Presets</a>
       <a href="#contact">Contact</a>
     </nav>
 
@@ -46,36 +47,27 @@
 
 <main id="main">
 
-  <!-- SPLASH -->
-  <section class="splash" id="top">
-    <div class="splash-bg" id="splashShader" aria-hidden="true"></div>
-    <img src="images/milk-logo.png" alt="milk studio" class="splash-logo">
-    <div class="splash-rule" aria-hidden="true"></div>
-    <div class="splash-scroll" aria-hidden="true">
-      <span>Scroll</span>
-      <svg viewBox="0 0 16 24" class="splash-arrow"><path d="M8 1v20M2 15l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
-  </section>
+  <!-- INTRO: logo and menu swipe between each other on one fixed screen,
+       sharing one continuous shader background. Scroll/swipe swaps between
+       them; the rest of the site is only reached by clicking a menu item. -->
+  <div class="intro" id="intro">
+    <div class="intro-bg" data-shader aria-hidden="true"></div>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-blob hero-blob--one" aria-hidden="true"></div>
-    <div class="hero-blob hero-blob--two" aria-hidden="true"></div>
-    <div class="wrap hero-inner">
-      <p class="eyebrow reveal">Home studio · North York</p>
-      <h1 class="hero-title reveal">
-        Modern nail art,<br>
-        handcrafted with care.
-      </h1>
-      <p class="hero-sub reveal">
-        Gel manicures, BIAB, and custom nail art in a calm, minimal space — every set designed around you.
-      </p>
-      <div class="hero-cta reveal">
-        <a class="btn btn-primary" href="https://calendly.com/emily-milkstudio/appointment" data-book-link>Book an appointment</a>
-        <a class="btn btn-ghost" href="#services">View services</a>
-      </div>
+    <div class="intro-stage">
+      <section class="intro-panel intro-panel--logo" id="top">
+        <img src="images/milk-logo-white.png" alt="milk studio" class="splash-logo">
+      </section>
+
+      <section class="intro-panel intro-panel--menu">
+        <nav class="flip-menu-list" aria-label="Quick links">
+          <a class="flip-link reveal" href="https://calendly.com/emily-milkstudio/appointment" data-book-link>book</a>
+          <a class="flip-link reveal" href="#services">pricing</a>
+          <a class="flip-link reveal" href="#gallery">portfolio</a>
+          <a class="flip-link reveal" href="#presets">preset designs</a>
+        </nav>
+      </section>
     </div>
-  </section>
+  </div>
 
   <!-- ABOUT -->
   <section class="about" id="about">
@@ -296,6 +288,24 @@
         <div class="gallery-tile reveal gt-d"></div>
         <div class="gallery-tile reveal gt-e"></div>
         <div class="gallery-tile reveal gt-f"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRESET DESIGNS -->
+  <section class="presets" id="presets">
+    <div class="wrap">
+      <p class="section-label reveal center">Preset Designs</p>
+      <h2 class="section-title reveal center">Ready-made looks</h2>
+      <p class="section-sub reveal center">A lookbook of ready-to-book designs is on its way — pick a look and go, no custom consult needed.</p>
+
+      <div class="gallery-grid">
+        <div class="gallery-tile reveal gt-c"></div>
+        <div class="gallery-tile reveal gt-a"></div>
+        <div class="gallery-tile reveal gt-f"></div>
+        <div class="gallery-tile reveal gt-b"></div>
+        <div class="gallery-tile reveal gt-e"></div>
+        <div class="gallery-tile reveal gt-d"></div>
       </div>
     </div>
   </section>
