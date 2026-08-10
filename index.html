@@ -10,6 +10,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.3.1",
+    "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
+    "react-dom": "https://esm.sh/react-dom@18.3.1",
+    "react-dom/client": "https://esm.sh/react-dom@18.3.1/client"
+  }
+}
+</script>
 </head>
 <body>
 
@@ -38,6 +48,7 @@
 
   <!-- SPLASH -->
   <section class="splash" id="top">
+    <div class="splash-bg" id="splashShader" aria-hidden="true"></div>
     <img src="images/milk-logo.png" alt="milk studio" class="splash-logo">
     <div class="splash-rule" aria-hidden="true"></div>
     <div class="splash-scroll" aria-hidden="true">
@@ -337,6 +348,7 @@
 </footer>
 
 <script src="js/main.js"></script>
+<script type="module" src="js/splash-shader.js"></script>
 <script src="https://assets.calendly.com/assets/external/widget.js"></script>
 </body>
 </html>

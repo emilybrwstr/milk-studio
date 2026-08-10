@@ -2,6 +2,7 @@
 :root {
   --maroon: #691815;
   --maroon-dark: #4a1110;
+  --maroon-soft: #b6675e;
   --blush: #f2e6d8;
   --blush-soft: #f8efe5;
   --cream: #fffbf6;
@@ -169,12 +170,34 @@ p { line-height: 1.7; color: var(--ink-soft); }
   justify-content: center;
   background: var(--blush-soft);
   position: relative;
+  overflow: hidden;
 }
+
+/* Shader canvas (mounted by js/splash-shader.js) fills the splash behind the logo */
+.splash-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--blush-soft);
+}
+.splash::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(circle at 50% 44%, var(--blush-soft) 0%, transparent 42%);
+  pointer-events: none;
+}
+
 .splash-logo {
+  position: relative;
+  z-index: 2;
   width: min(46vw, 380px);
   height: auto;
 }
 .splash-rule {
+  position: relative;
+  z-index: 2;
   width: 0;
   height: 1px;
   background: var(--maroon);
@@ -182,6 +205,7 @@ p { line-height: 1.7; color: var(--ink-soft); }
 }
 .splash-scroll {
   position: absolute;
+  z-index: 2;
   bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
