@@ -1,13 +1,18 @@
 // Sticky header state. On the homepage it stays hidden until the intro
-// (logo/menu) screen has been scrolled past; on subpages (no .intro) it's
-// shown right away, switching to its scrolled/blurred style once past the
-// page-hero banner.
+// (logo/menu) screen has been scrolled past. On subpages with a shader
+// page-hero it's shown right away and turns solid/blurred once scrolled
+// past the banner. On pages with neither (book.html) it's just solid from
+// the start — there's no shader banner for the white/transparent style to
+// make sense against.
 const header = document.getElementById('siteHeader');
 const intro = document.getElementById('intro');
-const heroAnchor = intro || document.querySelector('.page-hero');
+const pageHero = document.querySelector('.page-hero');
 if (!intro) header.classList.add('header-visible');
+if (!intro && !pageHero) header.classList.add('header-blurred');
 const onScroll = () => {
-  const threshold = heroAnchor ? Math.max(heroAnchor.offsetHeight - 120, 80) : 0;
+  const heroAnchor = intro || pageHero;
+  if (!heroAnchor) return;
+  const threshold = Math.max(heroAnchor.offsetHeight - 120, 80);
   header.classList.toggle(intro ? 'scrolled' : 'header-blurred', window.scrollY > threshold);
 };
 onScroll();
@@ -201,15 +206,3 @@ if (document.fonts && document.fonts.ready) {
 // Footer year
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-// Booking buttons open the Calendly popup instead of navigating away;
-// falls back to a normal link if the Calendly widget fails to load.
-document.querySelectorAll('[data-book-link]').forEach((link) => {
-  link.addEventListener('click', (e) => {
-    if (typeof Calendly === 'undefined') return;
-    e.preventDefault();
-    Calendly.initPopupWidget({
-      url: 'https://calendly.com/emily-milkstudio/appointment?hide_event_type_details=1&hide_gdpr_banner=1',
-    });
-  });
-});
