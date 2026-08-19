@@ -16,18 +16,8 @@
 <meta name="twitter:image" content="images/social-share.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Jost:wght@300;400;500;600&family=Pliant:wdth,wght@125,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
-<script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@18.3.1",
-    "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
-    "react-dom": "https://esm.sh/react-dom@18.3.1",
-    "react-dom/client": "https://esm.sh/react-dom@18.3.1/client"
-  }
-}
-</script>
 </head>
 <body>
 
@@ -36,7 +26,7 @@
 <header class="site-header" id="siteHeader">
   <div class="wrap header-inner">
     <a href="index.html#top" class="logo" aria-label="milk studio home">
-      <img src="images/milk-logo.png" alt="milk studio" class="logo-img">
+      <img src="images/milk-logo.png?v=2" alt="milk studio" class="logo-img">
     </a>
 
     <nav class="main-nav" id="mainNav" aria-label="Primary">
@@ -47,7 +37,7 @@
     </nav>
 
     <div class="header-actions">
-      <a class="btn btn-primary" href="book.html">Book Now</a>
+      <a class="btn btn-primary" href="book.html">Make a Reservation</a>
     </div>
   </div>
 </header>
@@ -55,9 +45,9 @@
 <main id="main">
 
   <section class="page-hero">
-    <div class="page-hero-bg" data-shader aria-hidden="true"></div>
+    <p class="page-hero-eyebrow">Vol. 01 — No. 02</p>
     <h1 class="page-hero-title">pricing</h1>
-    <p class="page-hero-sub">Full pricing below, including add-ons, removals, and repairs. Prices in CAD.</p>
+    <p class="page-hero-sub">use the <a href="custom-booking.html" class="text-link">price builder</a> below to see exactly what your dream set would cost before you book. no surprises at the end.</p>
   </section>
 
   <section class="services" id="services">
@@ -98,7 +88,7 @@
               </div>
               <div class="menu-item-right">
                 <span class="menu-item-price">$55</span>
-                <span class="menu-item-time">2 hr</span>
+                <span class="menu-item-time">2 hr 30 min</span>
               </div>
             </div>
             <div class="menu-item">
@@ -119,45 +109,68 @@
                 <span class="menu-item-time">+20 min</span>
               </div>
             </div>
+            <div class="menu-item">
+              <div class="menu-item-left">
+                <p class="menu-item-name">Refill</p>
+                <p class="menu-item-desc">For an existing Gel-X set</p>
+              </div>
+              <div class="menu-item-right">
+                <span class="menu-item-price">$40</span>
+                <span class="menu-item-time">1 hr 30 min</span>
+              </div>
+            </div>
           </div>
         </div>
 
         <div class="menu-category reveal">
-          <h3 class="menu-category-title">Nail art <span class="menu-category-note">added to any set</span></h3>
+          <h3 class="menu-category-title">Nail art <span class="menu-category-note">added to any set, pick as many as you like</span></h3>
           <div class="menu-list">
             <div class="menu-item">
               <div class="menu-item-left">
-                <p class="menu-item-name">Simple</p>
-                <p class="menu-item-desc">French tip, single accent nail, solid chrome</p>
-              </div>
-              <div class="menu-item-right">
-                <span class="menu-item-price">+$5</span>
-              </div>
-            </div>
-            <div class="menu-item">
-              <div class="menu-item-left">
-                <p class="menu-item-name">Medium</p>
-                <p class="menu-item-desc">Cat eye, ombré, full chrome, hand-painted on up to 2 nails</p>
+                <p class="menu-item-name">French tip</p>
               </div>
               <div class="menu-item-right">
                 <span class="menu-item-price">+$10</span>
+                <span class="menu-item-time">+15 min</span>
               </div>
             </div>
             <div class="menu-item">
               <div class="menu-item-left">
-                <p class="menu-item-name">Complex</p>
-                <p class="menu-item-desc">Hand-painted full set, detailed line work</p>
+                <p class="menu-item-name">Cat eye</p>
               </div>
               <div class="menu-item-right">
-                <span class="menu-item-price">+$20</span>
+                <span class="menu-item-price">+$10</span>
+                <span class="menu-item-time">+15 min</span>
               </div>
             </div>
             <div class="menu-item">
               <div class="menu-item-left">
-                <p class="menu-item-name">3D elements, charms, embellishments</p>
+                <p class="menu-item-name">Isolated chrome</p>
+                <p class="menu-item-desc">Or $20 for all nails, +30 min</p>
               </div>
               <div class="menu-item-right">
                 <span class="menu-item-price">+$2 / nail</span>
+                <span class="menu-item-time">+5 min each</span>
+              </div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-left">
+                <p class="menu-item-name">Aura nails</p>
+                <p class="menu-item-desc">Or $20 for all nails, +30 min</p>
+              </div>
+              <div class="menu-item-right">
+                <span class="menu-item-price">+$2 / nail</span>
+                <span class="menu-item-time">+5 min each</span>
+              </div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-left">
+                <p class="menu-item-name">Rhinestones / 3D elements</p>
+                <p class="menu-item-desc">Or $20 for all nails, +30 min</p>
+              </div>
+              <div class="menu-item-right">
+                <span class="menu-item-price">+$2 / nail</span>
+                <span class="menu-item-time">+5 min each</span>
               </div>
             </div>
           </div>
@@ -171,7 +184,8 @@
                 <p class="menu-item-name">My own soft gel, with a new set booked same day</p>
               </div>
               <div class="menu-item-right">
-                <span class="menu-item-price">Free</span>
+                <span class="menu-item-price">$5</span>
+                <span class="menu-item-time">+20 min</span>
               </div>
             </div>
             <div class="menu-item">
@@ -179,8 +193,8 @@
                 <p class="menu-item-name">My own soft gel, soak-off only</p>
               </div>
               <div class="menu-item-right">
-                <span class="menu-item-price">$10</span>
-                <span class="menu-item-time">20 min</span>
+                <span class="menu-item-price">$15</span>
+                <span class="menu-item-time">25 min</span>
               </div>
             </div>
             <div class="menu-item">
@@ -188,7 +202,7 @@
                 <p class="menu-item-name">Another tech's soft gel</p>
               </div>
               <div class="menu-item-right">
-                <span class="menu-item-price">$15</span>
+                <span class="menu-item-price">$20</span>
                 <span class="menu-item-time">30 min</span>
               </div>
             </div>
@@ -201,7 +215,8 @@
           <div class="menu-list">
             <div class="menu-item">
               <div class="menu-item-left">
-                <p class="menu-item-name">Nail lost within 7 days, first two</p>
+                <p class="menu-item-name">Up to 2 nails</p>
+                <p class="menu-item-desc">Within 7 days of your appointment</p>
               </div>
               <div class="menu-item-right">
                 <span class="menu-item-price">Free</span>
@@ -209,18 +224,11 @@
             </div>
             <div class="menu-item">
               <div class="menu-item-left">
-                <p class="menu-item-name">Third and each additional within 7 days</p>
-              </div>
-              <div class="menu-item-right">
-                <span class="menu-item-price">$5 each</span>
-              </div>
-            </div>
-            <div class="menu-item">
-              <div class="menu-item-left">
-                <p class="menu-item-name">Any repair after 7 days</p>
+                <p class="menu-item-name">3+ nails, or after 7 days</p>
               </div>
               <div class="menu-item-right">
                 <span class="menu-item-price">$5 / nail</span>
+                <span class="menu-item-time">15 min each</span>
               </div>
             </div>
           </div>
@@ -233,9 +241,10 @@
   <section class="page-cta">
     <div class="wrap page-cta-inner reveal">
       <h2>Found your set?</h2>
-      <p>Book an appointment, or browse the portfolio and preset designs for inspiration first.</p>
+      <p>Make a reservation, or browse the portfolio and preset designs for inspiration first.</p>
       <div class="page-cta-actions">
-        <a class="btn btn-primary" href="book.html">Book an appointment</a>
+        <a class="btn btn-primary" href="book.html">Make a Reservation</a>
+        <a class="btn btn-ghost" href="custom-booking.html">Try the price builder →</a>
         <a class="btn btn-ghost" href="portfolio.html">View portfolio</a>
       </div>
     </div>
@@ -247,7 +256,7 @@
   <div class="wrap footer-grid">
     <div class="footer-brand">
       <a href="index.html#top" class="logo logo--footer" aria-label="milk studio home">
-        <img src="images/milk-logo-light.png" alt="milk studio" class="logo-img">
+        <img src="images/milk-logo-light.png?v=2" alt="milk studio" class="logo-img">
       </a>
       <p class="footer-tagline">Modern nail art, handcrafted with care.</p>
     </div>
@@ -265,7 +274,7 @@
     <div class="footer-col">
       <p class="footer-col-title">Connect</p>
       <a href="#" data-social-link>Instagram</a>
-      <a href="book.html">Book now</a>
+      <a href="book.html">Make a Reservation</a>
     </div>
   </div>
   <div class="wrap footer-bottom">
@@ -274,6 +283,5 @@
 </footer>
 
 <script src="js/main.js"></script>
-<script type="module" src="js/splash-shader.js"></script>
 </body>
 </html>

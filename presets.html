@@ -16,18 +16,8 @@
 <meta name="twitter:image" content="images/social-share.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Jost:wght@300;400;500;600&family=Pliant:wdth,wght@125,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
-<script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@18.3.1",
-    "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
-    "react-dom": "https://esm.sh/react-dom@18.3.1",
-    "react-dom/client": "https://esm.sh/react-dom@18.3.1/client"
-  }
-}
-</script>
 </head>
 <body>
 
@@ -36,7 +26,7 @@
 <header class="site-header" id="siteHeader">
   <div class="wrap header-inner">
     <a href="index.html#top" class="logo" aria-label="milk studio home">
-      <img src="images/milk-logo.png" alt="milk studio" class="logo-img">
+      <img src="images/milk-logo.png?v=2" alt="milk studio" class="logo-img">
     </a>
 
     <nav class="main-nav" id="mainNav" aria-label="Primary">
@@ -47,7 +37,7 @@
     </nav>
 
     <div class="header-actions">
-      <a class="btn btn-primary" href="book.html">Book Now</a>
+      <a class="btn btn-primary" href="book.html">Make a Reservation</a>
     </div>
   </div>
 </header>
@@ -55,15 +45,13 @@
 <main id="main">
 
   <section class="page-hero">
-    <div class="page-hero-bg" data-shader aria-hidden="true"></div>
-    <h1 class="page-hero-title">preset designs</h1>
-    <p class="page-hero-sub">A lookbook of ready-to-book designs — pick a look and go, no custom consult needed.</p>
+    <p class="page-hero-eyebrow">Vol. 01 — No. 02</p>
+    <h1 class="page-hero-title">not sure what you want?</h1>
+    <p class="page-hero-sub page-hero-sub--wide">these are designs i've found in the wild that i've been dyingggggg to recreate. pick one and you'll get 15% off the full cost of your service in exchange for pics of your nails after! (prices listed below each design — select design choice in the <a href="custom-booking.html" class="text-link">price builder</a> and it will automatically schedule the time needed)</p>
   </section>
 
   <section class="presets" id="presets">
     <div class="wrap">
-      <p class="section-sub reveal center">New presets added regularly — this grid is ready and waiting for real looks.</p>
-
       <div class="gallery-grid">
         <div class="gallery-tile reveal gt-c"></div>
         <div class="gallery-tile reveal gt-a"></div>
@@ -78,10 +66,10 @@
   <section class="page-cta">
     <div class="wrap page-cta-inner reveal">
       <h2>Pick a look, no consult needed.</h2>
-      <p>Preset designs book straight into the menu above — just mention which one when you book.</p>
+      <p>Select your design in the price builder and the timing's worked out automatically.</p>
       <div class="page-cta-actions">
-        <a class="btn btn-primary" href="book.html">Book an appointment</a>
-        <a class="btn btn-ghost" href="pricing.html">View pricing</a>
+        <a class="btn btn-primary" href="custom-booking.html">Open the price builder</a>
+        <a class="btn btn-ghost" href="book.html">Make a Reservation</a>
       </div>
     </div>
   </section>
@@ -92,7 +80,7 @@
   <div class="wrap footer-grid">
     <div class="footer-brand">
       <a href="index.html#top" class="logo logo--footer" aria-label="milk studio home">
-        <img src="images/milk-logo-light.png" alt="milk studio" class="logo-img">
+        <img src="images/milk-logo-light.png?v=2" alt="milk studio" class="logo-img">
       </a>
       <p class="footer-tagline">Modern nail art, handcrafted with care.</p>
     </div>
@@ -110,7 +98,7 @@
     <div class="footer-col">
       <p class="footer-col-title">Connect</p>
       <a href="#" data-social-link>Instagram</a>
-      <a href="book.html">Book now</a>
+      <a href="book.html">Make a Reservation</a>
     </div>
   </div>
   <div class="wrap footer-bottom">
@@ -119,6 +107,5 @@
 </footer>
 
 <script src="js/main.js"></script>
-<script type="module" src="js/splash-shader.js"></script>
 </body>
 </html>

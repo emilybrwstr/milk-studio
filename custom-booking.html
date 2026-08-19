@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Your Set — milk studio</title>
+<meta name="description" content="Modern nail art, handcrafted with care. Home studio in Toronto — book online.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="milk studio">
+<meta property="og:title" content="Build Your Set — milk studio">
+<meta property="og:description" content="Modern nail art, handcrafted with care. Home studio in Toronto — book online.">
+<meta property="og:image" content="images/social-share.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Build Your Set — milk studio">
+<meta name="twitter:description" content="Modern nail art, handcrafted with care. Home studio in Toronto — book online.">
+<meta name="twitter:image" content="images/social-share.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Jost:wght@300;400;500;600&family=Pliant:wdth,wght@125,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header" id="siteHeader">
+  <div class="wrap header-inner">
+    <a href="index.html#top" class="logo" aria-label="milk studio home">
+      <img src="images/milk-logo.png?v=2" alt="milk studio" class="logo-img">
+    </a>
+
+    <nav class="main-nav" id="mainNav" aria-label="Primary">
+      <a href="index.html#about">About</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="presets.html">Presets</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="cb-builder">
+    <div class="wrap">
+
+      <nav class="cb-progress" id="cbProgress" aria-label="Booking progress">
+        <span class="cb-progress-step" data-step="1">01 Service</span>
+        <span class="cb-progress-step" data-step="2">02 Customize</span>
+        <span class="cb-progress-step" data-step="3">03 Review</span>
+      </nav>
+
+      <!-- STEP 1: base service -->
+      <div class="cb-step" id="step-1">
+        <h2 class="cb-step-heading" tabindex="-1">Choose your service</h2>
+        <p class="cb-step-sub">Every set starts here — add-ons come next.</p>
+
+        <fieldset class="cb-card-group" data-group="service">
+          <legend class="sr-only">Choose your service</legend>
+
+          <label class="cb-card">
+            <input type="radio" name="service" value="gel-manicure">
+            <span class="cb-card-name">Gel manicure</span>
+            <span class="cb-card-meta">$30 · 60 min</span>
+          </label>
+
+          <label class="cb-card">
+            <input type="radio" name="service" value="builder-gel-manicure">
+            <span class="cb-card-name">Builder gel manicure</span>
+            <span class="cb-card-desc">Overlay, no extension</span>
+            <span class="cb-card-meta">$45 · 90 min</span>
+          </label>
+
+          <label class="cb-card">
+            <input type="radio" name="service" value="gel-x-full-set">
+            <span class="cb-card-name">Gel-X full set</span>
+            <span class="cb-card-desc">Short to medium length</span>
+            <span class="cb-card-meta">$55 · 2 hr</span>
+          </label>
+
+          <!-- Duration is an ESTIMATE — not specified in the real menu, adjust freely -->
+          <label class="cb-card">
+            <input type="radio" name="service" value="refill">
+            <span class="cb-card-name">Refill</span>
+            <span class="cb-card-desc">For your existing Gel-X set</span>
+            <span class="cb-card-meta">$40 · ~1 hr 15 min</span>
+          </label>
+
+          <label class="cb-card">
+            <input type="radio" name="service" value="repair">
+            <span class="cb-card-name">Repair</span>
+            <span class="cb-card-desc">1–2 nails, free within 7 days of your last appointment</span>
+            <span class="cb-card-meta">Free · 30 min</span>
+          </label>
+        </fieldset>
+      </div>
+
+      <!-- STEP 2: customize -->
+      <div class="cb-step" id="step-2" hidden>
+        <h2 class="cb-step-heading" tabindex="-1">Customize your set</h2>
+        <p class="cb-step-sub">Everything here is optional.</p>
+
+        <div id="lengthSection" hidden>
+          <fieldset class="cb-card-group cb-card-group--row" data-group="length">
+            <legend class="cb-field-label">Length</legend>
+            <label class="cb-card cb-card--sm">
+              <input type="radio" name="length" value="standard" checked>
+              <span class="cb-card-name">Short to medium</span>
+              <span class="cb-card-meta">Included</span>
+            </label>
+            <label class="cb-card cb-card--sm">
+              <input type="radio" name="length" value="long">
+              <span class="cb-card-name">Long</span>
+              <span class="cb-card-meta">+$5 · +15 min</span>
+            </label>
+            <label class="cb-card cb-card--sm">
+              <input type="radio" name="length" value="extra-long">
+              <span class="cb-card-name">Extra long</span>
+              <span class="cb-card-meta">+$10 · +20 min</span>
+            </label>
+          </fieldset>
+        </div>
+
+        <div id="nailArtSection">
+          <p class="cb-field-label">Nail art — pick as many as you like</p>
+
+          <div class="cb-card-group cb-card-group--row">
+            <label class="cb-toggle-card cb-toggle-card--sm">
+              <input type="checkbox" id="frenchTipToggle">
+              <span class="cb-card-name">French tip</span>
+              <span class="cb-card-meta">$10 · 15 min</span>
+            </label>
+            <label class="cb-toggle-card cb-toggle-card--sm">
+              <input type="checkbox" id="catEyeToggle">
+              <span class="cb-card-name">Cat eye</span>
+              <span class="cb-card-meta">$10 · 15 min</span>
+            </label>
+          </div>
+
+          <div class="cb-nailart-item">
+            <div class="cb-nailart-item-head">
+              <span class="cb-card-name">Isolated chrome</span>
+              <span class="cb-card-meta">$2 / nail · +5 min each</span>
+            </div>
+            <div class="cb-stepper">
+              <button type="button" class="cb-stepper-btn" data-addon="chrome" data-dir="-1" aria-label="Decrease isolated chrome nail count" disabled>−</button>
+              <span class="cb-stepper-value" data-addon-value="chrome" aria-live="polite">0</span>
+              <button type="button" class="cb-stepper-btn" data-addon="chrome" data-dir="1" aria-label="Increase isolated chrome nail count">+</button>
+              <label class="cb-all-toggle">
+                <input type="checkbox" data-addon-all="chrome">
+                <span>All nails · $20 · +30 min</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="cb-nailart-item">
+            <div class="cb-nailart-item-head">
+              <span class="cb-card-name">Aura nails</span>
+              <span class="cb-card-meta">$2 / nail · +5 min each</span>
+            </div>
+            <div class="cb-stepper">
+              <button type="button" class="cb-stepper-btn" data-addon="aura" data-dir="-1" aria-label="Decrease aura nails nail count" disabled>−</button>
+              <span class="cb-stepper-value" data-addon-value="aura" aria-live="polite">0</span>
+              <button type="button" class="cb-stepper-btn" data-addon="aura" data-dir="1" aria-label="Increase aura nails nail count">+</button>
+              <label class="cb-all-toggle">
+                <input type="checkbox" data-addon-all="aura">
+                <span>All nails · $20 · +30 min</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="cb-nailart-item">
+            <div class="cb-nailart-item-head">
+              <span class="cb-card-name">Rhinestones / 3D elements</span>
+              <span class="cb-card-meta">$2 / nail · +5 min each</span>
+            </div>
+            <div class="cb-stepper">
+              <button type="button" class="cb-stepper-btn" data-addon="rhinestones" data-dir="-1" aria-label="Decrease rhinestones nail count" disabled>−</button>
+              <span class="cb-stepper-value" data-addon-value="rhinestones" aria-live="polite">0</span>
+              <button type="button" class="cb-stepper-btn" data-addon="rhinestones" data-dir="1" aria-label="Increase rhinestones nail count">+</button>
+              <label class="cb-all-toggle">
+                <input type="checkbox" data-addon-all="rhinestones">
+                <span>All nails · $20 · +30 min</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="cb-field" id="repairSection" hidden>
+          <fieldset class="cb-card-group cb-card-group--row" data-group="repair-tier">
+            <legend class="cb-field-label">How many nails need repair?</legend>
+            <label class="cb-card cb-card--sm">
+              <input type="radio" name="repair-tier" value="free" checked>
+              <span class="cb-card-name">Up to 2 nails</span>
+              <span class="cb-card-meta">Free · within 7 days</span>
+            </label>
+            <label class="cb-card cb-card--sm">
+              <input type="radio" name="repair-tier" value="paid">
+              <span class="cb-card-name">3+ nails, or after 7 days</span>
+              <span class="cb-card-meta">$5 / nail · 15 min each</span>
+            </label>
+          </fieldset>
+
+          <div id="repairPaidStepper" hidden>
+            <p class="cb-field-label">How many nails</p>
+            <div class="cb-stepper">
+              <button type="button" class="cb-stepper-btn" id="repairMinus" aria-label="Decrease repair nail count">−</button>
+              <span class="cb-stepper-value" id="repairValue" aria-live="polite">3</span>
+              <button type="button" class="cb-stepper-btn" id="repairPlus" aria-label="Increase repair nail count">+</button>
+              <span class="cb-stepper-note">$5 · 15 min each</span>
+            </div>
+          </div>
+
+          <p class="cb-step-sub" style="margin: 10px 0 0;">Free-tier eligibility (1–2 nails, within 7 days of your last appointment) is confirmed when I follow up.</p>
+        </div>
+
+        <div class="cb-field" id="removalSection">
+          <label class="cb-toggle-card">
+            <input type="checkbox" id="removalToggle">
+            <span class="cb-card-name">I need my existing gel removed first</span>
+            <span class="cb-card-desc">Only if you're currently wearing enhancements</span>
+          </label>
+
+          <div class="cb-subchoice-group" id="removalSubchoices" hidden>
+            <fieldset class="cb-card-group cb-card-group--row" data-group="removal-choice">
+              <legend class="sr-only">Whose gel needs removing</legend>
+              <label class="cb-card cb-card--sm">
+                <input type="radio" name="removal-choice" value="own-bundled">
+                <span class="cb-card-name">My own soft gel</span>
+                <span class="cb-card-meta">With a new set today · $5 · +20 min</span>
+              </label>
+              <label class="cb-card cb-card--sm">
+                <input type="radio" name="removal-choice" value="own-standalone">
+                <span class="cb-card-name">My own soft gel</span>
+                <span class="cb-card-meta">Soak-off only · $15 · +25 min</span>
+              </label>
+              <label class="cb-card cb-card--sm">
+                <input type="radio" name="removal-choice" value="other-tech">
+                <span class="cb-card-name">Another tech's soft gel</span>
+                <span class="cb-card-meta">$20 · +30 min</span>
+              </label>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3: review -->
+      <div class="cb-step" id="step-3" hidden>
+        <h2 class="cb-step-heading" tabindex="-1">Review your set</h2>
+        <p class="cb-step-sub">Here's everything you've chosen.</p>
+
+        <div class="cb-review-panel">
+          <div class="menu-list" id="reviewList"></div>
+          <div class="cb-total-highlight">
+            <span>Total</span>
+            <span class="cb-total-highlight-values">
+              <span id="reviewTotalDuration">0 min</span>
+              <span id="reviewTotalPrice">$0</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4: pick a date/time — hands off to the real Calendly event
+           whose configured duration is closest to the calculated total. -->
+      <div class="cb-step cb-confirmation" id="step-4" hidden>
+        <h2 class="cb-step-heading" tabindex="-1">Pick your time</h2>
+        <p class="cb-confirmation-recap" id="confirmationRecap"></p>
+        <p class="cb-step-sub cb-confirmation-note">Booking for the full <span id="confirmationDuration"></span> shown above — pick any open slot below.</p>
+        <div id="calendlyEmbed" class="cb-calendly-embed"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="cb-summary-bar" id="summaryBar">
+    <div class="cb-summary-bar-total" aria-live="polite" aria-atomic="true">
+      <span class="cb-summary-price" id="summaryPrice">$0</span>
+      <span class="cb-summary-duration" id="summaryDuration">Select a service to start</span>
+    </div>
+    <div class="cb-step-nav">
+      <button type="button" class="cb-back-link" id="backBtn" hidden>← Back</button>
+      <button type="button" class="btn btn-primary cb-summary-bar-cta" id="nextBtn" disabled>Continue</button>
+    </div>
+  </div>
+
+</main>
+
+<script src="js/main.js"></script>
+<script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+<script src="js/custom-booking.js?v=2"></script>
+</body>
+</html>

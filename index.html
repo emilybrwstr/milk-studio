@@ -16,18 +16,8 @@
 <meta name="twitter:image" content="images/social-share.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Jost:wght@300;400;500;600&family=Pliant:wdth,wght@125,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
-<script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@18.3.1",
-    "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
-    "react-dom": "https://esm.sh/react-dom@18.3.1",
-    "react-dom/client": "https://esm.sh/react-dom@18.3.1/client"
-  }
-}
-</script>
 </head>
 <body>
 
@@ -36,7 +26,7 @@
 <header class="site-header" id="siteHeader">
   <div class="wrap header-inner">
     <a href="index.html#top" class="logo" aria-label="milk studio home">
-      <img src="images/milk-logo.png" alt="milk studio" class="logo-img">
+      <img src="images/milk-logo.png?v=2" alt="milk studio" class="logo-img">
     </a>
 
     <nav class="main-nav" id="mainNav" aria-label="Primary">
@@ -47,30 +37,48 @@
     </nav>
 
     <div class="header-actions">
-      <a class="btn btn-primary" href="book.html">Book Now</a>
+      <a class="btn btn-primary" href="book.html">Make a Reservation</a>
     </div>
   </div>
 </header>
 
 <main id="main">
 
-  <!-- INTRO: logo and menu swipe between each other on one fixed screen,
-       sharing one continuous shader background. Scroll/swipe swaps between
-       them; the rest of the site is only reached by clicking a menu item. -->
+  <!-- INTRO: logo and menu swipe between each other on one fixed screen.
+       Scroll/swipe swaps between them; the rest of the site is only reached
+       by clicking a menu item. -->
   <div class="intro" id="intro">
-    <div class="intro-bg" data-shader aria-hidden="true"></div>
+    <div class="intro-bg" aria-hidden="true"></div>
+    <div class="intro-masthead" aria-hidden="true">
+      <span>Vol. 01 — No. 02</span>
+      <span>North York, Toronto</span>
+    </div>
 
     <div class="intro-stage">
       <section class="intro-panel intro-panel--logo" id="top">
-        <img src="images/milk-logo-white.png" alt="milk studio" class="splash-logo">
+        <img src="images/hero-glass-left.png" alt="" class="hero-glass hero-glass-left">
+        <img src="images/milk-logo.png?v=2" alt="milk studio" class="hero-logo">
+        <img src="images/hero-glass-right.png" alt="" class="hero-glass hero-glass-right">
       </section>
 
       <section class="intro-panel intro-panel--menu">
+        <img src="images/sticker-star-glitter-pale.png" alt="" class="menu-sticker ms-1">
+        <img src="images/sticker-star-matte-b.png" alt="" class="menu-sticker ms-2">
+        <img src="images/sticker-star-zebra.png" alt="" class="menu-sticker ms-3">
+        <img src="images/sticker-star-beaded.png" alt="" class="menu-sticker ms-4">
+        <img src="images/sticker-lips.png" alt="" class="menu-sticker ms-5">
+        <img src="images/sticker-star-matte-a.png" alt="" class="menu-sticker ms-6">
+        <img src="images/sticker-star-matte-a.png" alt="" class="menu-sticker ms-7">
+        <img src="images/sticker-star-sequin.png" alt="" class="menu-sticker ms-8">
+        <img src="images/sticker-star-zebra.png" alt="" class="menu-sticker ms-9">
+        <img src="images/sticker-lips.png" alt="" class="menu-sticker ms-10">
+        <img src="images/sticker-star-glitter-bright.png" alt="" class="menu-sticker ms-11">
+
         <nav class="flip-menu-list" aria-label="Quick links">
-          <a class="flip-link reveal" href="book.html">book</a>
-          <a class="flip-link reveal" href="pricing.html">pricing</a>
-          <a class="flip-link reveal" href="portfolio.html">portfolio</a>
-          <a class="flip-link reveal" href="presets.html">preset designs</a>
+          <a class="flip-link reveal" href="book.html"><span class="flip-link-text">book</span></a>
+          <a class="flip-link reveal" href="pricing.html"><span class="flip-link-text">pricing</span></a>
+          <a class="flip-link reveal" href="portfolio.html"><span class="flip-link-text">portfolio</span></a>
+          <a class="flip-link reveal" href="presets.html"><span class="flip-link-text">preset designs</span></a>
         </nav>
       </section>
     </div>
@@ -81,23 +89,29 @@
     <div class="wrap about-inner">
       <div class="about-copy reveal">
         <p class="section-label">About</p>
-        <h2>A small studio,<br>a slower pace.</h2>
+        <h2>hi, i'm emily &lt;3</h2>
         <p>
-          milk studio is a home-based nail studio in North York, built around one-on-one appointments,
-          clean technique, and designs that feel like you. No rush, no crowded salon floor — just a quiet
-          space to sit down, pick a shape, and leave with hands you actually want to look at.
+          i've always been a creative person. i love making things and i love experimenting even more,
+          and nails have been the outlet for as long as i can remember. i was doing nail art back when
+          thin brush liners were peak innovation and you genuinely weren't cool unless you had crackle polish.
         </p>
         <p>
-          Every appointment starts with a quick chat about shape, length, and finish, so what you book
-          is exactly what you get.
+          in 2022 i started my degree, realized i could no longer justify salon prices, and started doing
+          my own gel nails at home. what began as a broke-student workaround turned into kind of an obsession.
+          i've spent the last few years learning how to actually perfect shaping, cuticle care, and most
+          importantly design work. i also found myself wanting to change my nails every couple of days,
+          which is a lot of practice and a lot of wasted potential, so eventually i thought... why not just
+          start offering nails?
+        </p>
+        <p>
+          so here we are. milk studio is really just a space where i can offer good nails at prices that
+          make sense, in a cozy setup, and get to know some girls on campus while i'm at it. i've kept my
+          pricing as affordable as i possibly can, because being a student shouldn't stop you from being a baddie.
         </p>
       </div>
       <div class="about-visual reveal" aria-hidden="true">
-        <div class="about-swatch about-swatch--a"></div>
-        <div class="about-swatch about-swatch--b"></div>
-        <svg class="about-heart" viewBox="0 0 32 28" aria-hidden="true">
-          <path d="M16 27 C 6 20, 1 14, 1 8.5 C 1 3.8, 4.6 1, 8.6 1 C 11.7 1, 14.3 2.9, 16 5.8 C 17.7 2.9, 20.3 1, 23.4 1 C 27.4 1, 31 3.8, 31 8.5 C 31 14, 26 20, 16 27 Z"/>
-        </svg>
+        <div class="about-photo"></div>
+        <div class="about-chip">xo, m</div>
       </div>
     </div>
   </section>
@@ -108,7 +122,7 @@
   <div class="wrap footer-grid">
     <div class="footer-brand">
       <a href="index.html#top" class="logo logo--footer" aria-label="milk studio home">
-        <img src="images/milk-logo-light.png" alt="milk studio" class="logo-img">
+        <img src="images/milk-logo-light.png?v=2" alt="milk studio" class="logo-img">
       </a>
       <p class="footer-tagline">Modern nail art, handcrafted with care.</p>
     </div>
@@ -126,7 +140,7 @@
     <div class="footer-col">
       <p class="footer-col-title">Connect</p>
       <a href="#" data-social-link>Instagram</a>
-      <a href="book.html">Book now</a>
+      <a href="book.html">Make a Reservation</a>
     </div>
   </div>
   <div class="wrap footer-bottom">
@@ -135,6 +149,5 @@
 </footer>
 
 <script src="js/main.js"></script>
-<script type="module" src="js/splash-shader.js"></script>
 </body>
 </html>

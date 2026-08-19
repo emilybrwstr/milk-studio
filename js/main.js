@@ -152,49 +152,54 @@ if (reducesMotion) {
 
 // Size the flip-menu text to fill the available width as much as possible
 // without wrapping — one uniform size for all four, fit to the widest line
-// ("preset designs"), recalculated on resize and once the font loads.
+// ("preset designs"), recalculated on resize and once the font loads. Each
+// link is a counter number (::before) plus a .flip-link-text span; the
+// number's width doesn't scale with the fit size, so it's reserved as a
+// flat allowance rather than measured live.
 const fitFlipMenu = () => {
   const list = document.querySelector('.flip-menu-list');
   const links = [...document.querySelectorAll('.flip-link')];
-  if (!list || !links.length) return;
+  const texts = [...document.querySelectorAll('.flip-link-text')];
+  if (!list || !texts.length) return;
 
   const listStyle = getComputedStyle(list);
+  const numberAllowance = window.matchMedia('(max-width: 480px)').matches ? 46 : 90;
   const availableWidth =
-    list.clientWidth - parseFloat(listStyle.paddingLeft) - parseFloat(listStyle.paddingRight);
+    list.clientWidth - parseFloat(listStyle.paddingLeft) - parseFloat(listStyle.paddingRight) - numberAllowance;
 
-  // Measure each link's true unwrapped width at a neutral probe size —
+  // Measure each label's true unwrapped width at a neutral probe size —
   // force nowrap during the probe, since scrollWidth on a wrapped block
   // only reflects its widest wrapped line, not the full text width.
   const probeSize = 200;
   let widestRatio = 0;
-  links.forEach((link) => {
-    const prevSize = link.style.fontSize;
-    const prevWhiteSpace = link.style.whiteSpace;
-    link.style.fontSize = `${probeSize}px`;
-    link.style.whiteSpace = 'nowrap';
-    widestRatio = Math.max(widestRatio, link.scrollWidth / probeSize);
-    link.style.fontSize = prevSize;
-    link.style.whiteSpace = prevWhiteSpace;
+  texts.forEach((text) => {
+    const prevSize = text.style.fontSize;
+    const prevWhiteSpace = text.style.whiteSpace;
+    text.style.fontSize = `${probeSize}px`;
+    text.style.whiteSpace = 'nowrap';
+    widestRatio = Math.max(widestRatio, text.scrollWidth / probeSize);
+    text.style.fontSize = prevSize;
+    text.style.whiteSpace = prevWhiteSpace;
   });
   if (!widestRatio) return;
 
-  const lineHeight = parseFloat(getComputedStyle(links[0]).lineHeight) / probeSize || 1.15;
-  const heightFitSize = (window.innerHeight * 0.7) / (links.length * lineHeight);
+  const lineHeight = parseFloat(getComputedStyle(texts[0]).lineHeight) / probeSize || 1.0;
+  const heightFitSize = (window.innerHeight * 0.7) / (texts.length * lineHeight);
   const widthFitSize = (availableWidth * 0.98) / widestRatio;
 
   const minSize = window.matchMedia('(max-width: 480px)').matches ? 24 : 44;
-  let size = Math.max(Math.min(widthFitSize, heightFitSize, 260), minSize);
-  links.forEach((link) => { link.style.fontSize = `${size}px`; });
+  let size = Math.max(Math.min(widthFitSize, heightFitSize, 220), minSize);
+  texts.forEach((text) => { text.style.fontSize = `${size}px`; });
 
   // Safety net: if anything still wraps to a second line (detected by
   // rendered height, since a wrapped block's scrollWidth never exceeds its
   // own box), shrink further rather than trust the estimate alone.
-  const singleLineHeight = () => parseFloat(getComputedStyle(links[0]).lineHeight);
+  const singleLineHeight = () => parseFloat(getComputedStyle(texts[0]).lineHeight);
   for (let i = 0; i < 6; i++) {
     const wrapped = links.some((link) => link.getBoundingClientRect().height > singleLineHeight() * 1.4);
     if (!wrapped) break;
     size *= 0.94;
-    links.forEach((link) => { link.style.fontSize = `${size}px`; });
+    texts.forEach((text) => { text.style.fontSize = `${size}px`; });
   }
 };
 fitFlipMenu();
