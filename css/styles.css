@@ -131,13 +131,23 @@ p { line-height: 1.7; color: var(--ink-soft); }
 .header-inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
 }
-/* Logo dead center, nav links split to flank it — at every width, every
-   page. Nav dissolves via display:contents so its links become direct flex
-   items alongside the logo, letting order place two on each side. */
-.main-nav { display: contents; }
+/* Logo truly centered via a 3-column grid (nav-group | logo | nav-group)
+   rather than flex+order, which only approximated centering when the two
+   flanking link groups happened to be similar widths. The auto-sized
+   middle column keeps the logo dead center regardless of how much text is
+   in either group. */
+.main-nav {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+}
+.nav-group { display: flex; align-items: center; gap: 24px; }
+.nav-group:first-child { justify-content: flex-end; }
+.nav-group:last-child { justify-content: flex-start; }
+.logo { justify-self: center; }
 .main-nav a {
   position: relative;
   padding-bottom: 4px;
@@ -160,15 +170,42 @@ p { line-height: 1.7; color: var(--ink-soft); }
 .main-nav a:hover::after { transform: scaleX(1); transform-origin: left; }
 .main-nav a[aria-current="page"] { color: var(--pink-dark); }
 .main-nav a[aria-current="page"]::after { transform: scaleX(1); }
-.main-nav a:nth-child(1) { order: 1; }
-.main-nav a:nth-child(2) { order: 2; }
-.logo { order: 3; }
-.main-nav a:nth-child(3) { order: 4; }
-.main-nav a:nth-child(4) { order: 5; }
 
-.header-actions { display: flex; align-items: center; gap: 16px; order: 6; }
+/* ---------- Floating "Build Your Set" badge (menu/edit/archive pages) ----------
+   Fixed to the top-right corner, below the header, at every scroll
+   position. Split across two nested elements so the continuous idle bob
+   (on the inner span) and the hover pop (on the outer link) each own an
+   independent transform instead of fighting over the same property. */
+.floating-badge {
+  position: fixed;
+  top: 96px;
+  right: 24px;
+  z-index: 90;
+  display: block;
+  width: clamp(96px, 11vw, 150px);
+  transition: transform 0.25s ease;
+}
+.floating-badge:hover { transform: scale(1.07) rotate(-2deg); }
+.floating-badge-bob {
+  display: block;
+  animation: floatingBadgeBob 4.5s ease-in-out infinite;
+}
+.floating-badge-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 12px 22px rgba(34, 20, 27, 0.3));
+}
+@keyframes floatingBadgeBob {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-8px) rotate(3deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .floating-badge-bob { animation: none; }
+  .floating-badge { transition: none; }
+}
 @media (max-width: 640px) {
-  .header-actions { display: none; }
+  .floating-badge { top: 80px; right: 14px; width: clamp(76px, 20vw, 110px); }
 }
 
 /* ---------- Intro (logo + menu swipe on one fixed screen) ---------- */
@@ -544,7 +581,7 @@ section { padding: 100px 0; }
   mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
 }
 .menu-title-card {
-  width: min(96%, 680px);
+  width: min(98%, 780px);
   aspect-ratio: 2351 / 1879;
   margin: 0 auto;
   display: flex;
@@ -558,7 +595,7 @@ section { padding: 100px 0; }
   font-size: clamp(2.6rem, 10vw, 4.4rem);
   line-height: 0.9;
   color: var(--cream);
-  margin: 0;
+  margin: 0 0 24px;
 }
 
 /* ---------- Services (pricing menu) ----------
