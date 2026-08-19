@@ -172,40 +172,41 @@ p { line-height: 1.7; color: var(--ink-soft); }
 .main-nav a[aria-current="page"]::after { transform: scaleX(1); }
 
 /* ---------- Floating "Build Your Set" badge (menu/edit/archive pages) ----------
-   Fixed to the top-right corner, below the header, at every scroll
-   position. Split across two nested elements so the continuous idle bob
-   (on the inner span) and the hover pop (on the outer link) each own an
-   independent transform instead of fighting over the same property. */
+   Fixed to the header's top-right corner at every scroll position (the
+   header itself is fixed, so this just sits in its band rather than
+   scrolling away). Static until hovered, then gives a quick twist-shake. */
 .floating-badge {
   position: fixed;
-  top: 96px;
-  right: 24px;
-  z-index: 90;
+  top: 10px;
+  right: 20px;
+  z-index: 110;
   display: block;
-  width: clamp(96px, 11vw, 150px);
-  transition: transform 0.25s ease;
+  width: clamp(58px, 6vw, 82px);
 }
-.floating-badge:hover { transform: scale(1.07) rotate(-2deg); }
 .floating-badge-bob {
   display: block;
-  animation: floatingBadgeBob 4.5s ease-in-out infinite;
+}
+.floating-badge:hover .floating-badge-bob {
+  animation: floatingBadgeShake 0.5s ease-in-out;
 }
 .floating-badge-img {
   width: 100%;
   height: auto;
   display: block;
-  filter: drop-shadow(0 12px 22px rgba(34, 20, 27, 0.3));
 }
-@keyframes floatingBadgeBob {
-  0%, 100% { transform: translateY(0) rotate(-3deg); }
-  50% { transform: translateY(-8px) rotate(3deg); }
+@keyframes floatingBadgeShake {
+  0% { transform: rotate(0deg) scale(1); }
+  20% { transform: rotate(-12deg) scale(1.06); }
+  40% { transform: rotate(10deg) scale(1.06); }
+  60% { transform: rotate(-8deg) scale(1.06); }
+  80% { transform: rotate(5deg) scale(1.06); }
+  100% { transform: rotate(0deg) scale(1); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .floating-badge-bob { animation: none; }
-  .floating-badge { transition: none; }
+  .floating-badge:hover .floating-badge-bob { animation: none; }
 }
 @media (max-width: 640px) {
-  .floating-badge { top: 80px; right: 14px; width: clamp(76px, 20vw, 110px); }
+  .floating-badge { top: 8px; right: 12px; width: clamp(46px, 12vw, 64px); }
 }
 
 /* ---------- Intro (logo + menu swipe on one fixed screen) ---------- */
