@@ -375,21 +375,6 @@ p { line-height: 1.7; color: var(--ink-soft); }
   .flip-link, .flip-link.reveal, .flip-link-text { transition: none; }
 }
 
-/* ---------- Booking (book.html — full-page inline widget, no page-hero) ---------- */
-.booking-full {
-  min-height: 100vh;
-  box-sizing: border-box;
-  padding-top: 72px;
-  background: var(--cream);
-}
-.booking-full .calendly-inline-widget {
-  width: 100%;
-  height: 1000px !important;
-}
-@media (max-width: 760px) {
-  .booking-full { padding-top: 64px; }
-}
-
 /* ---------- Page hero (masthead-style subpage banner) ---------- */
 .page-hero {
   position: relative;
@@ -529,11 +514,88 @@ section { padding: 100px 0; }
   color: var(--pink-dark);
 }
 
-/* ---------- Services (pricing menu) ---------- */
-.services { background: var(--cream-panel); }
+/* ---------- Menu page (pricing.html) ----------
+   The star-confetti photo sits fixed behind the whole page — a plain
+   position:fixed div placed first in the DOM (rather than
+   background-attachment:fixed on the section) so it doesn't jitter on iOS
+   Safari. Everything else scrolls over it, including the title card. */
+.menu-page-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background: url("../images/menu-background.jpg") center / cover no-repeat;
+}
+.menu-intro {
+  position: relative;
+  padding: 20px 0 0;
+}
+/* A transparent frosted-glass overlay — backdrop-filter blurs whatever's
+   actually behind it (the fixed photo) rather than compositing a second
+   copy of the image. Masked to a top-to-bottom gradient, scoped to (and
+   scrolling with) the intro section, so the blur stays behind the title as
+   the page scrolls and fades out by the section's own bottom edge. */
+.menu-page-bg-blur {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+}
+.menu-title-card {
+  width: min(96%, 680px);
+  aspect-ratio: 2351 / 1879;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url("../images/splotch.png") center / contain no-repeat;
+}
+.menu-page-title {
+  font-family: var(--font-title);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 10vw, 4.4rem);
+  line-height: 0.9;
+  color: var(--cream);
+  margin: 0;
+}
+
+/* ---------- Services (pricing menu) ----------
+   Pulled up with a negative margin so the first card overlaps the bottom of
+   the splotch, tightening the gap under the enlarged splotch. Needs its own
+   position:relative (z-index:auto is enough) so it stacks in the same
+   paint layer as .menu-intro — otherwise .menu-intro's own
+   position:relative would outrank this plain, non-positioned sibling and
+   paint on top of it wherever the negative margin makes them overlap. */
+.services { background: none; padding-top: 0; margin-top: -90px; position: relative; }
+
+.menu-category.menu-qa-card {
+  background: var(--pink);
+  text-align: center;
+}
+.menu-page-qa { margin-top: 24px; }
+.menu-page-qa:first-child { margin-top: 0; }
+.menu-page-question {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 1.12rem;
+  color: var(--cream);
+  margin: 0;
+}
+.menu-page-answer {
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  color: rgba(246, 244, 240, 0.85);
+  margin: 6px 0 0;
+}
+.menu-page-answer .text-link {
+  color: var(--ink);
+  text-decoration-color: rgba(34, 20, 27, 0.5);
+}
 
 .menu {
-  margin-top: 56px;
+  margin-top: 32px;
   max-width: 640px;
   margin-left: auto;
   margin-right: auto;
@@ -1019,10 +1081,8 @@ section { padding: 100px 0; }
   width: 100%;
   /* A definite height (not min-height) so the iframe Calendly injects —
      which sizes itself via height:100% — has something to resolve
-     against. Matches the same fix used for the widget on book.html.
-     Taller than that one since this page has a hero + recap text above
-     it eating into the space, and mobile stacks the date list vertically
-     (needs more room than the desktop side-by-side layout). */
+     against. Tall enough that mobile's vertically-stacked date list fits
+     without triggering Calendly's own internal scroll. */
   height: 1500px;
 }
 @media (min-width: 760px) {

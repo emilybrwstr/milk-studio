@@ -1,7 +1,7 @@
 // Sticky header state. On the homepage it stays hidden until the intro
 // (logo/menu) screen has been scrolled past. On subpages with a shader
 // page-hero it's shown right away and turns solid/blurred once scrolled
-// past the banner. On pages with neither (book.html) it's just solid from
+// past the banner. On pages with neither (custom-booking.html) it's just solid from
 // the start — there's no shader banner for the white/transparent style to
 // make sense against.
 const header = document.getElementById('siteHeader');
