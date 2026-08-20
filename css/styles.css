@@ -723,7 +723,7 @@ section { padding: 100px 0; }
 /* ---------- Services (pricing menu) ----------
    The first section on the page now (title/splotch removed) — padding-top
    just needs to clear the fixed header. */
-.services { background: none; padding-top: 100px; }
+.services { background: none; padding-top: 100px; padding-bottom: 40px; }
 @media (max-width: 640px) {
   .services { padding-top: 90px; }
 }
