@@ -1266,32 +1266,58 @@ section { padding: 100px 0; }
 }
 .cb-subchoice-group .cb-card-group { margin-bottom: 0; }
 
-.cb-review-panel {
-  background: var(--cream-panel);
-  border-radius: var(--radius);
-  box-shadow: 0 14px 30px -18px rgba(34, 20, 27, 0.3);
-  padding: 8px 28px;
+/* ---------- Review step — real "guest check" receipt ----------
+   Line items and total are laid text-only over the printed guest-check
+   art rather than a styled panel, so the review step reads like an
+   actual handed-over check. Everything is positioned by percentage
+   against the image so it holds up as the receipt scales. */
+.cb-receipt {
+  position: relative;
+  max-width: 420px;
+  margin: 0 auto;
 }
-.cb-total-highlight {
+.cb-receipt-bg { display: block; width: 100%; height: auto; }
+.cb-receipt-lines {
+  position: absolute;
+  top: 28%;
+  left: 7%;
+  right: 28%;
+  bottom: 10%;
   display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  overflow: hidden;
+}
+.cb-receipt-line {
+  display: flex;
+  align-items: baseline;
   justify-content: space-between;
-  align-items: baseline;
-  padding: 20px 0;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1.2rem;
+  gap: 8px;
 }
-.cb-total-highlight-values {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
+.cb-receipt-line-name {
   font-family: var(--font-mono);
-  color: var(--pink-dark);
+  font-size: clamp(0.56rem, 2.6vw, 0.76rem);
+  color: var(--ink);
+  line-height: 1.2;
 }
-.cb-total-highlight-values #reviewTotalPrice {
-  font-family: var(--font-display);
+.cb-receipt-line-price {
+  font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 1.6rem;
+  font-size: clamp(0.56rem, 2.6vw, 0.76rem);
+  color: var(--ink);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.cb-receipt-total {
+  position: absolute;
+  bottom: 5.5%;
+  right: 8%;
+  width: 22%;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(0.7rem, 3.2vw, 0.95rem);
+  color: var(--ink);
+  text-align: center;
 }
 
 .cb-confirmation { text-align: center; padding-top: 24px; }

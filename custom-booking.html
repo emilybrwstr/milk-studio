@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Jost:wght@300;400;500;600&family=Pliant:wdth,wght@125,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=62">
+<link rel="stylesheet" href="css/styles.css?v=64">
 </head>
 <body>
 
@@ -330,18 +330,11 @@
 
       <!-- STEP 3: review -->
       <div class="cb-step" id="step-3" hidden>
-        <h2 class="cb-step-heading" tabindex="-1">Review your set</h2>
-        <p class="cb-step-sub">Here's everything you've chosen.</p>
-
-        <div class="cb-review-panel">
-          <div class="menu-list" id="reviewList"></div>
-          <div class="cb-total-highlight">
-            <span>Total</span>
-            <span class="cb-total-highlight-values">
-              <span id="reviewTotalDuration">0 min</span>
-              <span id="reviewTotalPrice">$0</span>
-            </span>
-          </div>
+        <div class="cb-receipt" tabindex="-1">
+          <img src="images/guestcheck.png" alt="Guest check receipt" class="cb-receipt-bg">
+          <div class="cb-receipt-lines" id="reviewList"></div>
+          <div class="cb-receipt-total" id="reviewTotalPrice">$0</div>
+          <span id="reviewTotalDuration" hidden>0 min</span>
         </div>
       </div>
 
@@ -372,6 +365,6 @@
 
 <script src="js/main.js"></script>
 <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
-<script src="js/custom-booking.js?v=12"></script>
+<script src="js/custom-booking.js?v=13"></script>
 </body>
 </html>

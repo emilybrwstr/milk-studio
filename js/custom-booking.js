@@ -385,20 +385,15 @@ function render() {
     nextBtn.disabled = false;
   }
 
-  // Review step content
+  // Review step content — laid out as line items on the guest-check receipt
   if (state.step === 3) {
     reviewList.innerHTML = '';
     summary.lineItems.forEach((item) => {
       const row = document.createElement('div');
-      row.className = 'menu-item';
+      row.className = 'cb-receipt-line';
       row.innerHTML = `
-        <div class="menu-item-left">
-          <p class="menu-item-name">${item.label}</p>
-        </div>
-        <div class="menu-item-right">
-          <span class="menu-item-price">${item.price > 0 ? '+' : ''}${formatPrice(item.price)}</span>
-          ${item.duration > 0 ? `<span class="menu-item-time">+${formatDuration(item.duration)}</span>` : ''}
-        </div>`;
+        <span class="cb-receipt-line-name">${item.label}</span>
+        <span class="cb-receipt-line-price">${item.price > 0 ? '+' : ''}${formatPrice(item.price)}</span>`;
       reviewList.appendChild(row);
     });
     reviewTotalPrice.textContent = formatPrice(summary.totalPrice);
@@ -485,7 +480,7 @@ function goToStep(n) {
   steps[n].hidden = false;
   render();
 
-  const heading = steps[n].querySelector('.cb-step-heading');
+  const heading = steps[n].querySelector('.cb-step-heading, .cb-receipt');
   if (heading) {
     heading.setAttribute('tabindex', '-1');
     heading.focus({ preventScroll: true });
