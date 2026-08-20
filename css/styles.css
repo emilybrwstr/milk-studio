@@ -1277,42 +1277,50 @@ section { padding: 100px 0; }
   margin: 0 auto;
 }
 .cb-receipt-bg { display: block; width: 100%; height: auto; }
-.cb-receipt-lines {
+
+/* The printed check has 4 ruled columns: a thin blank one, the wide
+   description column, a narrow price column, then a thin blank one.
+   Names and prices are two independent lists (not paired rows) so each
+   only ever has to land inside its own column — exact row-for-row
+   alignment between a name and its price isn't guaranteed, but neither
+   is it on a real hand-written check. */
+.cb-receipt-names,
+.cb-receipt-prices {
   position: absolute;
   top: 28%;
-  left: 7%;
-  right: 28%;
   bottom: 10%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   overflow: hidden;
 }
-.cb-receipt-line {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
+.cb-receipt-names {
+  left: 11.5%;
+  width: 61%;
 }
-.cb-receipt-line-name {
+.cb-receipt-prices {
+  left: 76%;
+  width: 11%;
+  align-items: flex-end;
+}
+.cb-receipt-name-line {
   font-family: var(--font-mono);
   font-size: clamp(0.56rem, 2.6vw, 0.76rem);
   color: var(--ink);
   line-height: 1.2;
 }
-.cb-receipt-line-price {
+.cb-receipt-price-line {
   font-family: var(--font-mono);
   font-weight: 700;
   font-size: clamp(0.56rem, 2.6vw, 0.76rem);
   color: var(--ink);
   white-space: nowrap;
-  flex-shrink: 0;
 }
 .cb-receipt-total {
   position: absolute;
   bottom: 5.5%;
-  right: 8%;
-  width: 22%;
+  left: 76%;
+  width: 21%;
   font-family: var(--font-mono);
   font-weight: 700;
   font-size: clamp(0.7rem, 3.2vw, 0.95rem);

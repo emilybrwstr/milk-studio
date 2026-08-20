@@ -264,7 +264,8 @@ const catEyeToggle = document.getElementById('catEyeToggle');
 const repairMinus = document.getElementById('repairMinus');
 const repairPlus = document.getElementById('repairPlus');
 const repairValue = document.getElementById('repairValue');
-const reviewList = document.getElementById('reviewList');
+const reviewNames = document.getElementById('reviewNames');
+const reviewPrices = document.getElementById('reviewPrices');
 const reviewTotalPrice = document.getElementById('reviewTotalPrice');
 const reviewTotalDuration = document.getElementById('reviewTotalDuration');
 const confirmationRecap = document.getElementById('confirmationRecap');
@@ -385,16 +386,21 @@ function render() {
     nextBtn.disabled = false;
   }
 
-  // Review step content — laid out as line items on the guest-check receipt
+  // Review step content — names and prices are two independent lists laid
+  // over the guest check's description and price columns.
   if (state.step === 3) {
-    reviewList.innerHTML = '';
+    reviewNames.innerHTML = '';
+    reviewPrices.innerHTML = '';
     summary.lineItems.forEach((item) => {
-      const row = document.createElement('div');
-      row.className = 'cb-receipt-line';
-      row.innerHTML = `
-        <span class="cb-receipt-line-name">${item.label}</span>
-        <span class="cb-receipt-line-price">${item.price > 0 ? '+' : ''}${formatPrice(item.price)}</span>`;
-      reviewList.appendChild(row);
+      const name = document.createElement('span');
+      name.className = 'cb-receipt-name-line';
+      name.textContent = item.label;
+      reviewNames.appendChild(name);
+
+      const price = document.createElement('span');
+      price.className = 'cb-receipt-price-line';
+      price.textContent = `${item.price > 0 ? '+' : ''}${formatPrice(item.price)}`;
+      reviewPrices.appendChild(price);
     });
     reviewTotalPrice.textContent = formatPrice(summary.totalPrice);
     reviewTotalDuration.textContent = formatDuration(summary.totalDuration);
