@@ -9,11 +9,7 @@
   const reducesMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reducesMotion) return;
 
-  // Shorter bubbles feel like a quick reply; longer ones (and the image)
-  // get a longer "typing…" beat, like she's actually writing them out.
-  const SHORT_TYPING_MS = 2000;
-  const LONG_TYPING_MS = 4000;
-  const LENGTH_THRESHOLD = 45;
+  const TYPING_MS = 2000;
   const GAP_MS = 250;
   const DIVIDER_PAUSE_MS = 450;
 
@@ -27,12 +23,6 @@
 
   const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  function typingDurationFor(el) {
-    if (el.classList.contains('about-bubble-img')) return LONG_TYPING_MS;
-    const length = el.textContent.trim().length;
-    return length > LENGTH_THRESHOLD ? LONG_TYPING_MS : SHORT_TYPING_MS;
-  }
-
   async function playback() {
     for (const el of items) {
       if (el.classList.contains('about-msg-time')) {
@@ -45,7 +35,7 @@
       container.insertBefore(typing, el);
       typing.style.display = '';
       typing.scrollIntoView({ behavior: 'smooth', block: 'end' });
-      await wait(typingDurationFor(el));
+      await wait(TYPING_MS);
       typing.style.display = 'none';
 
       el.style.display = '';
