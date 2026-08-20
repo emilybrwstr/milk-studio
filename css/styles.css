@@ -635,6 +635,28 @@ section { padding: 100px 0; }
   border-radius: 16px 16px 16px 4px;
 }
 .about-bubble-img img { width: 220px; max-width: 100%; display: block; border-radius: 10px; }
+.about-typing {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--cream-panel);
+  padding: 14px 16px;
+  border-radius: 16px 16px 16px 4px;
+}
+.about-typing span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-soft);
+  animation: about-typing-bounce 1.2s infinite ease-in-out;
+}
+.about-typing span:nth-child(2) { animation-delay: 0.15s; }
+.about-typing span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes about-typing-bounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-4px); }
+}
 
 /* ---------- Menu page (pricing.html) ----------
    Scattered sticker graphics (same art as the homepage flip-menu, a fresh
