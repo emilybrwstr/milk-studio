@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Jost:wght@300;400;500;600&family=Pliant:wdth,wght@125,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=15">
+<link rel="stylesheet" href="css/styles.css?v=44">
 </head>
 <body>
 
@@ -80,12 +80,27 @@
             <span class="cb-card-meta">$55 · 2 hr</span>
           </label>
 
+          <label class="cb-card">
+            <input type="radio" name="service" value="gel-x-full-set-no-overlay">
+            <span class="cb-card-name">Gel-X full set</span>
+            <span class="cb-card-desc">No builder gel overlay</span>
+            <span class="cb-card-meta">$45 · 2 hr</span>
+          </label>
+
           <!-- Duration is an ESTIMATE — not specified in the real menu, adjust freely -->
           <label class="cb-card">
             <input type="radio" name="service" value="refill">
             <span class="cb-card-name">Refill</span>
             <span class="cb-card-desc">For your existing Gel-X set</span>
             <span class="cb-card-meta">$40 · ~1 hr 15 min</span>
+          </label>
+
+          <!-- Duration is an ESTIMATE — not specified in the real menu, adjust freely -->
+          <label class="cb-card">
+            <input type="radio" name="service" value="refill-builder">
+            <span class="cb-card-name">Refill</span>
+            <span class="cb-card-desc">For your existing Builder overlay</span>
+            <span class="cb-card-meta">$35 · ~1 hr</span>
           </label>
 
           <label class="cb-card">
@@ -100,7 +115,7 @@
       <!-- STEP 2: customize -->
       <div class="cb-step" id="step-2" hidden>
         <h2 class="cb-step-heading" tabindex="-1">Customize your set</h2>
-        <p class="cb-step-sub">Everything here is optional.</p>
+        <p class="cb-step-sub">Basic colour is included, everything else is optional.</p>
 
         <div id="lengthSection" hidden>
           <fieldset class="cb-card-group cb-card-group--row" data-group="length">
@@ -130,7 +145,7 @@
             <label class="cb-toggle-card cb-toggle-card--sm">
               <input type="checkbox" id="frenchTipToggle">
               <span class="cb-card-name">French tip</span>
-              <span class="cb-card-meta">$10 · 15 min</span>
+              <span class="cb-card-meta">$5 · 15 min</span>
             </label>
             <label class="cb-toggle-card cb-toggle-card--sm">
               <input type="checkbox" id="catEyeToggle">
@@ -150,7 +165,23 @@
               <button type="button" class="cb-stepper-btn" data-addon="chrome" data-dir="1" aria-label="Increase isolated chrome nail count">+</button>
               <label class="cb-all-toggle">
                 <input type="checkbox" data-addon-all="chrome">
-                <span>All nails · $20 · +30 min</span>
+                <span>All nails · $15 · +30 min</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="cb-nailart-item">
+            <div class="cb-nailart-item-head">
+              <span class="cb-card-name">Full chrome</span>
+              <span class="cb-card-meta">$2 / nail · +5 min each</span>
+            </div>
+            <div class="cb-stepper">
+              <button type="button" class="cb-stepper-btn" data-addon="fullChrome" data-dir="-1" aria-label="Decrease full chrome nail count" disabled>−</button>
+              <span class="cb-stepper-value" data-addon-value="fullChrome" aria-live="polite">0</span>
+              <button type="button" class="cb-stepper-btn" data-addon="fullChrome" data-dir="1" aria-label="Increase full chrome nail count">+</button>
+              <label class="cb-all-toggle">
+                <input type="checkbox" data-addon-all="fullChrome">
+                <span>All nails · $15 · +30 min</span>
               </label>
             </div>
           </div>
@@ -166,7 +197,7 @@
               <button type="button" class="cb-stepper-btn" data-addon="aura" data-dir="1" aria-label="Increase aura nails nail count">+</button>
               <label class="cb-all-toggle">
                 <input type="checkbox" data-addon-all="aura">
-                <span>All nails · $20 · +30 min</span>
+                <span>All nails · $15 · +30 min</span>
               </label>
             </div>
           </div>
@@ -182,9 +213,42 @@
               <button type="button" class="cb-stepper-btn" data-addon="rhinestones" data-dir="1" aria-label="Increase rhinestones nail count">+</button>
               <label class="cb-all-toggle">
                 <input type="checkbox" data-addon-all="rhinestones">
-                <span>All nails · $20 · +30 min</span>
+                <span>All nails · $15 · +30 min</span>
               </label>
             </div>
+          </div>
+
+          <div class="cb-nailart-item">
+            <div class="cb-nailart-item-head">
+              <span class="cb-card-name">Nail piercing</span>
+              <span class="cb-card-meta">$2 / nail · +5 min each</span>
+            </div>
+            <div class="cb-stepper">
+              <button type="button" class="cb-stepper-btn" data-addon="nailPiercing" data-dir="-1" aria-label="Decrease nail piercing count" disabled>−</button>
+              <span class="cb-stepper-value" data-addon-value="nailPiercing" aria-live="polite">0</span>
+              <button type="button" class="cb-stepper-btn" data-addon="nailPiercing" data-dir="1" aria-label="Increase nail piercing count">+</button>
+              <label class="cb-all-toggle">
+                <input type="checkbox" data-addon-all="nailPiercing">
+                <span>All nails · $15 · +30 min</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="cb-nailart-item">
+            <div class="cb-nailart-item-head">
+              <span class="cb-card-name">Hand painted designs</span>
+              <span class="cb-card-meta">$2 / nail · +5 min each</span>
+            </div>
+            <div class="cb-stepper">
+              <button type="button" class="cb-stepper-btn" data-addon="handPainted" data-dir="-1" aria-label="Decrease hand painted designs nail count" disabled>−</button>
+              <span class="cb-stepper-value" data-addon-value="handPainted" aria-live="polite">0</span>
+              <button type="button" class="cb-stepper-btn" data-addon="handPainted" data-dir="1" aria-label="Increase hand painted designs nail count">+</button>
+              <label class="cb-all-toggle">
+                <input type="checkbox" data-addon-all="handPainted">
+                <span>All nails · $15 · +30 min</span>
+              </label>
+            </div>
+            <p class="cb-nailart-item-note">For more complex art, please let me know prior to your appointment.</p>
           </div>
         </div>
 
@@ -290,6 +354,6 @@
 
 <script src="js/main.js"></script>
 <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
-<script src="js/custom-booking.js?v=2"></script>
+<script src="js/custom-booking.js?v=5"></script>
 </body>
 </html>

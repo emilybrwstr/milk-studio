@@ -46,10 +46,28 @@ const SERVICES = [
     allowsRemoval: true,
   },
   {
+    id: 'gel-x-full-set-no-overlay',
+    name: 'Gel-X full set',
+    price: 45,
+    duration: 120,
+    allowsLengthUpgrade: true,
+    allowsNailArt: true,
+    allowsRemoval: true,
+  },
+  {
     id: 'refill',
     name: 'Refill',
     price: 40,
     duration: 90,
+    allowsLengthUpgrade: false,
+    allowsNailArt: true,
+    allowsRemoval: false,
+  },
+  {
+    id: 'refill-builder',
+    name: 'Refill',
+    price: 35,
+    duration: 60,
     allowsLengthUpgrade: false,
     allowsNailArt: true,
     allowsRemoval: false,
@@ -74,7 +92,7 @@ const LENGTH_UPGRADES = [
 
 // Flat, stackable nail-art picks — a client can select any combination.
 const FLAT_ART_ITEMS = [
-  { key: 'frenchTip', name: 'French tip', price: 10, duration: 15 },
+  { key: 'frenchTip', name: 'French tip', price: 5, duration: 15 },
   { key: 'catEye', name: 'Cat eye', price: 10, duration: 15 },
 ];
 
@@ -82,9 +100,12 @@ const FLAT_ART_ITEMS = [
 // the flat "all nails" rate (cheaper in time than 10x the per-nail rate,
 // since doing every nail at once is faster per-nail in practice).
 const PER_NAIL_ART_ITEMS = [
-  { key: 'chrome', name: 'Isolated chrome', pricePerNail: 2, durationPerNail: 5, allPrice: 20, allDuration: 30 },
-  { key: 'aura', name: 'Aura nails', pricePerNail: 2, durationPerNail: 5, allPrice: 20, allDuration: 30 },
-  { key: 'rhinestones', name: 'Rhinestones / 3D elements', pricePerNail: 2, durationPerNail: 5, allPrice: 20, allDuration: 30 },
+  { key: 'chrome', name: 'Isolated chrome', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
+  { key: 'fullChrome', name: 'Full chrome', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
+  { key: 'aura', name: 'Aura nails', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
+  { key: 'rhinestones', name: 'Rhinestones / 3D elements', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
+  { key: 'nailPiercing', name: 'Nail piercing', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
+  { key: 'handPainted', name: 'Hand painted designs', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
 ];
 
 // Two mutually exclusive repair options: 1-2 nails within 7 days is free;
@@ -109,8 +130,11 @@ const state = {
   frenchTip: false,
   catEye: false,
   chrome: { qty: 0, all: false },
+  fullChrome: { qty: 0, all: false },
   aura: { qty: 0, all: false },
   rhinestones: { qty: 0, all: false },
+  nailPiercing: { qty: 0, all: false },
+  handPainted: { qty: 0, all: false },
   repairTier: 'free',
   repairPaidQty: 3,
   removalNeeded: false,
@@ -315,6 +339,7 @@ function render() {
 
   updateCardSelectedClasses();
   updatePerNailStepperUI();
+  repairValue.textContent = state.repairPaidQty;
   repairMinus.disabled = state.repairPaidQty <= REPAIR_PAID.min;
   repairPlus.disabled = state.repairPaidQty >= REPAIR_PAID.max;
 
