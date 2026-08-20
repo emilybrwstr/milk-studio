@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Jost:wght@300;400;500;600&family=Pliant:wdth,wght@125,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=51">
+<link rel="stylesheet" href="css/styles.css?v=61">
 </head>
 <body>
 
@@ -97,7 +97,7 @@
           <label class="cb-card">
             <input type="radio" name="service" value="refill-builder">
             <span class="cb-card-name">Refill</span>
-            <span class="cb-card-desc">for your existing builder overlay</span>
+            <span class="cb-card-desc">for your existing builder gel manicure</span>
             <span class="cb-card-meta">$35 · 90 min</span>
           </label>
 
@@ -315,31 +315,15 @@
         </div>
 
         <div class="cb-field" id="repairSection" hidden>
-          <fieldset class="cb-card-group cb-card-group--row" data-group="repair-tier">
-            <legend class="cb-field-label">How many nails need repair?</legend>
-            <label class="cb-card cb-card--sm">
-              <input type="radio" name="repair-tier" value="free" checked>
-              <span class="cb-card-name">Up to 2 nails</span>
-              <span class="cb-card-meta">Free · within 7 days</span>
-            </label>
-            <label class="cb-card cb-card--sm">
-              <input type="radio" name="repair-tier" value="paid">
-              <span class="cb-card-name">3+ nails, or after 7 days</span>
-              <span class="cb-card-meta">$5 / nail · 15 min each</span>
-            </label>
-          </fieldset>
-
-          <div id="repairPaidStepper" hidden>
-            <p class="cb-field-label">How many nails</p>
-            <div class="cb-stepper">
-              <button type="button" class="cb-stepper-btn" id="repairMinus" aria-label="Decrease repair nail count">−</button>
-              <span class="cb-stepper-value" id="repairValue" aria-live="polite">3</span>
-              <button type="button" class="cb-stepper-btn" id="repairPlus" aria-label="Increase repair nail count">+</button>
-              <span class="cb-stepper-note">$5 · 15 min each</span>
-            </div>
+          <p class="cb-field-label">How many nails need repair?</p>
+          <div class="cb-stepper">
+            <button type="button" class="cb-stepper-btn" id="repairMinus" aria-label="Decrease repair nail count">−</button>
+            <span class="cb-stepper-value" id="repairValue" aria-live="polite">2</span>
+            <button type="button" class="cb-stepper-btn" id="repairPlus" aria-label="Increase repair nail count">+</button>
+            <span class="cb-stepper-note">first 2 free · $10/nail after that</span>
           </div>
 
-          <p class="cb-step-sub" style="margin: 10px 0 0;">Free-tier eligibility (1–2 nails, within 7 days of your last appointment) is confirmed when I follow up.</p>
+          <p class="cb-step-sub" style="margin: 10px 0 0;">Free-tier eligibility (first 2 nails, within 7 days of your last appointment) is confirmed when I follow up.</p>
         </div>
 
       </div>
@@ -388,6 +372,6 @@
 
 <script src="js/main.js"></script>
 <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
-<script src="js/custom-booking.js?v=10"></script>
+<script src="js/custom-booking.js?v=12"></script>
 </body>
 </html>

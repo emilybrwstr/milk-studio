@@ -546,50 +546,95 @@ section { padding: 100px 0; }
 }
 .page-cta .btn-ghost:hover { background: var(--pink-soft); color: var(--ink); }
 
-/* ---------- About ---------- */
-.about { background: var(--cream); }
-.about-inner {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 64px;
-  align-items: center;
-}
-.about-copy h2 { margin-bottom: 22px; }
-.about-copy p { max-width: 460px; margin: 0 0 18px; }
-.about-visual {
+/* ---------- About (text-thread reveal) ----------
+   Em's bio told as a DM thread rather than a paragraph — a phone frame
+   with her photo as the contact avatar, the story broken into short
+   bubbles grouped under timestamps, and the tabloid clipping sent mid-
+   conversation as an image attachment. Keeps a long, personal story
+   scannable instead of a wall of text. */
+.about-thread {
   position: relative;
-  height: 360px;
+  background: linear-gradient(180deg, var(--cream-panel), var(--cream) 22%);
+  padding: 100px 20px;
+  display: flex;
+  justify-content: center;
 }
-.about-photo {
-  position: absolute;
-  width: 76%;
-  aspect-ratio: 4 / 5;
-  top: 6%;
-  left: 8%;
-  background: linear-gradient(150deg, var(--pink-soft), var(--pink) 55%, var(--pink-dark));
-  border: 6px solid var(--cream);
-  border-radius: 28px;
-  transform: rotate(-4deg);
-  box-shadow: 0 18px 34px -14px rgba(34, 20, 27, 0.35);
+.about-phone {
+  width: 100%;
+  max-width: 420px;
+  background: var(--cream);
+  border-radius: 32px;
+  border: 8px solid var(--ink);
+  box-shadow: 0 30px 60px -24px rgba(34, 20, 27, 0.4);
+  overflow: hidden;
 }
-.about-chip {
-  position: absolute;
-  bottom: 4%;
-  right: 4%;
-  width: 44%;
-  aspect-ratio: 1.4;
-  background: var(--cream-panel);
-  border-radius: 20px;
-  box-shadow: 0 14px 28px -12px rgba(34, 20, 27, 0.25);
-  transform: rotate(3deg);
+.about-contact {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(34, 20, 27, 0.1);
+  background: var(--cream);
+  position: sticky;
+  top: 0;
+}
+.about-contact img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 20%;
+}
+.about-contact-name {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 1.2rem;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+.about-contact-status {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
   color: var(--pink-dark);
 }
+.about-messages {
+  padding: 22px 16px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.about-msg-time {
+  align-self: center;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 14px 0 6px;
+}
+.about-bubble {
+  align-self: flex-start;
+  max-width: 82%;
+  background: var(--cream-panel);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  padding: 10px 14px;
+  border-radius: 16px 16px 16px 4px;
+}
+.about-bubble--emph {
+  background: var(--pink);
+  color: var(--cream);
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+.about-bubble-img {
+  align-self: flex-start;
+  padding: 6px;
+  background: var(--cream-panel);
+  border-radius: 16px 16px 16px 4px;
+}
+.about-bubble-img img { width: 220px; max-width: 100%; display: block; border-radius: 10px; }
 
 /* ---------- Menu page (pricing.html) ----------
    Scattered sticker graphics (same art as the homepage flip-menu, a fresh
@@ -825,13 +870,9 @@ section { padding: 100px 0; }
   font-size: 0.82rem;
   color: var(--ink-soft);
 }
-.menu-item--sub { padding-left: 22px; }
 .menu-item--sub .menu-item-name {
   color: var(--ink-soft);
   font-size: 0.82rem;
-}
-.menu-item--sub .menu-item-name::before {
-  content: "... ";
 }
 
 .services-note { margin-top: 44px; font-family: var(--font-mono); font-size: 0.85rem; }
@@ -939,6 +980,7 @@ section { padding: 100px 0; }
      space-between, which wraps cleanly. */
   .menu-item-row { justify-content: space-between; }
   .menu-item-leader { display: none; }
+  .menu-item--sub .menu-item-name { font-size: 0.74rem; }
   .gallery-grid { grid-template-columns: 1fr 1fr; }
 }
 
@@ -1321,19 +1363,116 @@ section { padding: 100px 0; }
   .cb-card, .cb-toggle-card, .cb-stepper-btn { transition: none; }
 }
 
-/* ---------- Full-screen "coming soon" placeholder (Archive/Edit/About) ---------- */
-.coming-soon {
-  position: relative;
-  height: 100dvh;
-  box-sizing: border-box;
-  overflow: hidden;
+/* ---------- "Coming soon" content page (Archive/Edit) — "Sticker Wall" ----------
+   A taped-down note card carries the title + intro, tilted and drop-shadowed
+   like a hand-stuck page against a dotted pink backdrop; the coming-soon
+   splat sits beside it as a big sticker with a couple of loose stars/lips
+   scattered around, mirroring the site's other sticker clusters. */
+@font-face {
+  font-family: 'Network';
+  src: url('../fonts/NetworkFreeVersion.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
-.coming-soon img {
-  display: block;
+.coming-soon-page {
+  position: relative;
+  min-height: 100dvh;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: var(--pink-pale);
+  background-image: radial-gradient(circle, rgba(34, 20, 27, 0.06) 1.5px, transparent 1.5px);
+  background-size: 26px 26px;
+}
+.coming-soon-page-inner {
+  position: relative;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(40px, 6vw, 64px);
+  padding: 132px clamp(24px, 6vw, 72px) 64px;
+}
+.coming-soon-page-card {
+  position: relative;
+  flex: 1 1 340px;
+  max-width: 540px;
+  background: var(--cream);
+  border: 3px solid var(--ink);
+  border-radius: 4px;
+  padding: clamp(36px, 4vw, 56px) clamp(28px, 4vw, 52px) clamp(30px, 4vw, 48px);
+  transform: rotate(-2.5deg);
+  box-shadow: 14px 16px 0 rgba(34, 20, 27, 0.9);
+}
+.coming-soon-page-title {
+  font-family: 'Network', var(--font-display);
+  color: var(--ink);
+  font-size: clamp(2.6rem, 7vw, 4.4rem);
+  line-height: 0.85;
+  letter-spacing: 0.01em;
+  margin: 0 0 22px;
+  transform: rotate(-1deg);
+}
+.coming-soon-page-desc p {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  margin: 0 0 14px;
+  max-width: 42ch;
+}
+.coming-soon-page-desc p:last-child { margin-bottom: 0; }
+.coming-soon-page-tape {
+  position: absolute;
+  width: 100px;
+  height: 34px;
+  background: rgba(255, 143, 181, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 8px rgba(34, 20, 27, 0.15);
+}
+.coming-soon-page-tape--tl { top: -18px; left: 30px; transform: rotate(-8deg); }
+.coming-soon-page-tape--br { bottom: -18px; right: 40px; transform: rotate(6deg); }
+.coming-soon-page-art {
+  position: relative;
+  flex: 0 0 auto;
+}
+.coming-soon-page-splat {
+  display: block;
+  width: 598px;
+  max-width: 68vw;
+  height: auto;
+  transform: rotate(6deg);
+  filter: drop-shadow(0 4px 0 var(--cream)) drop-shadow(0 4px 0 var(--cream))
+          drop-shadow(0 18px 30px rgba(34, 20, 27, 0.25));
+}
+.coming-soon-page-sticker {
+  position: absolute;
+  filter: drop-shadow(0 6px 10px rgba(34, 20, 27, 0.25));
+}
+.cs-sticker-1 { width: 70px; top: -40px; left: -30px; transform: rotate(-12deg); }
+.cs-sticker-2 { width: 64px; bottom: -20px; left: -40px; transform: rotate(10deg); }
+.cs-sticker-3 { width: 50px; top: 20%; right: -36px; transform: rotate(18deg); }
+@media (max-width: 760px) {
+  .coming-soon-page { align-items: flex-start; }
+  .coming-soon-page-inner {
+    flex-direction: column-reverse;
+    align-items: center;
+    padding-top: 32px;
+  }
+  .coming-soon-page-card {
+    flex: 0 1 auto;
+    width: 100%;
+    min-width: 0;
+    transform: rotate(-1.5deg);
+  }
+  .coming-soon-page-title { font-size: clamp(2.2rem, 11vw, 3rem); margin-bottom: 16px; }
+  .coming-soon-page-art { width: 100%; max-width: 420px; }
+  .coming-soon-page-splat { width: 100%; max-width: none; }
 }
 
 /* ---------- Portfolio collage (no-scroll, animated stacking) ---------- */

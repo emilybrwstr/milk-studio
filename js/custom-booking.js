@@ -119,12 +119,11 @@ const PER_NAIL_ART_ITEMS = [
   { key: 'handPainted', name: 'Hand painted designs', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
 ];
 
-// Two mutually exclusive repair options: 1-2 nails within 7 days is free;
-// 3+ nails, or any repair after 7 days, is priced per nail regardless of
-// which condition triggered it (the price builder can't know how long ago
-// the original appointment was, so eligibility for the free tier is
-// confirmed by hand when following up).
-const REPAIR_PAID = { pricePerNail: 5, durationPerNail: 15, min: 1, max: 10 };
+// The first 2 nails in a repair booking are free (within 7 days of the
+// original appointment — eligibility is confirmed by hand when following
+// up, since the price builder can't know how long ago that was); any nail
+// beyond those first 2 is charged per-nail on top.
+const REPAIR_PAID = { pricePerNail: 10, durationPerNail: 15, freeNails: 2, min: 1, max: 10 };
 
 // Add-on for removing an existing set on the same visit as a new one — the
 // standalone soak-off tiers live on their own "removal-only" service
@@ -157,8 +156,7 @@ const state = {
   threeDElements: { qty: 0, all: false },
   nailPiercing: { qty: 0, all: false },
   handPainted: { qty: 0, all: false },
-  repairTier: 'free',
-  repairPaidQty: 3,
+  repairQty: 2,
   removalNeeded: false,
   removalTypeId: 'own',
   removalOnlyTypeId: 'own',
@@ -191,17 +189,15 @@ function computeSummary() {
 
   if (service) {
     if (service.isRepair) {
-      // Two mutually exclusive options — replaces the generic base-service
-      // line entirely, rather than adding on top of it.
-      if (state.repairTier === 'free') {
-        add('Repair — up to 2 nails', 0, service.duration);
-      } else {
-        add(
-          `Repair — ${state.repairPaidQty} nail${state.repairPaidQty === 1 ? '' : 's'}`,
-          REPAIR_PAID.pricePerNail * state.repairPaidQty,
-          REPAIR_PAID.durationPerNail * state.repairPaidQty
-        );
-      }
+      // Replaces the generic base-service line entirely: the first
+      // REPAIR_PAID.freeNails are covered by service.duration at no
+      // charge, and any nail beyond that adds its own price/time on top.
+      const paidQty = Math.max(0, state.repairQty - REPAIR_PAID.freeNails);
+      add(
+        `Repair — ${state.repairQty} nail${state.repairQty === 1 ? '' : 's'}`,
+        REPAIR_PAID.pricePerNail * paidQty,
+        service.duration + REPAIR_PAID.durationPerNail * paidQty
+      );
     } else {
       add(service.name, service.price, service.duration);
     }
@@ -265,7 +261,6 @@ const removalToggle = document.getElementById('removalToggle');
 const removalSubchoices = document.getElementById('removalSubchoices');
 const frenchTipToggle = document.getElementById('frenchTipToggle');
 const catEyeToggle = document.getElementById('catEyeToggle');
-const repairPaidStepper = document.getElementById('repairPaidStepper');
 const repairMinus = document.getElementById('repairMinus');
 const repairPlus = document.getElementById('repairPlus');
 const repairValue = document.getElementById('repairValue');
@@ -314,9 +309,7 @@ function applyStateToInputs() {
     if (allBox) allBox.checked = addonState.all;
   });
 
-  const repairTierEl = document.querySelector(`input[name="repair-tier"][value="${state.repairTier}"]`);
-  if (repairTierEl) repairTierEl.checked = true;
-  repairValue.textContent = state.repairPaidQty;
+  repairValue.textContent = state.repairQty;
 
   removalToggle.checked = state.removalNeeded;
   const removalTypeEl = document.querySelector(`input[name="removal-type"][value="${state.removalTypeId}"]`);
@@ -365,7 +358,6 @@ function render() {
   lengthSection.hidden = !(service && service.allowsLengthUpgrade);
   nailArtSection.hidden = !(service && service.allowsNailArt);
   repairSection.hidden = !(service && service.isRepair);
-  repairPaidStepper.hidden = state.repairTier !== 'paid';
   removalSection.hidden = !(service && service.allowsRemoval);
   removalSubchoices.hidden = !state.removalNeeded;
   removalOnlySection.hidden = !(service && service.isRemovalOnly);
@@ -374,9 +366,9 @@ function render() {
 
   updateCardSelectedClasses();
   updatePerNailStepperUI();
-  repairValue.textContent = state.repairPaidQty;
-  repairMinus.disabled = state.repairPaidQty <= REPAIR_PAID.min;
-  repairPlus.disabled = state.repairPaidQty >= REPAIR_PAID.max;
+  repairValue.textContent = state.repairQty;
+  repairMinus.disabled = state.repairQty <= REPAIR_PAID.min;
+  repairPlus.disabled = state.repairQty >= REPAIR_PAID.max;
 
   // Continue/back button state per step
   backBtn.hidden = state.step === 1 || state.step === 4;
@@ -573,19 +565,12 @@ PER_NAIL_ART_ITEMS.forEach((item) => {
   });
 });
 
-document.querySelectorAll('input[name="repair-tier"]').forEach((input) => {
-  input.addEventListener('change', () => {
-    state.repairTier = input.value;
-    render();
-  });
-});
-
 repairMinus.addEventListener('click', () => {
-  state.repairPaidQty = Math.max(REPAIR_PAID.min, state.repairPaidQty - 1);
+  state.repairQty = Math.max(REPAIR_PAID.min, state.repairQty - 1);
   render();
 });
 repairPlus.addEventListener('click', () => {
-  state.repairPaidQty = Math.min(REPAIR_PAID.max, state.repairPaidQty + 1);
+  state.repairQty = Math.min(REPAIR_PAID.max, state.repairQty + 1);
   render();
 });
 
