@@ -49,7 +49,7 @@ const SERVICES = [
     id: 'gel-x-full-set-no-overlay',
     name: 'Gel-X full set',
     price: 45,
-    duration: 120,
+    duration: 90,
     allowsLengthUpgrade: true,
     allowsNailArt: true,
     allowsRemoval: true,
@@ -67,10 +67,20 @@ const SERVICES = [
     id: 'refill-builder',
     name: 'Refill',
     price: 35,
-    duration: 60,
+    duration: 90,
     allowsLengthUpgrade: false,
     allowsNailArt: true,
     allowsRemoval: false,
+  },
+  {
+    id: 'removal-only',
+    name: 'Removal',
+    price: 15,
+    duration: 25,
+    allowsLengthUpgrade: false,
+    allowsNailArt: false,
+    allowsRemoval: false,
+    isRemovalOnly: true,
   },
   {
     id: 'repair',
@@ -103,7 +113,8 @@ const PER_NAIL_ART_ITEMS = [
   { key: 'chrome', name: 'Isolated chrome', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
   { key: 'fullChrome', name: 'Full chrome', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
   { key: 'aura', name: 'Aura nails', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
-  { key: 'rhinestones', name: 'Rhinestones / 3D elements', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
+  { key: 'rhinestones', name: 'Rhinestones', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
+  { key: 'threeDElements', name: '3D elements', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
   { key: 'nailPiercing', name: 'Nail piercing', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
   { key: 'handPainted', name: 'Hand painted designs', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
 ];
@@ -115,10 +126,20 @@ const PER_NAIL_ART_ITEMS = [
 // confirmed by hand when following up).
 const REPAIR_PAID = { pricePerNail: 5, durationPerNail: 15, min: 1, max: 10 };
 
-const REMOVAL_CHOICES = [
-  { id: 'own-bundled', name: 'Removal — my own soft gel, with a new set', priceDelta: 5, durationDelta: 20 },
-  { id: 'own-standalone', name: 'Removal — my own soft gel, soak-off only', priceDelta: 15, durationDelta: 25 },
-  { id: 'other-tech', name: "Removal — another tech's soft gel", priceDelta: 20, durationDelta: 30 },
+// Add-on for removing an existing set on the same visit as a new one — the
+// standalone soak-off tiers live on their own "removal-only" service
+// instead, since they don't need a new set at all.
+const REMOVAL_TYPES = [
+  { id: 'own', name: 'Existing set removal — my own soft gel', priceDelta: 5, durationDelta: 20 },
+  { id: 'other', name: "Existing set removal — another tech's soft gel", priceDelta: 10, durationDelta: 25 },
+];
+
+// Whose gel is being removed, for a removal-only booking (no new set). The
+// base "removal-only" service price/duration already covers "my own soft
+// gel"; this only adds the delta for the other-tech tier.
+const REMOVAL_ONLY_TYPES = [
+  { id: 'own', name: 'My own soft gel', priceDelta: 0, durationDelta: 0 },
+  { id: 'other', name: "Another tech's soft gel", priceDelta: 5, durationDelta: 5 },
 ];
 
 const STORAGE_KEY = 'cb-state';
@@ -133,12 +154,14 @@ const state = {
   fullChrome: { qty: 0, all: false },
   aura: { qty: 0, all: false },
   rhinestones: { qty: 0, all: false },
+  threeDElements: { qty: 0, all: false },
   nailPiercing: { qty: 0, all: false },
   handPainted: { qty: 0, all: false },
   repairTier: 'free',
   repairPaidQty: 3,
   removalNeeded: false,
-  removalChoiceId: null,
+  removalTypeId: 'own',
+  removalOnlyTypeId: 'own',
 };
 
 function formatPrice(n) {
@@ -202,9 +225,14 @@ function computeSummary() {
       });
     }
 
-    if (service.allowsRemoval && state.removalNeeded && state.removalChoiceId) {
-      const r = REMOVAL_CHOICES.find((r) => r.id === state.removalChoiceId);
-      if (r) add(r.name, r.priceDelta, r.durationDelta);
+    if (service.allowsRemoval && state.removalNeeded) {
+      const t = REMOVAL_TYPES.find((t) => t.id === state.removalTypeId) || REMOVAL_TYPES[0];
+      add(t.name, t.priceDelta, t.durationDelta);
+    }
+
+    if (service.isRemovalOnly) {
+      const t = REMOVAL_ONLY_TYPES.find((t) => t.id === state.removalOnlyTypeId) || REMOVAL_ONLY_TYPES[0];
+      if (t.priceDelta || t.durationDelta) add(t.name, t.priceDelta, t.durationDelta);
     }
   }
 
@@ -227,6 +255,9 @@ const summaryDuration = document.getElementById('summaryDuration');
 const backBtn = document.getElementById('backBtn');
 const nextBtn = document.getElementById('nextBtn');
 const lengthSection = document.getElementById('lengthSection');
+const removalOnlySection = document.getElementById('removalOnlySection');
+const step2SubDefault = document.getElementById('step2SubDefault');
+const step2SubRemovalOnly = document.getElementById('step2SubRemovalOnly');
 const nailArtSection = document.getElementById('nailArtSection');
 const repairSection = document.getElementById('repairSection');
 const removalSection = document.getElementById('removalSection');
@@ -288,10 +319,11 @@ function applyStateToInputs() {
   repairValue.textContent = state.repairPaidQty;
 
   removalToggle.checked = state.removalNeeded;
-  if (state.removalChoiceId) {
-    const removalEl = document.querySelector(`input[name="removal-choice"][value="${state.removalChoiceId}"]`);
-    if (removalEl) removalEl.checked = true;
-  }
+  const removalTypeEl = document.querySelector(`input[name="removal-type"][value="${state.removalTypeId}"]`);
+  if (removalTypeEl) removalTypeEl.checked = true;
+
+  const removalOnlyEl = document.querySelector(`input[name="removal-only-type"][value="${state.removalOnlyTypeId}"]`);
+  if (removalOnlyEl) removalOnlyEl.checked = true;
 }
 
 // ---------------------------------------------------------------------------
@@ -336,6 +368,9 @@ function render() {
   repairPaidStepper.hidden = state.repairTier !== 'paid';
   removalSection.hidden = !(service && service.allowsRemoval);
   removalSubchoices.hidden = !state.removalNeeded;
+  removalOnlySection.hidden = !(service && service.isRemovalOnly);
+  step2SubDefault.hidden = !!(service && service.isRemovalOnly);
+  step2SubRemovalOnly.hidden = !(service && service.isRemovalOnly);
 
   updateCardSelectedClasses();
   updatePerNailStepperUI();
@@ -352,7 +387,7 @@ function render() {
     nextBtn.disabled = !state.serviceId;
   } else if (state.step === 2) {
     nextBtn.textContent = 'Continue';
-    nextBtn.disabled = state.removalNeeded && !state.removalChoiceId;
+    nextBtn.disabled = false;
   } else if (state.step === 3) {
     nextBtn.textContent = 'Reserve This Look';
     nextBtn.disabled = false;
@@ -489,6 +524,12 @@ document.querySelectorAll('input[name="service"]').forEach((input) => {
     state.lengthId = 'standard';
     const standard = document.querySelector('input[name="length"][value="standard"]');
     if (standard) standard.checked = true;
+    state.removalOnlyTypeId = 'own';
+    const removalOnlyOwn = document.querySelector('input[name="removal-only-type"][value="own"]');
+    if (removalOnlyOwn) removalOnlyOwn.checked = true;
+    state.removalTypeId = 'own';
+    const removalOwn = document.querySelector('input[name="removal-type"][value="own"]');
+    if (removalOwn) removalOwn.checked = true;
     render();
   });
 });
@@ -496,6 +537,13 @@ document.querySelectorAll('input[name="service"]').forEach((input) => {
 document.querySelectorAll('input[name="length"]').forEach((input) => {
   input.addEventListener('change', () => {
     state.lengthId = input.value;
+    render();
+  });
+});
+
+document.querySelectorAll('input[name="removal-only-type"]').forEach((input) => {
+  input.addEventListener('change', () => {
+    state.removalOnlyTypeId = input.value;
     render();
   });
 });
@@ -543,16 +591,12 @@ repairPlus.addEventListener('click', () => {
 
 removalToggle.addEventListener('change', () => {
   state.removalNeeded = removalToggle.checked;
-  if (!state.removalNeeded) {
-    state.removalChoiceId = null;
-    document.querySelectorAll('input[name="removal-choice"]').forEach((el) => { el.checked = false; });
-  }
   render();
 });
 
-document.querySelectorAll('input[name="removal-choice"]').forEach((input) => {
+document.querySelectorAll('input[name="removal-type"]').forEach((input) => {
   input.addEventListener('change', () => {
-    state.removalChoiceId = input.value;
+    state.removalTypeId = input.value;
     render();
   });
 });

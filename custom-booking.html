@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Jost:wght@300;400;500;600&family=Pliant:wdth,wght@125,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=44">
+<link rel="stylesheet" href="css/styles.css?v=51">
 </head>
 <body>
 
@@ -69,38 +69,43 @@
           <label class="cb-card">
             <input type="radio" name="service" value="builder-gel-manicure">
             <span class="cb-card-name">Builder gel manicure</span>
-            <span class="cb-card-desc">Overlay, no extension</span>
+            <span class="cb-card-desc">overlay, no extension</span>
+            <span class="cb-card-meta">$45 · 90 min</span>
+          </label>
+
+          <label class="cb-card">
+            <input type="radio" name="service" value="gel-x-full-set-no-overlay">
+            <span class="cb-card-name">Gel-X full set</span>
+            <span class="cb-card-desc">no builder gel overlay</span>
             <span class="cb-card-meta">$45 · 90 min</span>
           </label>
 
           <label class="cb-card">
             <input type="radio" name="service" value="gel-x-full-set">
             <span class="cb-card-name">Gel-X full set</span>
-            <span class="cb-card-desc">Short to medium length</span>
+            <span class="cb-card-desc">with builder gel overlay</span>
             <span class="cb-card-meta">$55 · 2 hr</span>
           </label>
 
           <label class="cb-card">
-            <input type="radio" name="service" value="gel-x-full-set-no-overlay">
-            <span class="cb-card-name">Gel-X full set</span>
-            <span class="cb-card-desc">No builder gel overlay</span>
-            <span class="cb-card-meta">$45 · 2 hr</span>
-          </label>
-
-          <!-- Duration is an ESTIMATE — not specified in the real menu, adjust freely -->
-          <label class="cb-card">
             <input type="radio" name="service" value="refill">
             <span class="cb-card-name">Refill</span>
-            <span class="cb-card-desc">For your existing Gel-X set</span>
-            <span class="cb-card-meta">$40 · ~1 hr 15 min</span>
+            <span class="cb-card-desc">for your existing gel-x set</span>
+            <span class="cb-card-meta">$40 · 90 min</span>
           </label>
 
-          <!-- Duration is an ESTIMATE — not specified in the real menu, adjust freely -->
           <label class="cb-card">
             <input type="radio" name="service" value="refill-builder">
             <span class="cb-card-name">Refill</span>
-            <span class="cb-card-desc">For your existing Builder overlay</span>
-            <span class="cb-card-meta">$35 · ~1 hr</span>
+            <span class="cb-card-desc">for your existing builder overlay</span>
+            <span class="cb-card-meta">$35 · 90 min</span>
+          </label>
+
+          <label class="cb-card">
+            <input type="radio" name="service" value="removal-only">
+            <span class="cb-card-name">Removal</span>
+            <span class="cb-card-desc">soak-off only, no new set</span>
+            <span class="cb-card-meta">$15 · 25 min</span>
           </label>
 
           <label class="cb-card">
@@ -115,7 +120,48 @@
       <!-- STEP 2: customize -->
       <div class="cb-step" id="step-2" hidden>
         <h2 class="cb-step-heading" tabindex="-1">Customize your set</h2>
-        <p class="cb-step-sub">Basic colour is included, everything else is optional.</p>
+        <p class="cb-step-sub" id="step2SubDefault">Basic colour is included, everything else is optional.</p>
+        <p class="cb-step-sub" id="step2SubRemovalOnly" hidden>Just let me know whose gel is coming off.</p>
+
+        <div class="cb-field" id="removalSection">
+          <label class="cb-toggle-card">
+            <input type="checkbox" id="removalToggle">
+            <span class="cb-card-name">I want my existing set removed first</span>
+            <span class="cb-card-desc">only if you're currently wearing enhancements</span>
+          </label>
+
+          <div class="cb-subchoice-group" id="removalSubchoices" hidden>
+            <fieldset class="cb-card-group cb-card-group--row" data-group="removal-type">
+              <legend class="sr-only">Whose gel needs removing</legend>
+              <label class="cb-card cb-card--sm">
+                <input type="radio" name="removal-type" value="own" checked>
+                <span class="cb-card-name">My own soft gel</span>
+                <span class="cb-card-meta">+$5 · +20 min</span>
+              </label>
+              <label class="cb-card cb-card--sm">
+                <input type="radio" name="removal-type" value="other">
+                <span class="cb-card-name">Another tech's soft gel</span>
+                <span class="cb-card-meta">+$10 · +25 min</span>
+              </label>
+            </fieldset>
+          </div>
+        </div>
+
+        <div id="removalOnlySection" hidden>
+          <fieldset class="cb-card-group cb-card-group--row" data-group="removal-only-type">
+            <legend class="cb-field-label">Whose gel needs removing</legend>
+            <label class="cb-card cb-card--sm">
+              <input type="radio" name="removal-only-type" value="own" checked>
+              <span class="cb-card-name">My own soft gel</span>
+              <span class="cb-card-meta">Included</span>
+            </label>
+            <label class="cb-card cb-card--sm">
+              <input type="radio" name="removal-only-type" value="other">
+              <span class="cb-card-name">Another tech's soft gel</span>
+              <span class="cb-card-meta">+$5 · +5 min</span>
+            </label>
+          </fieldset>
+        </div>
 
         <div id="lengthSection" hidden>
           <fieldset class="cb-card-group cb-card-group--row" data-group="length">
@@ -157,7 +203,7 @@
           <div class="cb-nailart-item">
             <div class="cb-nailart-item-head">
               <span class="cb-card-name">Isolated chrome</span>
-              <span class="cb-card-meta">$2 / nail · +5 min each</span>
+              <span class="cb-card-meta">$2/nail · +5 min each</span>
             </div>
             <div class="cb-stepper">
               <button type="button" class="cb-stepper-btn" data-addon="chrome" data-dir="-1" aria-label="Decrease isolated chrome nail count" disabled>−</button>
@@ -173,7 +219,7 @@
           <div class="cb-nailart-item">
             <div class="cb-nailart-item-head">
               <span class="cb-card-name">Full chrome</span>
-              <span class="cb-card-meta">$2 / nail · +5 min each</span>
+              <span class="cb-card-meta">$2/nail · +5 min each</span>
             </div>
             <div class="cb-stepper">
               <button type="button" class="cb-stepper-btn" data-addon="fullChrome" data-dir="-1" aria-label="Decrease full chrome nail count" disabled>−</button>
@@ -189,7 +235,7 @@
           <div class="cb-nailart-item">
             <div class="cb-nailart-item-head">
               <span class="cb-card-name">Aura nails</span>
-              <span class="cb-card-meta">$2 / nail · +5 min each</span>
+              <span class="cb-card-meta">$2/nail · +5 min each</span>
             </div>
             <div class="cb-stepper">
               <button type="button" class="cb-stepper-btn" data-addon="aura" data-dir="-1" aria-label="Decrease aura nails nail count" disabled>−</button>
@@ -204,8 +250,8 @@
 
           <div class="cb-nailart-item">
             <div class="cb-nailart-item-head">
-              <span class="cb-card-name">Rhinestones / 3D elements</span>
-              <span class="cb-card-meta">$2 / nail · +5 min each</span>
+              <span class="cb-card-name">Rhinestones</span>
+              <span class="cb-card-meta">$2/nail · +5 min each</span>
             </div>
             <div class="cb-stepper">
               <button type="button" class="cb-stepper-btn" data-addon="rhinestones" data-dir="-1" aria-label="Decrease rhinestones nail count" disabled>−</button>
@@ -220,8 +266,24 @@
 
           <div class="cb-nailart-item">
             <div class="cb-nailart-item-head">
+              <span class="cb-card-name">3D elements</span>
+              <span class="cb-card-meta">$2/nail · +5 min each</span>
+            </div>
+            <div class="cb-stepper">
+              <button type="button" class="cb-stepper-btn" data-addon="threeDElements" data-dir="-1" aria-label="Decrease 3D elements nail count" disabled>−</button>
+              <span class="cb-stepper-value" data-addon-value="threeDElements" aria-live="polite">0</span>
+              <button type="button" class="cb-stepper-btn" data-addon="threeDElements" data-dir="1" aria-label="Increase 3D elements nail count">+</button>
+              <label class="cb-all-toggle">
+                <input type="checkbox" data-addon-all="threeDElements">
+                <span>All nails · $15 · +30 min</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="cb-nailart-item">
+            <div class="cb-nailart-item-head">
               <span class="cb-card-name">Nail piercing</span>
-              <span class="cb-card-meta">$2 / nail · +5 min each</span>
+              <span class="cb-card-meta">$2/nail · +5 min each</span>
             </div>
             <div class="cb-stepper">
               <button type="button" class="cb-stepper-btn" data-addon="nailPiercing" data-dir="-1" aria-label="Decrease nail piercing count" disabled>−</button>
@@ -237,7 +299,7 @@
           <div class="cb-nailart-item">
             <div class="cb-nailart-item-head">
               <span class="cb-card-name">Hand painted designs</span>
-              <span class="cb-card-meta">$2 / nail · +5 min each</span>
+              <span class="cb-card-meta">$2/nail · +5 min each</span>
             </div>
             <div class="cb-stepper">
               <button type="button" class="cb-stepper-btn" data-addon="handPainted" data-dir="-1" aria-label="Decrease hand painted designs nail count" disabled>−</button>
@@ -248,7 +310,7 @@
                 <span>All nails · $15 · +30 min</span>
               </label>
             </div>
-            <p class="cb-nailart-item-note">For more complex art, please let me know prior to your appointment.</p>
+            <p class="cb-nailart-item-note">for more complex art, please let me know prior to your appointment.</p>
           </div>
         </div>
 
@@ -280,34 +342,6 @@
           <p class="cb-step-sub" style="margin: 10px 0 0;">Free-tier eligibility (1–2 nails, within 7 days of your last appointment) is confirmed when I follow up.</p>
         </div>
 
-        <div class="cb-field" id="removalSection">
-          <label class="cb-toggle-card">
-            <input type="checkbox" id="removalToggle">
-            <span class="cb-card-name">I need my existing gel removed first</span>
-            <span class="cb-card-desc">Only if you're currently wearing enhancements</span>
-          </label>
-
-          <div class="cb-subchoice-group" id="removalSubchoices" hidden>
-            <fieldset class="cb-card-group cb-card-group--row" data-group="removal-choice">
-              <legend class="sr-only">Whose gel needs removing</legend>
-              <label class="cb-card cb-card--sm">
-                <input type="radio" name="removal-choice" value="own-bundled">
-                <span class="cb-card-name">My own soft gel</span>
-                <span class="cb-card-meta">With a new set today · $5 · +20 min</span>
-              </label>
-              <label class="cb-card cb-card--sm">
-                <input type="radio" name="removal-choice" value="own-standalone">
-                <span class="cb-card-name">My own soft gel</span>
-                <span class="cb-card-meta">Soak-off only · $15 · +25 min</span>
-              </label>
-              <label class="cb-card cb-card--sm">
-                <input type="radio" name="removal-choice" value="other-tech">
-                <span class="cb-card-name">Another tech's soft gel</span>
-                <span class="cb-card-meta">$20 · +30 min</span>
-              </label>
-            </fieldset>
-          </div>
-        </div>
       </div>
 
       <!-- STEP 3: review -->
@@ -354,6 +388,6 @@
 
 <script src="js/main.js"></script>
 <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
-<script src="js/custom-booking.js?v=5"></script>
+<script src="js/custom-booking.js?v=10"></script>
 </body>
 </html>

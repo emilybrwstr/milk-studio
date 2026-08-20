@@ -825,6 +825,14 @@ section { padding: 100px 0; }
   font-size: 0.82rem;
   color: var(--ink-soft);
 }
+.menu-item--sub { padding-left: 22px; }
+.menu-item--sub .menu-item-name {
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+}
+.menu-item--sub .menu-item-name::before {
+  content: "... ";
+}
 
 .services-note { margin-top: 44px; font-family: var(--font-mono); font-size: 0.85rem; }
 .services-note a { color: var(--pink-dark); text-decoration: underline; text-underline-offset: 3px; }
@@ -1121,7 +1129,10 @@ section { padding: 100px 0; }
 .cb-toggle-card:focus-within { outline: 3px solid var(--pink); outline-offset: 2px; }
 .cb-toggle-card.is-selected { background: var(--pink); box-shadow: 0 14px 26px -14px rgba(255, 90, 145, 0.6); }
 .cb-toggle-card.is-selected .cb-card-name { color: var(--cream); }
+.cb-toggle-card .cb-card-desc { display: block; margin-top: 4px; }
 .cb-toggle-card.is-selected .cb-card-desc { color: rgba(246, 244, 240, 0.82); }
+.cb-toggle-card:not(.cb-toggle-card--sm) .cb-card-meta { display: block; margin-top: 4px; }
+.cb-toggle-card.is-selected .cb-card-meta { color: var(--cream); }
 .cb-toggle-card--sm { padding: 14px 16px; }
 .cb-toggle-card--sm .cb-card-name { font-family: var(--font-display); font-weight: 600; font-size: 0.95rem; }
 .cb-toggle-card--sm .cb-card-meta {
