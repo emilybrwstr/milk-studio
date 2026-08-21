@@ -1,16 +1,28 @@
 // Custom booking builder — service + add-on picker with a live price/duration
-// total. Step 4 hands off to the real Calendly event (a single event type
-// configured with several selectable durations), picking whichever
-// configured duration is closest to the calculated total — actual
-// scheduling, availability, confirmation emails, and reminders are all
-// handled by Calendly itself from that point on.
-const CALENDLY_URL = 'https://calendly.com/milkstudio/gel-x-full-set-clone';
-const CALENDLY_DURATIONS = [120, 180, 240, 300]; // minutes: 2/3/4/5 hr
+// total. Step 4 hands off to the real Calendly event for whichever group the
+// chosen service belongs to (see CALENDLY_GROUPS and each service's
+// `calendlyGroup`), picking whichever of that event's configured durations
+// is closest to the calculated total — actual scheduling, availability,
+// confirmation emails, and reminders are all handled by Calendly from there.
+const CALENDLY_GROUPS = {
+  'gel-manicure': {
+    url: 'https://calendly.com/mikstudio/gelmanicure',
+    durations: [60, 90, 120, 150], // 1 / 1.5 / 2 / 2.5 hr
+  },
+  'gel-x': {
+    url: 'https://calendly.com/mikstudio/gel-x',
+    durations: [150, 210, 270, 330], // 2.5 / 3.5 / 4.5 / 5.5 hr
+  },
+  'repair-removal': {
+    url: 'https://calendly.com/mikstudio/repairremoval',
+    durations: [30, 45, 75, 90], // 30 / 45 / 75 min, 1.5 hr
+  },
+};
 
-function nearestCalendlyDuration(totalMinutes) {
+function nearestCalendlyDuration(totalMinutes, durations) {
   // On an exact tie between two options, prefer the longer one — running
   // short on a booked slot is worse than a little extra buffer.
-  return CALENDLY_DURATIONS.reduce((closest, d) => {
+  return durations.reduce((closest, d) => {
     const diff = Math.abs(d - totalMinutes);
     const closestDiff = Math.abs(closest - totalMinutes);
     return diff < closestDiff || (diff === closestDiff && d > closest) ? d : closest;
@@ -26,6 +38,7 @@ const SERVICES = [
     allowsLengthUpgrade: false,
     allowsNailArt: true,
     allowsRemoval: true,
+    calendlyGroup: 'gel-manicure',
   },
   {
     id: 'builder-gel-manicure',
@@ -35,6 +48,7 @@ const SERVICES = [
     allowsLengthUpgrade: false,
     allowsNailArt: true,
     allowsRemoval: true,
+    calendlyGroup: 'gel-manicure',
   },
   {
     id: 'gel-x-full-set',
@@ -44,6 +58,7 @@ const SERVICES = [
     allowsLengthUpgrade: true,
     allowsNailArt: true,
     allowsRemoval: true,
+    calendlyGroup: 'gel-x',
   },
   {
     id: 'gel-x-full-set-no-overlay',
@@ -53,6 +68,7 @@ const SERVICES = [
     allowsLengthUpgrade: true,
     allowsNailArt: true,
     allowsRemoval: true,
+    calendlyGroup: 'gel-x',
   },
   {
     id: 'refill',
@@ -62,6 +78,7 @@ const SERVICES = [
     allowsLengthUpgrade: false,
     allowsNailArt: true,
     allowsRemoval: false,
+    calendlyGroup: 'gel-x',
   },
   {
     id: 'refill-builder',
@@ -71,6 +88,7 @@ const SERVICES = [
     allowsLengthUpgrade: false,
     allowsNailArt: true,
     allowsRemoval: false,
+    calendlyGroup: 'gel-manicure',
   },
   {
     id: 'removal-only',
@@ -81,6 +99,7 @@ const SERVICES = [
     allowsNailArt: false,
     allowsRemoval: false,
     isRemovalOnly: true,
+    calendlyGroup: 'repair-removal',
   },
   {
     id: 'repair',
@@ -89,6 +108,7 @@ const SERVICES = [
     duration: 30,
     allowsLengthUpgrade: false,
     allowsNailArt: false,
+    calendlyGroup: 'repair-removal',
     allowsRemoval: false,
     isRepair: true,
   },
@@ -445,9 +465,10 @@ function loadCalendlyEmbed() {
   const summary = computeSummary();
   if (!summary.service) return;
 
-  const duration = nearestCalendlyDuration(summary.totalDuration);
+  const group = CALENDLY_GROUPS[summary.service.calendlyGroup];
+  const duration = nearestCalendlyDuration(summary.totalDuration, group.durations);
   const summaryText = buildBookingSummaryText(summary);
-  const url = `${CALENDLY_URL}?duration=${duration}&a2=${encodeURIComponent(summaryText)}`;
+  const url = `${group.url}?duration=${duration}&a2=${encodeURIComponent(summaryText)}`;
   if (calendlyLoadedFor === url) return; // already showing this exact selection
   calendlyLoadedFor = url;
 
