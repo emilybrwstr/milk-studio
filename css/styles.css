@@ -1052,9 +1052,14 @@ section { padding: 100px 0; }
   padding-bottom: 28px;
 }
 
+/* Bottom padding is 0 here on purpose — each .cb-step already reserves
+   its own clearance below its content via padding-bottom (sized to clear
+   the fixed summary bar), so an extra blanket bottom padding on top of
+   that just adds unused scroll height, most visibly on step-3 where the
+   receipt is now precisely height-capped to fit with no slack to spare. */
 .cb-builder {
   background: var(--cream);
-  padding: 96px 0 40px;
+  padding: 96px 0 0;
   --cb-bar-height: 110px;
 }
 @media (max-width: 420px) {
@@ -1295,11 +1300,21 @@ section { padding: 100px 0; }
    art rather than a styled panel, so the review step reads like an
    actual handed-over check. Everything is positioned by percentage
    against the image so it holds up as the receipt scales. */
+/* max-height (not just max-width) is required here — a fixed-size receipt
+   only fits on tall viewports; on a real ~800px-tall desktop window, or on
+   mobile, it simply doesn't fit above the fixed summary bar and forces a
+   scroll no amount of padding-trimming can fix. Capping height to the
+   actual space available (viewport minus the bar and the chrome above the
+   receipt) lets width shrink to match via aspect-ratio, so it always fits. */
 .cb-receipt {
   position: relative;
   max-width: 420px;
+  max-height: calc(100vh - var(--cb-bar-height, 110px) - 178px);
   aspect-ratio: 942 / 1413;
   margin: -20px auto 0;
+}
+@media (max-width: 760px) {
+  .cb-receipt { max-height: calc(100vh - var(--cb-bar-height, 110px) - 170px); }
 }
 .cb-receipt-bg { display: block; width: 100%; height: 100%; }
 
