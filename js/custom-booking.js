@@ -6,15 +6,15 @@
 // confirmation emails, and reminders are all handled by Calendly from there.
 const CALENDLY_GROUPS = {
   'gel-manicure': {
-    url: 'https://calendly.com/mikstudio/gelmanicure',
+    url: 'https://calendly.com/milkstudio/gelmanicure',
     durations: [60, 90, 120, 150], // 1 / 1.5 / 2 / 2.5 hr
   },
   'gel-x': {
-    url: 'https://calendly.com/mikstudio/gel-x',
+    url: 'https://calendly.com/milkstudio/gel-x',
     durations: [150, 210, 270, 330], // 2.5 / 3.5 / 4.5 / 5.5 hr
   },
   'repair-removal': {
-    url: 'https://calendly.com/mikstudio/repairremoval',
+    url: 'https://calendly.com/milkstudio/repairremoval',
     durations: [30, 45, 75, 90], // 30 / 45 / 75 min, 1.5 hr
   },
 };
