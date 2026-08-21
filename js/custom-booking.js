@@ -498,6 +498,28 @@ function loadCalendlyEmbed() {
   }, 150);
 }
 
+// Fits the receipt to whatever room #step-3 actually has, preserving its
+// aspect ratio — see the long comment on .cb-receipt in styles.css for
+// why this is done in JS rather than CSS aspect-ratio/max-height alone.
+const RECEIPT_RATIO = 942 / 1413;
+const receiptEl = document.querySelector('.cb-receipt');
+const step3El = document.getElementById('step-3');
+function sizeReceipt() {
+  if (!receiptEl || !step3El || step3El.hidden) return;
+  const cs = getComputedStyle(step3El);
+  const availW = step3El.clientWidth;
+  const availH = step3El.clientHeight - parseFloat(cs.paddingBottom);
+  let w = Math.min(420, availW);
+  let h = w / RECEIPT_RATIO;
+  if (h > availH) {
+    h = availH;
+    w = h * RECEIPT_RATIO;
+  }
+  receiptEl.style.width = `${w}px`;
+  receiptEl.style.height = `${h}px`;
+}
+window.addEventListener('resize', () => { if (state.step === 3) sizeReceipt(); });
+
 // ---------------------------------------------------------------------------
 // Step navigation
 // ---------------------------------------------------------------------------
@@ -505,7 +527,12 @@ function goToStep(n) {
   state.step = n;
   Object.values(steps).forEach((el) => { el.hidden = true; });
   steps[n].hidden = false;
+  // Only the review step needs its column height-capped to the viewport
+  // (so the receipt shrinks to fit instead of scrolling) — the other
+  // steps have real, sometimes-long content and need to scroll normally.
+  document.querySelector('.cb-builder').classList.toggle('cb-builder--capped', n === 3);
   render();
+  if (n === 3) sizeReceipt();
 
   const heading = steps[n].querySelector('.cb-step-heading, .cb-receipt');
   if (heading) {
@@ -615,4 +642,6 @@ loadState();
 applyStateToInputs();
 Object.values(steps).forEach((el) => { el.hidden = true; });
 steps[state.step].hidden = false;
+document.querySelector('.cb-builder').classList.toggle('cb-builder--capped', state.step === 3);
 render();
+if (state.step === 3) sizeReceipt();

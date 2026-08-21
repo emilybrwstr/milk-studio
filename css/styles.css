@@ -1052,11 +1052,6 @@ section { padding: 100px 0; }
   padding-bottom: 28px;
 }
 
-/* Bottom padding is 0 here on purpose — each .cb-step already reserves
-   its own clearance below its content via padding-bottom (sized to clear
-   the fixed summary bar), so an extra blanket bottom padding on top of
-   that just adds unused scroll height, most visibly on step-3 where the
-   receipt is now precisely height-capped to fit with no slack to spare. */
 .cb-builder {
   background: var(--cream);
   padding: 96px 0 0;
@@ -1068,9 +1063,28 @@ section { padding: 100px 0; }
 @media (max-width: 760px) {
   .cb-builder { padding-top: 88px; }
 }
+.cb-builder .wrap {
+  display: flex;
+  flex-direction: column;
+}
+/* Steps 1/2/4 have real, sometimes-long content and need to scroll
+   normally, so .wrap is only height-capped (a hard ceiling, not a
+   min-height floor — a floor lets content grow past it, which defeats
+   the point) while the review step is showing. custom-booking.js toggles
+   this class in goToStep(). Capping .wrap lets #step-3 (flex: 1 below)
+   fill exactly what's left below the padding-top, so the receipt's
+   max-height:100% sizes against real available room instead of a
+   guessed vh figure, and never has slack left over or gets clipped. */
+.cb-builder--capped .wrap {
+  height: calc(100vh - 96px);
+}
+@media (max-width: 760px) {
+  .cb-builder--capped .wrap { height: calc(100vh - 88px); }
+}
 
 .cb-progress[hidden] { display: none; }
 .cb-progress {
+  flex-shrink: 0;
   display: flex;
   gap: clamp(16px, 4vw, 32px);
   margin-bottom: 48px;
@@ -1089,12 +1103,26 @@ section { padding: 100px 0; }
 /* Step 4 hides the summary bar (it's the terminal step), so it doesn't
    need that reserved space — wastes room the Calendly embed could use. */
 .cb-step#step-4 { padding-bottom: 40px; }
-/* The receipt fit at its normal size already — the scroll came from
-   padding, not the image, so trim the gap above it (progress nav to
-   receipt) instead of shrinking the receipt itself. Still needs to clear
-   the fixed summary bar at the bottom, though — that reserve can't drop
-   below var(--cb-bar-height) or the bar covers the bottom of the check. */
-.cb-step#step-3 { padding-bottom: calc(var(--cb-bar-height, 110px) + 16px); }
+/* Grows to fill whatever's left in the flex column above, and centers
+   the receipt inside that real space; the bar-height padding (inside
+   box-sizing:border-box) carves the reserved strip for the fixed bar out
+   of that same box, so max-height:100% on the receipt sizes it against
+   actual available room instead of a guessed vh figure. */
+.cb-step#step-3 {
+  flex: 1;
+  min-height: 0;
+  box-sizing: border-box;
+  padding-bottom: var(--cb-bar-height, 110px);
+  display: grid;
+  /* An implicit grid row defaults to auto — sized by its content — so
+     without this, the receipt's max-height:100% has nothing bounded to
+     resolve against and the row just grows to fit it instead of the
+     other way around. minmax(0, 1fr) ties the row to the actual
+     available space and lets it shrink below content size. */
+  grid-template-rows: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+}
 .cb-step-heading {
   font-size: clamp(1.8rem, 4vw, 2.4rem);
   outline: none;
@@ -1300,23 +1328,30 @@ section { padding: 100px 0; }
    art rather than a styled panel, so the review step reads like an
    actual handed-over check. Everything is positioned by percentage
    against the image so it holds up as the receipt scales. */
-/* max-height (not just max-width) is required here — a fixed-size receipt
-   only fits on tall viewports; on a real ~800px-tall desktop window, or on
-   mobile, it simply doesn't fit above the fixed summary bar and forces a
-   scroll no amount of padding-trimming can fix. Capping height to the
-   actual space available (viewport minus the bar and the chrome above the
-   receipt) lets width shrink to match via aspect-ratio, so it always fits. */
+/* Every direct approach to "shrink to fit available space, preserving
+   aspect-ratio, as a box with no in-flow content of its own" hit a real
+   CSS edge case: width:auto collapses to 0 (nothing for a non-stretched
+   grid item to size itself from), an explicit width defeats the mutual
+   width+height shrink aspect-ratio is supposed to provide once max-height
+   clamps, and grid's implicit row track is auto-sized (fits content, i.e.
+   doesn't clamp it) even with minmax(0,1fr) fighting it. So this is sized
+   in JS instead (sizeReceipt() in custom-booking.js) — width/height below
+   are just a sane pre-JS fallback. container-type turns it into a query
+   container so its own text (below) can scale off ITS width via cqw
+   instead of the viewport's, once JS sets a real pixel width — otherwise
+   text sized in vw stays put even as this box shrinks to fit a short
+   viewport, and ends up looking oversized for the box it's in. */
 .cb-receipt {
   position: relative;
-  max-width: 420px;
-  max-height: calc(100vh - var(--cb-bar-height, 110px) - 178px);
+  width: 420px;
+  max-width: 100%;
   aspect-ratio: 942 / 1413;
-  margin: -20px auto 0;
+  container-type: inline-size;
 }
-@media (max-width: 760px) {
-  .cb-receipt { max-height: calc(100vh - var(--cb-bar-height, 110px) - 170px); }
-}
-.cb-receipt-bg { display: block; width: 100%; height: 100%; }
+/* Absolutely positioned (not normal-flow width/height:100%) so it can't
+   create a circular sizing loop with .cb-receipt, which sizes itself off
+   this same image's aspect-ratio via max-width/max-height alone. */
+.cb-receipt-bg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
 
 /* The printed check has 4 ruled columns: a thin blank one, the wide
    description column, a narrow price column, then a thin blank one —
@@ -1354,14 +1389,14 @@ section { padding: 100px 0; }
 }
 .cb-receipt-name-line {
   font-family: var(--font-mono);
-  font-size: clamp(0.68rem, 3.1vw, 0.82rem);
+  font-size: clamp(0.5rem, 3.2cqw, 0.82rem);
   color: var(--ink);
   line-height: 1.15;
 }
 .cb-receipt-price-line {
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: clamp(0.68rem, 3.1vw, 0.82rem);
+  font-size: clamp(0.5rem, 3.2cqw, 0.82rem);
   color: var(--ink);
   white-space: nowrap;
 }
@@ -1376,7 +1411,7 @@ section { padding: 100px 0; }
   justify-content: center;
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: clamp(0.85rem, 3.8vw, 1.1rem);
+  font-size: clamp(0.68rem, 4.4cqw, 1.1rem);
   color: var(--ink);
   text-align: center;
 }
