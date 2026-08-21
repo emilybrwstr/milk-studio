@@ -952,7 +952,7 @@ section { padding: 100px 0; }
 .footer-main {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  align-items: start;
+  align-items: center;
   gap: 16px 28px;
 }
 .logo--footer .logo-img { height: 26px; }
@@ -976,17 +976,17 @@ section { padding: 100px 0; }
 .footer-social {
   grid-column: 1;
   grid-row: 1;
-  justify-self: start;
+  justify-self: center;
   display: flex;
   align-items: center;
   gap: 16px;
 }
 .footer-icon {
   display: flex;
-  color: rgba(246, 244, 240, 0.75);
+  color: var(--pink);
   transition: color 0.2s ease, transform 0.2s ease;
 }
-.footer-icon svg { width: 17px; height: 17px; }
+.footer-icon svg { width: 26px; height: 26px; }
 .footer-icon:hover { color: var(--pink-soft); transform: translateY(-2px); }
 
 /* ---------- Reveal animation ---------- */
