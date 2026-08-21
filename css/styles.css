@@ -1108,6 +1108,13 @@ section { padding: 100px 0; }
    box-sizing:border-box) carves the reserved strip for the fixed bar out
    of that same box, so max-height:100% on the receipt sizes it against
    actual available room instead of a guessed vh figure. */
+/* #step-3 (an ID selector) beats the UA stylesheet's [hidden]{display:none}
+   on specificity alone, so the display:grid below was making the receipt
+   render even while [hidden] was set — stacked under whichever step was
+   actually showing, and adding its full height to every step's scroll.
+   This rule must win that fight back: same specificity as #step-3 itself
+   (id + attribute), later in the cascade. */
+.cb-step#step-3[hidden] { display: none; }
 .cb-step#step-3 {
   flex: 1;
   min-height: 0;
@@ -1121,7 +1128,12 @@ section { padding: 100px 0; }
      available space and lets it shrink below content size. */
   grid-template-rows: minmax(0, 1fr);
   grid-template-columns: minmax(0, 1fr);
-  place-items: center;
+  /* Vertical: start, not center — sizeReceipt() sets an explicit
+     margin-top instead, because grid centering here uses step-3's
+     padding-defined content box, which doesn't match the box its sizing
+     math uses (the real gap to the bar's actual position). Horizontal
+     centering is left to grid since there's no equivalent mismatch. */
+  place-items: start center;
 }
 .cb-step-heading {
   font-size: clamp(1.8rem, 4vw, 2.4rem);

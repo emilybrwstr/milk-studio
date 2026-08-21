@@ -504,12 +504,27 @@ function loadCalendlyEmbed() {
 const RECEIPT_RATIO = 942 / 1413;
 const receiptEl = document.querySelector('.cb-receipt');
 const step3El = document.getElementById('step-3');
+// No fixed max-width — the receipt scales with whatever room is actually
+// available, always keeping this much breathing room on the tighter axis
+// rather than either a hard-capped size (leaves a big unused gap on
+// tall/wide viewports) or filling edge-to-edge (leaves none). Both the
+// size AND the vertical position are measured against the bar's real
+// position — not step-3's padding-bottom reserve, which is sized
+// generously as a safety margin and rarely matches the bar's actual
+// rendered height, so letting CSS grid centering use that padding-defined
+// box (a different box than "step-3's top to the bar's real top") landed
+// the receipt off-center by that same mismatch. Horizontal centering is
+// still left to CSS (see place-items on #step-3) since there's no
+// equivalent horizontal mismatch.
+const RECEIPT_GAP = 30;
 function sizeReceipt() {
   if (!receiptEl || !step3El || step3El.hidden) return;
-  const cs = getComputedStyle(step3El);
-  const availW = step3El.clientWidth;
-  const availH = step3El.clientHeight - parseFloat(cs.paddingBottom);
-  let w = Math.min(420, availW);
+  const step3Rect = step3El.getBoundingClientRect();
+  const barRect = summaryBar.getBoundingClientRect();
+  const trueAvailH = barRect.top - step3Rect.top;
+  const availW = step3Rect.width - RECEIPT_GAP * 2;
+  const availH = trueAvailH - RECEIPT_GAP * 2;
+  let w = availW;
   let h = w / RECEIPT_RATIO;
   if (h > availH) {
     h = availH;
@@ -517,6 +532,7 @@ function sizeReceipt() {
   }
   receiptEl.style.width = `${w}px`;
   receiptEl.style.height = `${h}px`;
+  receiptEl.style.marginTop = `${(trueAvailH - h) / 2}px`;
 }
 window.addEventListener('resize', () => { if (state.step === 3) sizeReceipt(); });
 
@@ -532,14 +548,20 @@ function goToStep(n) {
   // steps have real, sometimes-long content and need to scroll normally.
   document.querySelector('.cb-builder').classList.toggle('cb-builder--capped', n === 3);
   render();
-  if (n === 3) sizeReceipt();
 
   const heading = steps[n].querySelector('.cb-step-heading, .cb-receipt');
   if (heading) {
     heading.setAttribute('tabindex', '-1');
     heading.focus({ preventScroll: true });
   }
-  steps[n].scrollIntoView({ block: 'start', behavior: reducesMotion ? 'auto' : 'smooth' });
+  // sizeReceipt() measures step-3's gap to the fixed summary bar, which
+  // depends on scroll position (step-3 is normal-flow, the bar isn't) —
+  // so it has to run after the scroll actually lands, not before. A smooth
+  // scroll animates over the next several frames, so step 3 forces an
+  // instant one instead: it's already applied by the time the next line
+  // runs, where a smooth scroll wouldn't be yet.
+  steps[n].scrollIntoView({ block: 'start', behavior: n === 3 ? 'auto' : (reducesMotion ? 'auto' : 'smooth') });
+  if (n === 3) sizeReceipt();
 
   if (n === 4) {
     try { sessionStorage.removeItem(STORAGE_KEY); } catch (_) {}
