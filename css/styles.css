@@ -1338,14 +1338,14 @@ section { padding: 100px 0; }
 }
 .cb-receipt-name-line {
   font-family: var(--font-mono);
-  font-size: clamp(0.5rem, 2.2vw, 0.68rem);
+  font-size: clamp(0.68rem, 3.1vw, 0.82rem);
   color: var(--ink);
-  line-height: 1.1;
+  line-height: 1.15;
 }
 .cb-receipt-price-line {
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: clamp(0.5rem, 2.2vw, 0.68rem);
+  font-size: clamp(0.68rem, 3.1vw, 0.82rem);
   color: var(--ink);
   white-space: nowrap;
 }
@@ -1360,7 +1360,7 @@ section { padding: 100px 0; }
   justify-content: center;
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: clamp(0.7rem, 3.2vw, 0.95rem);
+  font-size: clamp(0.85rem, 3.8vw, 1.1rem);
   color: var(--ink);
   text-align: center;
 }

@@ -10,6 +10,9 @@
   if (reducesMotion) return;
 
   const TYPING_MS = 2000;
+  // Everything after the "i've been doing nail art since..." bubble
+  // (marked #aboutPaceSlow) slows to a longer typing beat.
+  const TYPING_MS_SLOW = 4000;
   const GAP_MS = 250;
   const DIVIDER_PAUSE_MS = 450;
 
@@ -24,6 +27,7 @@
   const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   async function playback() {
+    let typingMs = TYPING_MS;
     for (const el of items) {
       if (el.classList.contains('about-msg-time')) {
         await wait(DIVIDER_PAUSE_MS);
@@ -35,12 +39,14 @@
       container.insertBefore(typing, el);
       typing.style.display = '';
       typing.scrollIntoView({ behavior: 'smooth', block: 'end' });
-      await wait(TYPING_MS);
+      await wait(typingMs);
       typing.style.display = 'none';
 
       el.style.display = '';
       el.scrollIntoView({ behavior: 'smooth', block: 'end' });
       await wait(GAP_MS);
+
+      if (el.id === 'aboutPaceSlow') typingMs = TYPING_MS_SLOW;
     }
     typing.remove();
   }
