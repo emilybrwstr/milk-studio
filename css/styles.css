@@ -1086,9 +1086,10 @@ section { padding: 100px 0; }
 .cb-step#step-4 { padding-bottom: 40px; }
 /* The receipt fit at its normal size already — the scroll came from
    padding, not the image, so trim the gap above it (progress nav to
-   receipt) and below it (receipt to the fixed bar) instead of shrinking
-   the receipt itself. */
-.cb-step#step-3 { padding-bottom: 8px; }
+   receipt) instead of shrinking the receipt itself. Still needs to clear
+   the fixed summary bar at the bottom, though — that reserve can't drop
+   below var(--cb-bar-height) or the bar covers the bottom of the check. */
+.cb-step#step-3 { padding-bottom: calc(var(--cb-bar-height, 110px) + 16px); }
 .cb-step-heading {
   font-size: clamp(1.8rem, 4vw, 2.4rem);
   outline: none;
