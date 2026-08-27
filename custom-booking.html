@@ -19,9 +19,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Jost:wght@300;400;500;600&family=Pliant:wdth,wght@125,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=94">
+<link rel="stylesheet" href="css/styles.css?v=113">
 </head>
 <body>
+<div class="safari-tint safari-tint--top" aria-hidden="true"></div>
+<div class="safari-tint safari-tint--bottom" aria-hidden="true"></div>
 
 <a class="skip-link" href="#main">Skip to content</a>
 
@@ -92,8 +94,8 @@
           <label class="cb-card">
             <input type="radio" name="service" value="refill">
             <span class="cb-card-name">Refill</span>
-            <span class="cb-card-desc">for your existing gel-x set</span>
-            <span class="cb-card-meta">$40 · 90 min</span>
+            <span class="cb-card-desc">for a gel-x set with gel overlay</span>
+            <span class="cb-card-meta">$45 · 90 min</span>
           </label>
 
           <label class="cb-card">
@@ -192,7 +194,7 @@
             <label class="cb-toggle-card cb-toggle-card--sm">
               <input type="checkbox" id="frenchTipToggle">
               <span class="cb-card-name">French tip</span>
-              <span class="cb-card-meta">$5 · 15 min</span>
+              <span class="cb-card-meta">$10 · 15 min</span>
             </label>
             <label class="cb-toggle-card cb-toggle-card--sm">
               <input type="checkbox" id="catEyeToggle">
@@ -251,13 +253,29 @@
 
           <div class="cb-nailart-item">
             <div class="cb-nailart-item-head">
-              <span class="cb-card-name">Rhinestones</span>
+              <span class="cb-card-name">Ombré nails</span>
               <span class="cb-card-meta">$2/nail · +5 min each</span>
             </div>
             <div class="cb-stepper">
-              <button type="button" class="cb-stepper-btn" data-addon="rhinestones" data-dir="-1" aria-label="Decrease rhinestones nail count" disabled>−</button>
+              <button type="button" class="cb-stepper-btn" data-addon="ombre" data-dir="-1" aria-label="Decrease ombre nails nail count" disabled>−</button>
+              <span class="cb-stepper-value" data-addon-value="ombre" aria-live="polite">0</span>
+              <button type="button" class="cb-stepper-btn" data-addon="ombre" data-dir="1" aria-label="Increase ombre nails nail count">+</button>
+              <label class="cb-all-toggle">
+                <input type="checkbox" data-addon-all="ombre">
+                <span>All nails · $15 · +30 min</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="cb-nailart-item">
+            <div class="cb-nailart-item-head">
+              <span class="cb-card-name">Nail gems</span>
+              <span class="cb-card-meta">$2/nail · +5 min each</span>
+            </div>
+            <div class="cb-stepper">
+              <button type="button" class="cb-stepper-btn" data-addon="rhinestones" data-dir="-1" aria-label="Decrease nail gems nail count" disabled>−</button>
               <span class="cb-stepper-value" data-addon-value="rhinestones" aria-live="polite">0</span>
-              <button type="button" class="cb-stepper-btn" data-addon="rhinestones" data-dir="1" aria-label="Increase rhinestones nail count">+</button>
+              <button type="button" class="cb-stepper-btn" data-addon="rhinestones" data-dir="1" aria-label="Increase nail gems nail count">+</button>
               <label class="cb-all-toggle">
                 <input type="checkbox" data-addon-all="rhinestones">
                 <span>All nails · $15 · +30 min</span>
@@ -299,19 +317,35 @@
 
           <div class="cb-nailart-item">
             <div class="cb-nailart-item-head">
-              <span class="cb-card-name">Hand painted designs</span>
+              <span class="cb-card-name">Hand painted — simple</span>
               <span class="cb-card-meta">$2/nail · +5 min each</span>
             </div>
             <div class="cb-stepper">
-              <button type="button" class="cb-stepper-btn" data-addon="handPainted" data-dir="-1" aria-label="Decrease hand painted designs nail count" disabled>−</button>
+              <button type="button" class="cb-stepper-btn" data-addon="handPainted" data-dir="-1" aria-label="Decrease hand painted simple nail count" disabled>−</button>
               <span class="cb-stepper-value" data-addon-value="handPainted" aria-live="polite">0</span>
-              <button type="button" class="cb-stepper-btn" data-addon="handPainted" data-dir="1" aria-label="Increase hand painted designs nail count">+</button>
+              <button type="button" class="cb-stepper-btn" data-addon="handPainted" data-dir="1" aria-label="Increase hand painted simple nail count">+</button>
               <label class="cb-all-toggle">
                 <input type="checkbox" data-addon-all="handPainted">
                 <span>All nails · $15 · +30 min</span>
               </label>
             </div>
-            <p class="cb-nailart-item-note">for more complex art, please let me know prior to your appointment.</p>
+          </div>
+
+          <div class="cb-nailart-item">
+            <div class="cb-nailart-item-head">
+              <span class="cb-card-name">Hand painted — complex</span>
+              <span class="cb-card-meta">$4/nail · +5 min each</span>
+            </div>
+            <div class="cb-stepper">
+              <button type="button" class="cb-stepper-btn" data-addon="handPaintedComplex" data-dir="-1" aria-label="Decrease hand painted complex nail count" disabled>−</button>
+              <span class="cb-stepper-value" data-addon-value="handPaintedComplex" aria-live="polite">0</span>
+              <button type="button" class="cb-stepper-btn" data-addon="handPaintedComplex" data-dir="1" aria-label="Increase hand painted complex nail count">+</button>
+              <label class="cb-all-toggle">
+                <input type="checkbox" data-addon-all="handPaintedComplex">
+                <span>All nails · $35 · +30 min</span>
+              </label>
+            </div>
+            <p class="cb-nailart-item-note">let me know prior to your appointment if your design is complex.</p>
           </div>
         </div>
 
@@ -321,10 +355,15 @@
             <button type="button" class="cb-stepper-btn" id="repairMinus" aria-label="Decrease repair nail count">−</button>
             <span class="cb-stepper-value" id="repairValue" aria-live="polite">2</span>
             <button type="button" class="cb-stepper-btn" id="repairPlus" aria-label="Increase repair nail count">+</button>
-            <span class="cb-stepper-note">first 2 free · $10/nail after that</span>
+            <span class="cb-stepper-note" id="repairStepperNote">first 2 free · $10/nail after that</span>
           </div>
 
-          <p class="cb-step-sub" style="margin: 10px 0 0;">Free-tier eligibility (first 2 nails, within 7 days of your last appointment) is confirmed when I follow up.</p>
+          <label class="cb-toggle-card" style="margin-top: 14px;">
+            <input type="checkbox" id="repairOver7Toggle">
+            <span class="cb-card-name">It's been more than 7 days since my last appointment</span>
+          </label>
+
+          <p class="cb-step-sub" style="margin: 10px 0 0;">Free-tier eligibility is confirmed when I follow up.</p>
         </div>
 
       </div>
@@ -333,6 +372,8 @@
       <div class="cb-step" id="step-3" hidden>
         <div class="cb-receipt" tabindex="-1">
           <img src="images/guestcheck.png" alt="Guest check receipt" class="cb-receipt-bg">
+          <div class="cb-receipt-server" id="reviewEditServer" hidden>THE EDIT</div>
+          <div class="cb-receipt-table" id="reviewEditTable" hidden></div>
           <div class="cb-receipt-names" id="reviewNames"></div>
           <div class="cb-receipt-prices" id="reviewPrices"></div>
           <div class="cb-receipt-total" id="reviewTotalPrice">$0</div>
@@ -367,6 +408,6 @@
 
 <script src="js/main.js"></script>
 <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
-<script src="js/custom-booking.js?v=23"></script>
+<script src="js/custom-booking.js?v=28"></script>
 </body>
 </html>

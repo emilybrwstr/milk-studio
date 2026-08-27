@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Archive — cinema mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Jost:wght@300;400;500;600&family=Pliant:wdth,wght@125,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css?v=104">
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    overflow-x: hidden;
+    background: #0c0709;
+    cursor: none;
+  }
+  .site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: rgba(12,7,9,0.35); backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .site-header .main-nav a { color: rgba(255,255,255,0.65); }
+  .site-header .main-nav a[aria-current="page"] { color: var(--pink-soft); }
+  .site-header .logo-img { filter: brightness(0) invert(1); }
+
+  /* ---------- Custom cursor ---------- */
+  .cine-cursor {
+    position: fixed; top: 0; left: 0; z-index: 999; pointer-events: none;
+    width: 64px; height: 64px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.5);
+    color: #fff; font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+    transform: translate(-50%, -50%) scale(0.001);
+    transition: transform 0.25s cubic-bezier(.2,.8,.2,1), background 0.25s ease;
+    mix-blend-mode: difference;
+  }
+  .cine-cursor.is-visible { transform: translate(-50%, -50%) scale(1); }
+
+  .cine-scroller { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; }
+  .chapter {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    scroll-snap-align: start;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+
+  /* ---------- Intro chapter ---------- */
+  .chapter--intro {
+    align-items: center; justify-content: center; text-align: center; flex-direction: column; gap: 18px;
+    background: radial-gradient(ellipse at 50% 30%, #221217 0%, #0c0709 70%);
+  }
+  .intro-eyebrow { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--pink-soft); margin: 0; }
+  .intro-title {
+    font-family: var(--font-title); font-weight: 400; font-size: clamp(3.4rem, 12vw, 8rem);
+    color: #fdf3ec; margin: 0; line-height: 0.92;
+  }
+  .intro-sub { font-family: var(--font-sans); font-size: 1rem; color: rgba(255,255,255,0.55); max-width: 40ch; margin: 6px 0 0; line-height: 1.6; }
+  .intro-scroll {
+    margin-top: 30px; display: flex; flex-direction: column; align-items: center; gap: 8px;
+    font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.4);
+    animation: bob 1.8s ease-in-out infinite;
+  }
+  .intro-scroll-line { width: 1px; height: 34px; background: linear-gradient(180deg, rgba(255,255,255,0.6), transparent); }
+  @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+
+  /* ---------- Look chapters ---------- */
+  .chapter-bg { position: absolute; inset: 0; overflow: hidden; }
+  .chapter-bg img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transform: scale(1.18); filter: blur(6px) brightness(0.8) saturate(1.05);
+    transition: transform 1.4s cubic-bezier(.16,.8,.2,1), filter 1.4s ease;
+  }
+  .chapter.is-active .chapter-bg img { transform: scale(1); filter: blur(0) brightness(1) saturate(1.08); }
+  .chapter-scrim {
+    position: absolute; inset: 0;
+    background: linear-gradient(0deg, rgba(8,4,5,0.92) 0%, rgba(8,4,5,0.35) 42%, rgba(8,4,5,0.05) 65%);
+  }
+
+  .chapter-body {
+    position: relative; z-index: 2;
+    width: 100%;
+    padding: 0 6vw 8vh;
+    display: flex; flex-direction: column; gap: 14px;
+    opacity: 0; transform: translateY(28px);
+    transition: opacity 0.9s ease 0.25s, transform 0.9s cubic-bezier(.2,.8,.2,1) 0.25s;
+  }
+  .chapter.is-active .chapter-body { opacity: 1; transform: translateY(0); }
+
+  .chapter-index { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.2em; color: var(--pink-soft); text-transform: uppercase; }
+  .chapter-title {
+    font-family: var(--font-title); font-weight: 400; font-size: clamp(2.6rem, 8vw, 5.5rem);
+    color: #fdf3ec; margin: 0; line-height: 0.95; text-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  }
+  .chapter-note { font-family: var(--font-sans); font-size: 1rem; color: rgba(255,255,255,0.75); max-width: 42ch; margin: 0; }
+  .chapter-actions { display: flex; align-items: center; gap: 16px; margin-top: 8px; }
+  .chapter-cta {
+    font-family: var(--font-display); font-weight: 700; font-size: 0.8rem; text-transform: uppercase;
+    letter-spacing: 0.03em; color: #2a1015; background: linear-gradient(180deg, #ffe4ee, var(--pink-soft));
+    padding: 13px 24px; border-radius: 999px; text-decoration: none;
+    box-shadow: 0 10px 24px rgba(255,143,181,0.3);
+  }
+  .chapter-count { font-family: var(--font-mono); font-size: 0.72rem; color: rgba(255,255,255,0.45); letter-spacing: 0.08em; }
+
+  /* ---------- Progress rail ---------- */
+  .cine-rail {
+    position: fixed; right: 26px; top: 50%; transform: translateY(-50%); z-index: 40;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .cine-rail-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.3);
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+  .cine-rail-dot.is-active { background: var(--pink-soft); transform: scale(1.6); }
+  @media (max-width: 640px) { .cine-rail { display: none; } }
+
+  /* ---------- Final chapter ---------- */
+  .chapter--end {
+    align-items: center; justify-content: center; text-align: center; flex-direction: column; gap: 16px;
+    background: radial-gradient(ellipse at 50% 60%, #241318 0%, #0c0709 70%);
+  }
+  .end-title { font-family: var(--font-title); font-weight: 400; font-size: clamp(2.4rem, 7vw, 4rem); color: #fdf3ec; margin: 0; }
+  .end-sub { font-family: var(--font-sans); color: rgba(255,255,255,0.6); max-width: 38ch; line-height: 1.6; margin: 0; }
+  .end-cta {
+    margin-top: 14px; font-family: var(--font-display); font-weight: 700; font-size: 0.85rem; text-transform: uppercase;
+    color: #fff; background: var(--pink); padding: 15px 30px; border-radius: 999px; text-decoration: none;
+    box-shadow: 0 12px 26px rgba(255,90,145,0.35);
+  }
+</style>
+</head>
+<body>
+
+<div class="cine-cursor" id="cineCursor">view</div>
+
+<header class="site-header" id="siteHeader">
+  <div class="wrap header-inner">
+    <nav class="main-nav" id="mainNav" aria-label="Primary">
+      <div class="nav-group">
+        <a href="pricing.html">Menu</a>
+        <a href="presets.html">The Edit</a>
+      </div>
+      <a href="index.html#top" class="logo" aria-label="milk studio home">
+        <img src="images/milk-logo.png?v=2" alt="milk studio" class="logo-img">
+      </a>
+      <div class="nav-group">
+        <a href="portfolio.html" aria-current="page">The Archive</a>
+        <a href="about.html">About</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="cine-rail" id="cineRail"></div>
+
+<div class="cine-scroller" id="cineScroller">
+  <section class="chapter chapter--intro" data-rail-skip>
+    <p class="intro-eyebrow">Mockup — the cinema cut (using the edit's photos as a stand-in)</p>
+    <h1 class="intro-title">the archive</h1>
+    <p class="intro-sub">every set that's actually left the studio, full-screen and unskippable &#9825;</p>
+    <div class="intro-scroll"><span>scroll</span><span class="intro-scroll-line"></span></div>
+  </section>
+
+  <div id="cineChapters"></div>
+
+  <section class="chapter chapter--end" data-rail-skip>
+    <h2 class="end-title">that's the archive &#9825;</h2>
+    <p class="end-sub">for now — new sets get added the moment they're done. want yours in it next?</p>
+    <a class="end-cta" href="custom-booking.html">&#9733; Build Your Set</a>
+  </section>
+</div>
+
+<script>
+const LOOKS = [
+  { img: 'images/the-edit/IMG_7950.JPG', title: 'emerald cage', note: 'stiletto claws wrapped in liquid chrome.' },
+  { img: 'images/the-edit/IMG_7958.JPG', title: 'gothic bloom', note: 'blood red jelly against liquid metal swirls.' },
+  { img: 'images/the-edit/IMG_7952.JPG', title: 'chrome reverie', note: 'blushed pink melting into mirrored chrome, slay.' },
+  { img: 'images/the-edit/IMG_7962.JPG', title: 'liquid mercury', note: 'basically a mirror at this point.' },
+  { img: 'images/the-edit/IMG_7967.JPG', title: 'honey chrome', note: 'ombré gold chrome, need i say more?' },
+  { img: 'images/the-edit/IMG_7971.JPG', title: 'gilded muse', note: 'hand-laid gold filigree over warm cream.' },
+  { img: 'images/the-edit/IMG_7969.JPG', title: 'renegade', note: "rhinestones, a real nail piercing, snakeskin — not for the faint of heart." },
+];
+
+const chapters = document.getElementById('cineChapters');
+const rail = document.getElementById('cineRail');
+
+LOOKS.forEach((look, i) => {
+  const section = document.createElement('section');
+  section.className = 'chapter';
+  section.innerHTML = `
+    <div class="chapter-bg"><img src="${look.img}" alt="${look.title}" loading="${i === 0 ? 'eager' : 'lazy'}"></div>
+    <div class="chapter-scrim"></div>
+    <div class="chapter-body">
+      <span class="chapter-index">Look ${String(i + 1).padStart(2, '0')} / ${String(LOOKS.length).padStart(2, '0')}</span>
+      <h2 class="chapter-title">${look.title}</h2>
+      <p class="chapter-note">${look.note}</p>
+      <div class="chapter-actions">
+        <a class="chapter-cta" href="custom-booking.html">Want Something Like This?</a>
+      </div>
+    </div>
+  `;
+  chapters.appendChild(section);
+
+  const dot = document.createElement('div');
+  dot.className = 'cine-rail-dot';
+  dot.dataset.index = i;
+  rail.appendChild(dot);
+});
+
+const allChapterEls = document.querySelectorAll('.chapter:not([data-rail-skip])');
+const railDots = document.querySelectorAll('.cine-rail-dot');
+
+const io = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    entry.target.classList.toggle('is-active', entry.isIntersecting);
+    if (entry.isIntersecting) {
+      const idx = [...allChapterEls].indexOf(entry.target);
+      railDots.forEach((d, i) => d.classList.toggle('is-active', i === idx));
+    }
+  });
+}, { threshold: 0.6 });
+allChapterEls.forEach((c) => io.observe(c));
+
+// Custom "view" cursor — only shown over photo chapters, hidden elsewhere.
+const cursor = document.getElementById('cineCursor');
+document.addEventListener('mousemove', (e) => {
+  cursor.style.left = `${e.clientX}px`;
+  cursor.style.top = `${e.clientY}px`;
+  const overChapter = e.target.closest('.chapter') && !e.target.closest('.chapter--intro') && !e.target.closest('.chapter--end') && !e.target.closest('a');
+  cursor.classList.toggle('is-visible', !!overChapter);
+});
+document.addEventListener('mouseleave', () => cursor.classList.remove('is-visible'));
+
+// Clicking anywhere on a look chapter (not the CTA itself) also opens the CTA link.
+allChapterEls.forEach((section) => {
+  section.addEventListener('click', (e) => {
+    if (e.target.closest('a')) return;
+    window.location.href = 'custom-booking.html';
+  });
+});
+</script>
+</body>
+</html>

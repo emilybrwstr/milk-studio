@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Archive — the gallery wall</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Jost:wght@300;400;500;600&family=Pliant:wdth,wght@125,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css?v=104">
+<style>
+  * { box-sizing: border-box; }
+  body { background: #ece4d8; overflow-x: hidden; }
+
+  /* ============ DOOR SCENE ============ */
+  .door-scene {
+    position: fixed; inset: 0; z-index: 300;
+    perspective: 2400px;
+    background: #0e0704;
+  }
+  .door-scene.is-open { pointer-events: none; }
+  .door-frame {
+    position: absolute; inset: 0;
+    display: flex;
+    transform-style: preserve-3d;
+  }
+  .door-panel {
+    position: relative;
+    width: 50%; height: 100%;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,0.25) 0%, transparent 6%, transparent 94%, rgba(0,0,0,0.3) 100%),
+      repeating-linear-gradient(90deg, #5a3a22 0px, #6b4527 14px, #52341e 26px, #6b4527 40px, #5a3a22 54px);
+    box-shadow: inset 0 0 80px rgba(0,0,0,0.6);
+    transition: transform 1.3s cubic-bezier(.7,0,.3,1);
+    transform-style: preserve-3d;
+  }
+  .door-panel::before {
+    /* raised inset panel molding, top block */
+    content: ''; position: absolute; top: 8%; left: 14%; right: 14%; height: 34%;
+    border: 6px solid rgba(0,0,0,0.35);
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.08);
+    border-radius: 3px;
+  }
+  .door-panel::after {
+    /* raised inset panel molding, bottom block */
+    content: ''; position: absolute; bottom: 8%; left: 14%; right: 14%; height: 42%;
+    border: 6px solid rgba(0,0,0,0.35);
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.08);
+    border-radius: 3px;
+  }
+  .door-left { transform-origin: left center; }
+  .door-right { transform-origin: right center; }
+  .door-scene.is-open .door-left { transform: rotateY(-112deg); }
+  .door-scene.is-open .door-right { transform: rotateY(112deg); }
+
+  .door-knob {
+    position: absolute; top: 50%; width: 16px; height: 16px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff2c9 0%, #d8a83e 35%, #8a6218 75%, #4d3608 100%);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.6);
+  }
+  .door-left .door-knob { right: 8%; }
+  .door-right .door-knob { left: 8%; }
+
+  .door-welcome {
+    position: absolute; inset: 0; z-index: 2;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+    text-align: center; padding: 24px;
+    transition: opacity 0.5s ease;
+  }
+  .door-scene.is-open .door-welcome { opacity: 0; }
+  .door-eyebrow {
+    font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: rgba(255,225,180,0.7); margin: 0;
+  }
+  .door-title {
+    font-family: var(--font-title); font-weight: 400; font-size: clamp(2.4rem, 7vw, 4.2rem);
+    color: #fdf3e2; margin: 0; line-height: 1.05;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+  }
+  .door-enter {
+    margin-top: 10px;
+    font-family: var(--font-display); font-weight: 700; font-size: 0.82rem; text-transform: uppercase;
+    letter-spacing: 0.05em; color: #2a1a0d; background: linear-gradient(180deg, #f4e2b8, #d8a83e);
+    border: none; padding: 14px 30px; border-radius: 999px; cursor: pointer;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.6);
+  }
+
+  /* ============ HEADER (behind the door) ============ */
+  .site-header { background: #ece4d8; }
+
+  /* ============ GALLERY WALL ============ */
+  .arc-page { max-width: 1180px; margin: 0 auto; padding: 48px 24px 20px; }
+  .arc-head { text-align: center; margin-bottom: 40px; }
+  .arc-eyebrow2 {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--pink-dark); margin: 0 0 12px;
+  }
+  .arc-title2 {
+    font-family: var(--font-title); font-weight: 400; font-size: clamp(2.6rem, 6vw, 4rem);
+    color: var(--ink); margin: 0 0 14px;
+  }
+  .arc-sub2 {
+    font-family: var(--font-sans); font-size: 0.95rem; color: var(--ink-soft);
+    max-width: 50ch; margin: 0 auto; line-height: 1.6;
+  }
+
+  .gallery-wall {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-auto-rows: 60px;
+    gap: 22px;
+    padding: 30px 20px 60px;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(0,0,0,0.05), transparent 60%),
+      #ece4d8;
+    border-radius: 4px;
+  }
+  @media (max-width: 900px) { .gallery-wall { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 540px) {
+    .gallery-wall { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 42px; gap: 16px; }
+    /* Item spans are tuned for wider grids — at 2 columns, a span of 3+
+       forces an extra implicit (empty) track, so every frame is normalized
+       to a uniform, bug-free size here instead of trying to preserve the
+       desktop mosaic. */
+    .frame-item { grid-column: span 1 !important; grid-row: span 6 !important; }
+  }
+
+  .frame-item {
+    grid-column: span var(--cs, 2);
+    grid-row: span var(--rs, 4);
+    display: flex; flex-direction: column; align-items: center;
+    cursor: pointer;
+  }
+  .frame-outer {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    background: #fff;
+    transition: transform 0.3s cubic-bezier(.2,.8,.2,1), box-shadow 0.3s ease;
+  }
+  .frame-item:hover .frame-outer { transform: translateY(-5px) scale(1.015); }
+  .frame-mat { width: 100%; height: 100%; background: #fbf9f4; padding: 8%; }
+  .frame-mat img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .frame-black .frame-outer { background: #1c1a18; padding: 12px; box-shadow: 0 10px 22px rgba(0,0,0,0.28); }
+  .frame-gold .frame-outer {
+    padding: 14px;
+    background: linear-gradient(135deg, #f4e2b8 0%, #caa25a 25%, #8a6a30 50%, #caa25a 75%, #f4e2b8 100%);
+    box-shadow: 0 12px 26px rgba(90,65,20,0.35);
+  }
+  .frame-wood .frame-outer {
+    padding: 16px;
+    background: repeating-linear-gradient(100deg, #6b4527 0px, #7c5836 10px, #5a3a20 20px, #7c5836 30px);
+    box-shadow: 0 12px 24px rgba(40,25,10,0.35);
+  }
+  .frame-white .frame-outer {
+    padding: 10px;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.18), inset 0 0 0 1px rgba(0,0,0,0.08);
+  }
+
+  .frame-plate {
+    margin-top: 10px;
+    font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase;
+    color: #6b5a3a; background: linear-gradient(180deg, #f4e2b8, #d8b56a);
+    padding: 3px 10px; border-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+
+  .arc-footnote {
+    margin: 10px 0 60px; text-align: center; font-family: var(--font-sans); font-size: 0.85rem; color: var(--ink-soft);
+  }
+  .arc-footnote a { color: var(--pink-dark); font-weight: 500; }
+
+  /* ============ Lightbox ============ */
+  .arc-lightbox {
+    position: fixed; inset: 0; background: rgba(20,14,8,0.9);
+    display: none; align-items: center; justify-content: center; z-index: 200; padding: 24px;
+  }
+  .arc-lightbox.is-open { display: flex; }
+  .arc-lightbox-inner { max-width: 440px; width: 100%; background: #fff; border-radius: 6px; padding: 18px 18px 24px; position: relative; }
+  .arc-lightbox-photo { width: 100%; aspect-ratio: 4/5; overflow: hidden; background: #111; }
+  .arc-lightbox-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .arc-lightbox-caption { text-align: center; margin: 16px 0 0; font-family: var(--font-title); font-size: 1.3rem; color: var(--ink); }
+  .arc-lightbox-cta {
+    display: block; text-align: center; margin: 18px auto 0; width: fit-content;
+    background: var(--pink); color: #fff; font-family: var(--font-display); font-weight: 700;
+    font-size: 0.82rem; text-transform: uppercase; padding: 12px 26px; border-radius: 10px; text-decoration: none;
+  }
+  .arc-lightbox-close {
+    position: absolute; top: -16px; right: -10px; width: 34px; height: 34px; border-radius: 50%;
+    background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.25); border: none; font-size: 1.1rem; cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="door-scene" id="doorScene">
+  <div class="door-frame" id="doorFrame">
+    <div class="door-panel door-left"><span class="door-knob"></span></div>
+    <div class="door-panel door-right"><span class="door-knob"></span></div>
+  </div>
+  <div class="door-welcome">
+    <p class="door-eyebrow">milk studio</p>
+    <h1 class="door-title">welcome to<br>the archives</h1>
+    <button type="button" class="door-enter" id="doorEnter">&#10022; Step Inside</button>
+  </div>
+</div>
+
+<header class="site-header" id="siteHeader">
+  <div class="wrap header-inner">
+    <nav class="main-nav" id="mainNav" aria-label="Primary">
+      <div class="nav-group">
+        <a href="pricing.html">Menu</a>
+        <a href="presets.html">The Edit</a>
+      </div>
+      <a href="index.html#top" class="logo" aria-label="milk studio home">
+        <img src="images/milk-logo.png?v=2" alt="milk studio" class="logo-img">
+      </a>
+      <div class="nav-group">
+        <a href="portfolio.html" aria-current="page">The Archive</a>
+        <a href="about.html">About</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="arc-page">
+    <div class="arc-head">
+      <p class="arc-eyebrow2">Mockup — the gallery wall (using the edit's photos as a stand-in)</p>
+      <h1 class="arc-title2">the archive</h1>
+      <p class="arc-sub2">every set, hung salon-style like the wall it deserves. click any frame for the full breakdown.</p>
+    </div>
+  </div>
+
+  <div class="gallery-wall" id="galleryWall"></div>
+
+  <p class="arc-footnote">want to add yours to the wall? <a href="custom-booking.html">build your set</a></p>
+</main>
+
+<div class="arc-lightbox" id="arcLightbox">
+  <div class="arc-lightbox-inner">
+    <button class="arc-lightbox-close" id="arcClose" aria-label="Close">&times;</button>
+    <div class="arc-lightbox-photo"><img id="arcLightboxImg" src="" alt=""></div>
+    <p class="arc-lightbox-caption" id="arcLightboxCaption"></p>
+    <a class="arc-lightbox-cta" href="custom-booking.html">&#9733; Want Something Like This?</a>
+  </div>
+</div>
+
+<script>
+// NOTE: these are IMAGES FROM THE EDIT, standing in only so this mockup reads
+// well — swap back to real archive photos once a direction is picked.
+const SHOTS = [
+  { img: 'images/the-edit/IMG_7950.JPG', note: 'emerald cage', frame: 'wood', cs: 3, rs: 6 },
+  { img: 'images/the-edit/IMG_7952.JPG', note: 'chrome reverie', frame: 'gold', cs: 2, rs: 4 },
+  { img: 'images/the-edit/IMG_7958.JPG', note: 'gothic bloom', frame: 'black', cs: 3, rs: 5 },
+  { img: 'images/the-edit/IMG_7959.JPG', note: 'sage stained glass', frame: 'white', cs: 2, rs: 5 },
+  { img: 'images/the-edit/IMG_7962.JPG', note: 'liquid mercury', frame: 'gold', cs: 3, rs: 4 },
+  { img: 'images/the-edit/IMG_7965.JPG', note: 'pearl orchard', frame: 'black', cs: 2, rs: 4 },
+  { img: 'images/the-edit/IMG_7967.JPG', note: 'honey chrome', frame: 'wood', cs: 3, rs: 5 },
+  { img: 'images/the-edit/IMG_7971.JPG', note: 'gilded muse', frame: 'gold', cs: 2, rs: 6 },
+  { img: 'images/the-edit/IMG_7969.JPG', note: 'renegade', frame: 'white', cs: 3, rs: 4 },
+  { img: 'images/the-edit/IMG_7955.JPG', note: 'lilac static', frame: 'black', cs: 2, rs: 5 },
+  { img: 'images/the-edit/IMG_7956.JPG', note: 'wild card', frame: 'wood', cs: 2, rs: 4 },
+  { img: 'images/the-edit/IMG_7961.JPG', note: 'bruised petal', frame: 'gold', cs: 3, rs: 5 },
+];
+
+const wall = document.getElementById('galleryWall');
+SHOTS.forEach((s, i) => {
+  const item = document.createElement('div');
+  item.className = `frame-item frame-${s.frame}`;
+  item.style.setProperty('--cs', s.cs);
+  item.style.setProperty('--rs', s.rs);
+  item.innerHTML = `
+    <div class="frame-outer">
+      <div class="frame-mat"><img src="${s.img}" alt="${s.note}" loading="lazy"></div>
+    </div>
+    <span class="frame-plate">${s.note}</span>
+  `;
+  item.addEventListener('click', () => openLightbox(i));
+  wall.appendChild(item);
+});
+
+const lightbox = document.getElementById('arcLightbox');
+function openLightbox(i) {
+  const s = SHOTS[i];
+  document.getElementById('arcLightboxImg').src = s.img;
+  document.getElementById('arcLightboxImg').alt = s.note;
+  document.getElementById('arcLightboxCaption').textContent = s.note;
+  lightbox.classList.add('is-open');
+}
+document.getElementById('arcClose').addEventListener('click', () => lightbox.classList.remove('is-open'));
+lightbox.addEventListener('click', (e) => { if (e.target === lightbox) lightbox.classList.remove('is-open'); });
+
+// Door reveal
+const doorScene = document.getElementById('doorScene');
+document.getElementById('doorEnter').addEventListener('click', () => {
+  doorScene.classList.add('is-open');
+  setTimeout(() => { doorScene.style.display = 'none'; }, 1400);
+});
+</script>
+</body>
+</html>

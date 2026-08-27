@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Archive — camera roll mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Jost:wght@300;400;500;600&family=Pliant:wdth,wght@125,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css?v=108">
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body { background: #16100f; overflow: hidden; }
+
+  /* ============ iPhone frame — fills the whole page, nothing above it ============ */
+  .phone-stage { height: 100vh; display: flex; align-items: center; justify-content: center; }
+  .iphone {
+    position: relative;
+    width: min(94vw, 430px);
+    height: min(90vh, 882px);
+    aspect-ratio: 430 / 882;
+    background: #060606;
+    border-radius: clamp(38px, 9vw, 54px);
+    padding: 14px;
+    box-shadow: 0 40px 80px -20px rgba(0,0,0,0.6), 0 0 0 1.5px rgba(255,255,255,0.08) inset;
+  }
+  .iphone::before {
+    /* side buttons */
+    content: ''; position: absolute; left: -3px; top: 128px; width: 3px; height: 28px;
+    background: #1a1a1a; border-radius: 2px 0 0 2px;
+    box-shadow: 0 46px 0 #1a1a1a, 0 92px 0 #1a1a1a;
+  }
+  .iphone::after {
+    content: ''; position: absolute; right: -3px; top: 178px; width: 3px; height: 62px;
+    background: #1a1a1a; border-radius: 0 2px 2px 0;
+  }
+  .iphone-screen {
+    position: relative; width: 100%; height: 100%;
+    background: #fff; border-radius: clamp(26px, 6.4vw, 40px); overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .iphone-island {
+    position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+    width: 100px; height: 26px; background: #000; border-radius: 16px; z-index: 40;
+  }
+
+  .status-bar {
+    flex-shrink: 0; height: 46px; padding: 0 26px; display: flex; align-items: center; justify-content: space-between;
+    font-family: -apple-system, 'Jost', sans-serif; font-size: 0.85rem; font-weight: 600; color: #000;
+    position: relative; z-index: 30;
+  }
+  .status-icons { display: flex; align-items: center; gap: 5px; }
+
+  /* ============ Library screen ============ */
+  .screen { position: absolute; inset: 0; top: 46px; display: flex; flex-direction: column; background: #fff; transition: transform 0.4s cubic-bezier(.32,.72,0,1), opacity 0.3s ease; }
+  .screen-library { z-index: 10; }
+  .lib-header { padding: 2px 18px 8px; flex-shrink: 0; }
+  .lib-toprow { display: flex; justify-content: space-between; align-items: baseline; }
+  .lib-select { font-family: 'Jost', sans-serif; font-size: 0.92rem; color: #ff5a91; font-weight: 500; }
+  .lib-title { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 2.1rem; color: #000; margin: 2px 0 0; text-align: left; }
+  .lib-count { font-family: 'Jost', sans-serif; font-size: 0.8rem; color: #8e8e93; text-align: left; margin: 2px 0 8px; }
+
+  .lib-tabs { display: flex; gap: 18px; padding: 6px 18px 10px; border-bottom: 1px solid #ececec; flex-shrink: 0; }
+  .lib-tab { font-family: 'Jost', sans-serif; font-size: 0.85rem; font-weight: 500; color: #b8b8bc; }
+  .lib-tab.is-active { color: #000; font-weight: 600; position: relative; }
+  .lib-tab.is-active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -11px; height: 2px; background: #000; }
+
+  .lib-grid-wrap { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .lib-date-label {
+    font-family: 'Jost', sans-serif; font-size: 0.78rem; font-weight: 600; color: #000;
+    padding: 12px 18px 6px;
+  }
+  .lib-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+  .lib-thumb { position: relative; aspect-ratio: 1; overflow: hidden; background: #eee; cursor: pointer; }
+  .lib-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .lib-thumb-heart {
+    position: absolute; bottom: 5px; right: 5px; width: 14px; height: 14px; color: #fff;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6));
+  }
+
+  .tab-bar {
+    flex-shrink: 0; display: flex; justify-content: space-around; align-items: center;
+    height: 74px; padding-bottom: 14px; border-top: 1px solid #ececec; background: rgba(255,255,255,0.94);
+  }
+  .tab-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: #b8b8bc; }
+  .tab-item.is-active { color: #ff5a91; }
+  .tab-item span { font-family: 'Jost', sans-serif; font-size: 0.62rem; font-weight: 500; }
+
+  /* ============ Viewer screen ============ */
+  .screen-viewer {
+    z-index: 20; background: #000; transform: translateY(100%); opacity: 0;
+  }
+  .screen-viewer.is-open { transform: translateY(0); opacity: 1; }
+  .viewer-top {
+    flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 16px; color: #fff;
+  }
+  .viewer-back { display: flex; align-items: center; gap: 3px; font-family: 'Jost', sans-serif; font-size: 0.92rem; color: #ff9fbe; }
+  .viewer-info-btn { color: #ff9fbe; }
+
+  .viewer-photo-wrap { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .viewer-track { display: flex; width: 100%; height: 100%; transition: transform 0.35s cubic-bezier(.32,.72,0,1); }
+  .viewer-slide { flex: 0 0 100%; display: flex; align-items: center; justify-content: center; }
+  .viewer-slide img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+  .viewer-toolbar { flex-shrink: 0; display: flex; justify-content: space-around; align-items: center; padding: 14px 10px 6px; color: #fff; }
+  .viewer-toolbar button { color: #fff; background: none; border: none; padding: 6px; }
+  .viewer-toolbar button.is-fav { color: #ff5a91; }
+
+  .filmstrip-wrap { flex-shrink: 0; padding: 4px 0 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .filmstrip { display: flex; gap: 3px; padding: 0 14px; width: max-content; }
+  .film-thumb { width: 40px; height: 40px; border-radius: 4px; overflow: hidden; opacity: 0.45; flex-shrink: 0; cursor: pointer; transition: opacity 0.2s ease, transform 0.2s ease; }
+  .film-thumb.is-active { opacity: 1; transform: scale(1.15); box-shadow: 0 0 0 1.5px #fff; }
+  .film-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .home-indicator { flex-shrink: 0; display: flex; justify-content: center; padding: 8px 0 6px; }
+  .home-indicator span { width: 132px; height: 5px; border-radius: 3px; background: currentColor; opacity: 0.9; }
+  .screen-library .home-indicator { color: #000; }
+  .screen-viewer .home-indicator { color: #fff; }
+
+  /* The small status-bar clock/icons only make sense once you're "in" the
+     phone — the lock screen has its own big clock instead, same as a real
+     iPhone. */
+  .status-bar { opacity: 0; transition: opacity 0.5s ease; }
+  .iphone-screen.is-unlocked .status-bar { opacity: 1; }
+
+  /* ============ Lock screen ============ */
+  .screen-lock {
+    /* Covers the full screen (top: 0, not the shared .screen's top: 46px) and
+       sits above the status bar's own z-index: 30, since the real lock
+       screen's wallpaper runs edge-to-edge with no gap at the very top. */
+    top: 0;
+    z-index: 35;
+    color: #fff;
+    transition: transform 0.55s cubic-bezier(.32,.72,0,1), opacity 0.45s ease;
+  }
+  .screen-lock.is-unlocked { transform: translateY(-100%); opacity: 0.5; pointer-events: none; }
+  .lock-bg { position: absolute; inset: 0; }
+  .lock-bg img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.5) saturate(1.05); }
+  .lock-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.1) 35%, rgba(0,0,0,0.6) 100%); }
+  .lock-content {
+    position: relative; z-index: 2; height: 100%;
+    display: flex; flex-direction: column; align-items: center;
+    padding-top: 9%;
+  }
+  .lock-time {
+    font-family: -apple-system, 'Jost', sans-serif; font-weight: 600; font-size: clamp(3.4rem, 15vw, 4.6rem);
+    line-height: 1; letter-spacing: -0.02em;
+  }
+  .lock-date {
+    font-family: -apple-system, 'Jost', sans-serif; font-weight: 500; font-size: 1rem;
+    color: rgba(255,255,255,0.92); margin-top: 4px;
+  }
+  .lock-welcome { display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 16%; text-align: center; }
+  .lock-welcome-sub { font-family: 'Jost', sans-serif; font-weight: 400; font-size: 1.15rem; color: rgba(255,255,255,0.9); }
+  .lock-welcome-title { font-family: 'Network', 'Fredoka', sans-serif; font-size: clamp(2.6rem, 12vw, 3.4rem); line-height: 1; color: #fff; text-shadow: 0 6px 24px rgba(0,0,0,0.45); }
+  .lock-swipe-hint {
+    position: absolute; bottom: 66px; left: 0; right: 0; z-index: 2;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    font-family: 'Jost', sans-serif; font-size: 0.76rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(255,255,255,0.88); cursor: pointer;
+    animation: lockBob 1.7s ease-in-out infinite;
+  }
+  @keyframes lockBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+  .lock-home-indicator { position: absolute; bottom: 0; left: 0; right: 0; color: #fff; }
+</style>
+</head>
+<body>
+
+<div class="phone-stage">
+      <div class="iphone">
+        <div class="iphone-screen">
+          <div class="iphone-island"></div>
+
+          <div class="screen screen-lock" id="screenLock">
+            <div class="lock-bg"><img src="images/the-edit/IMG_7952.JPG" alt=""></div>
+            <div class="lock-scrim"></div>
+            <div class="lock-content">
+              <div class="lock-time">9:41</div>
+              <div class="lock-date">Wednesday, August 26</div>
+              <div class="lock-welcome">
+                <span class="lock-welcome-sub">welcome to</span>
+                <span class="lock-welcome-title">the archive</span>
+              </div>
+            </div>
+            <div class="lock-swipe-hint" id="lockSwipeHint">
+              <svg width="18" height="12" viewBox="0 0 18 12" fill="none"><path d="M1 10L9 2l8 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>swipe up to unlock</span>
+            </div>
+            <div class="home-indicator lock-home-indicator"><span></span></div>
+          </div>
+
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-icons">
+              <svg width="18" height="12" viewBox="0 0 18 12" fill="none"><rect x="0" y="7" width="3" height="5" rx="0.5" fill="#000"/><rect x="5" y="5" width="3" height="7" rx="0.5" fill="#000"/><rect x="10" y="3" width="3" height="9" rx="0.5" fill="#000"/><rect x="15" y="0" width="3" height="12" rx="0.5" fill="#000"/></svg>
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M8 10.5C8.6 10.5 9 10.1 9 9.5C9 8.9 8.6 8.5 8 8.5C7.4 8.5 7 8.9 7 9.5C7 10.1 7.4 10.5 8 10.5Z" fill="#000"/><path d="M4.5 7C5.4 6.1 6.6 5.6 8 5.6C9.4 5.6 10.6 6.1 11.5 7" stroke="#000" stroke-width="1.3" stroke-linecap="round"/><path d="M1.7 4.2C3.4 2.5 5.6 1.5 8 1.5C10.4 1.5 12.6 2.5 14.3 4.2" stroke="#000" stroke-width="1.3" stroke-linecap="round"/></svg>
+              <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="20" height="11" rx="2.5" stroke="#000"/><rect x="2" y="2" width="15" height="8" rx="1.3" fill="#000"/><rect x="21.5" y="4" width="2" height="4" rx="1" fill="#000"/></svg>
+            </div>
+          </div>
+
+          <div class="screen screen-library" id="screenLibrary">
+            <div class="lib-header">
+              <div class="lib-toprow"><span></span><span class="lib-select">Select</span></div>
+              <h1 class="lib-title">Recents</h1>
+              <p class="lib-count" id="libCount"></p>
+            </div>
+            <div class="lib-tabs">
+              <span class="lib-tab">Years</span>
+              <span class="lib-tab">Months</span>
+              <span class="lib-tab">Days</span>
+              <span class="lib-tab is-active">All Photos</span>
+            </div>
+            <div class="lib-grid-wrap">
+              <p class="lib-date-label">Today</p>
+              <div class="lib-grid" id="libGrid"></div>
+            </div>
+            <div class="tab-bar">
+              <div class="tab-item is-active">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="9.5" r="1.5" fill="currentColor" stroke="none"/><path d="M21 15l-5-5-9 9"/></svg>
+                <span>Library</span>
+              </div>
+              <div class="tab-item">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.5-9.5-9C1 8.5 2.5 5 6 5c2 0 3.5 1.2 4.2 2.4C10.9 6.2 12.4 5 14.4 5c3.5 0 5 3.5 3.5 7-2.5 4.5-9.5 9-9.5 9z"/></svg>
+                <span>For You</span>
+              </div>
+              <div class="tab-item">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h5l2 2h11v10H3z"/></svg>
+                <span>Albums</span>
+              </div>
+              <div class="tab-item">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+                <span>Search</span>
+              </div>
+            </div>
+            <div class="home-indicator"><span></span></div>
+          </div>
+
+          <div class="screen screen-viewer" id="screenViewer">
+            <div class="viewer-top">
+              <div class="viewer-back" id="viewerBack">
+                <svg width="10" height="16" viewBox="0 0 10 16" fill="none"><path d="M9 1L2 8l7 7" stroke="#ff9fbe" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Recents
+              </div>
+              <svg class="viewer-info-btn" id="viewerInfoBtn" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ff9fbe" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5" stroke-linecap="round"/><circle cx="12" cy="8" r="0.9" fill="#ff9fbe" stroke="none"/></svg>
+            </div>
+            <div class="viewer-photo-wrap">
+              <div class="viewer-track" id="viewerTrack"></div>
+            </div>
+            <div class="viewer-toolbar">
+              <button aria-label="Share"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v13" stroke-linecap="round"/><path d="M7 8l5-5 5 5" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 13v6a2 2 0 002 2h10a2 2 0 002-2v-6" stroke-linecap="round"/></svg></button>
+              <button aria-label="Favorite" id="viewerFavBtn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7-4.4-9.3-8.8C1.3 8 3 4.8 6.3 4.8c2 0 3.3 1.1 4 2.2.7-1.1 2-2.2 4-2.2 3.3 0 5 3.2 3.6 6.4C19 15.6 12 20 12 20z"/></svg></button>
+              <button aria-label="Info" id="viewerInfoBtn2"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5" stroke-linecap="round"/><circle cx="12" cy="8" r="0.9" fill="currentColor" stroke="none"/></svg></button>
+              <button aria-label="Delete"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16" stroke-linecap="round"/><path d="M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2" stroke-linecap="round"/><path d="M6 7l1 13a1 1 0 001 1h8a1 1 0 001-1l1-13" stroke-linecap="round"/></svg></button>
+            </div>
+            <div class="filmstrip-wrap">
+              <div class="filmstrip" id="filmstrip"></div>
+            </div>
+            <div class="home-indicator"><span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<script>
+// NOTE: these are IMAGES FROM THE EDIT, standing in only so this mockup reads
+// well — swap back to real archive photos once a direction is picked.
+const PHOTOS = [
+  { img: 'images/the-edit/IMG_7950.JPG', title: 'emerald cage', note: 'stiletto claws wrapped in liquid chrome.' },
+  { img: 'images/the-edit/IMG_7952.JPG', title: 'chrome reverie', note: 'blushed pink melting into mirrored chrome, slay.' },
+  { img: 'images/the-edit/IMG_7958.JPG', title: 'gothic bloom', note: 'blood red jelly against liquid metal swirls.' },
+  { img: 'images/the-edit/IMG_7959.JPG', title: 'sage stained glass', note: 'stained-glass chrome in a soft sage green.' },
+  { img: 'images/the-edit/IMG_7962.JPG', title: 'liquid mercury', note: 'basically a mirror at this point.' },
+  { img: 'images/the-edit/IMG_7965.JPG', title: 'pearl orchard', note: 'green ombré nails dripping in pearls.' },
+  { img: 'images/the-edit/IMG_7967.JPG', title: 'honey chrome', note: 'ombré gold chrome, need i say more?' },
+  { img: 'images/the-edit/IMG_7969.JPG', title: 'renegade', note: 'rhinestones, a real nail piercing, snakeskin.' },
+  { img: 'images/the-edit/IMG_7971.JPG', title: 'gilded muse', note: 'hand-laid gold filigree over warm cream.' },
+];
+
+document.getElementById('libCount').textContent = `${PHOTOS.length} Photos`;
+
+const libGrid = document.getElementById('libGrid');
+PHOTOS.forEach((p, i) => {
+  const thumb = document.createElement('div');
+  thumb.className = 'lib-thumb';
+  thumb.innerHTML = `
+    <img src="${p.img}" alt="${p.title}" loading="lazy">
+    <svg class="lib-thumb-heart" viewBox="0 0 24 24" fill="currentColor"><path d="M12 20s-7-4.4-9.3-8.8C1.3 8 3 4.8 6.3 4.8c2 0 3.3 1.1 4 2.2.7-1.1 2-2.2 4-2.2 3.3 0 5 3.2 3.6 6.4C19 15.6 12 20 12 20z"/></svg>
+  `;
+  thumb.addEventListener('click', () => openViewer(i));
+  libGrid.appendChild(thumb);
+});
+
+// Real iOS Photos opens already scrolled to the bottom of the grid (the
+// newest photo, last in source order) — older ones are above, reached by
+// scrolling/swiping up, not down.
+const libGridWrap = document.querySelector('.lib-grid-wrap');
+function scrollLibraryToNewest() {
+  libGridWrap.scrollTop = libGridWrap.scrollHeight;
+}
+scrollLibraryToNewest();
+
+const track = document.getElementById('viewerTrack');
+PHOTOS.forEach((p) => {
+  const slide = document.createElement('div');
+  slide.className = 'viewer-slide';
+  slide.innerHTML = `<img src="${p.img}" alt="${p.title}">`;
+  track.appendChild(slide);
+});
+
+const filmstrip = document.getElementById('filmstrip');
+PHOTOS.forEach((p, i) => {
+  const t = document.createElement('div');
+  t.className = 'film-thumb';
+  t.innerHTML = `<img src="${p.img}" alt="${p.title}">`;
+  t.addEventListener('click', () => goToPhoto(i));
+  filmstrip.appendChild(t);
+});
+
+const screenLibrary = document.getElementById('screenLibrary');
+const screenViewer = document.getElementById('screenViewer');
+let currentIndex = 0;
+const favorited = new Set();
+
+function renderViewer() {
+  track.style.transform = `translateX(-${currentIndex * 100}%)`;
+  document.querySelectorAll('.film-thumb').forEach((t, i) => t.classList.toggle('is-active', i === currentIndex));
+  const activeThumb = document.querySelectorAll('.film-thumb')[currentIndex];
+  // Manual horizontal scroll instead of scrollIntoView: the filmstrip only
+  // scrolls on the x-axis, so a block-axis "nearest" search with no
+  // vertically-scrollable ancestor between it and the viewport falls back to
+  // scrolling the whole page — this keeps the scroll fully contained.
+  if (activeThumb) {
+    const wrap = document.querySelector('.filmstrip-wrap');
+    const target = activeThumb.offsetLeft - (wrap.clientWidth - activeThumb.clientWidth) / 2;
+    wrap.scrollTo({ left: target, behavior: 'smooth' });
+  }
+  document.getElementById('viewerFavBtn').classList.toggle('is-fav', favorited.has(currentIndex));
+}
+
+function goToPhoto(i) {
+  currentIndex = i;
+  renderViewer();
+}
+
+function openViewer(i) {
+  currentIndex = i;
+  renderViewer();
+  screenViewer.classList.add('is-open');
+}
+function closeViewer() {
+  screenViewer.classList.remove('is-open');
+}
+document.getElementById('viewerBack').addEventListener('click', closeViewer);
+
+document.getElementById('viewerFavBtn').addEventListener('click', () => {
+  if (favorited.has(currentIndex)) favorited.delete(currentIndex); else favorited.add(currentIndex);
+  document.getElementById('viewerFavBtn').classList.toggle('is-fav', favorited.has(currentIndex));
+});
+
+// Swipe support on the photo itself
+let touchStartX = null;
+const photoWrap = document.querySelector('.viewer-photo-wrap');
+photoWrap.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
+photoWrap.addEventListener('touchend', (e) => {
+  if (touchStartX === null) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 40) {
+    if (dx < 0 && currentIndex < PHOTOS.length - 1) goToPhoto(currentIndex + 1);
+    else if (dx > 0 && currentIndex > 0) goToPhoto(currentIndex - 1);
+  }
+  touchStartX = null;
+});
+// Click left/right half of the photo to step through, for non-touch testing too.
+photoWrap.addEventListener('click', (e) => {
+  const rect = photoWrap.getBoundingClientRect();
+  const clickX = e.clientX - rect.left;
+  if (clickX > rect.width / 2 && currentIndex < PHOTOS.length - 1) goToPhoto(currentIndex + 1);
+  else if (clickX <= rect.width / 2 && currentIndex > 0) goToPhoto(currentIndex - 1);
+});
+
+// Lock screen — swipe up (touch or mouse-drag, for desktop testing) to unlock.
+const screenLock = document.getElementById('screenLock');
+const iphoneScreen = document.querySelector('.iphone-screen');
+const UNLOCK_THRESHOLD = 70;
+
+function unlock() {
+  screenLock.style.transform = '';
+  screenLock.classList.add('is-unlocked');
+  iphoneScreen.classList.add('is-unlocked');
+  scrollLibraryToNewest();
+}
+
+let dragStartY = null;
+function dragMove(y) {
+  if (dragStartY === null) return;
+  const dy = Math.min(0, y - dragStartY);
+  screenLock.style.transform = `translateY(${dy}px)`;
+}
+function dragEnd(y) {
+  if (dragStartY === null) return;
+  const dy = y - dragStartY;
+  dragStartY = null;
+  if (dy < -UNLOCK_THRESHOLD) unlock();
+  else screenLock.style.transform = '';
+}
+
+screenLock.addEventListener('touchstart', (e) => { dragStartY = e.touches[0].clientY; }, { passive: true });
+screenLock.addEventListener('touchmove', (e) => dragMove(e.touches[0].clientY), { passive: true });
+screenLock.addEventListener('touchend', (e) => dragEnd(e.changedTouches[0].clientY));
+
+let mouseDragging = false;
+screenLock.addEventListener('mousedown', (e) => { mouseDragging = true; dragStartY = e.clientY; });
+window.addEventListener('mousemove', (e) => { if (mouseDragging) dragMove(e.clientY); });
+window.addEventListener('mouseup', (e) => { if (mouseDragging) { mouseDragging = false; dragEnd(e.clientY); } });
+
+// Tapping the hint itself also unlocks, as a click-only fallback.
+document.getElementById('lockSwipeHint').addEventListener('click', unlock);
+</script>
+</body>
+</html>

@@ -115,6 +115,13 @@ p { line-height: 1.7; color: var(--ink-soft); }
   z-index: 100;
   padding: 16px 0;
   background: var(--cream);
+  /* Real, structural pink at the header's own top edge — a separate
+     hidden strip at the viewport edge didn't get picked up by Safari's
+     toolbar-tinting sampling, most likely because it reads whichever
+     fixed element is actually dominant at that edge (the header, by
+     size), not just whatever technically touches y:0. Making the pink
+     part of the header itself removes that ambiguity. */
+  border-top: 10px solid var(--pink);
   box-shadow: 0 4px 20px -8px rgba(34, 20, 27, 0.12);
   opacity: 0;
   transform: translateY(-12px);
@@ -1375,6 +1382,30 @@ section { padding: 100px 0; }
    of drifting into the rule above or below it — row-for-row alignment
    between a name and its price isn't guaranteed, but neither is it on
    a real hand-written check, and each still lands in its own column. */
+/* The check's printed header row has blank SERVER/TABLE boxes above the
+   ruled line-items (measured the same way as the row grid below: header
+   box spans 16.1%–27.1% of the image height, with vertical divider lines
+   at 23%/42.4%/60.9% of the width) — repurposed to name which edit look
+   this booking came from, left blank entirely for a normal booking. */
+.cb-receipt-server,
+.cb-receipt-table {
+  position: absolute;
+  top: 20%;
+  height: 6.5%;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-family: var(--font-mono);
+  font-size: clamp(0.4rem, 2.3cqw, 0.62rem);
+  color: var(--ink);
+}
+.cb-receipt-server[hidden],
+.cb-receipt-table[hidden] { display: none; }
+.cb-receipt-server { left: 2.5%; width: 18%; }
+.cb-receipt-table { left: 24.5%; width: 16%; }
+
 .cb-receipt-names,
 .cb-receipt-prices {
   position: absolute;
@@ -1748,3 +1779,750 @@ body.no-scroll {
   .ci-cta { left: 16%; top: 88%; }
   .ci-dot { left: 86%; top: 11%; }
 }
+
+/* ---------- The Edit — lookbook (hero + taped-card slides) ----------
+   Hero: the title is masked straight out of a real photo (background-clip:
+   text) instead of sitting as flat colour on top of one, so the art and
+   the type are the same object. Every look below reuses the same device
+   with its own photo, then hands off to a taped index-card for the price
+   and CTA — matching the site's scrapbook/sticker language rather than a
+   generic e-commerce price tag. */
+.edit-hero {
+  position: relative;
+  height: 100vh;
+  min-height: 640px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #0d0a0c;
+}
+.edit-hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  animation: edit-hero-bg-in 1.6s ease forwards 0.1s;
+}
+@keyframes edit-hero-bg-in {
+  from { opacity: 0; transform: scale(1.08); }
+  to { opacity: 0.5; transform: scale(1); }
+}
+.edit-hero-scrim {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 45%, rgba(13,10,12,0.15), rgba(13,10,12,0.88) 78%);
+}
+.edit-hero-eyebrow {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(255, 143, 181, 0.85);
+  margin: 0 0 8px;
+  opacity: 0;
+  animation: edit-hero-fade-up 1s ease forwards 0.9s;
+}
+.edit-hero-title {
+  position: relative;
+  z-index: 2;
+  font-family: 'Network', var(--font-display);
+  font-size: clamp(4.2rem, 15vw, 11rem);
+  line-height: 0.85;
+  text-align: center;
+  margin: 0;
+  background-image: var(--hero-photo);
+  background-size: cover;
+  background-position: center 30%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(255, 245, 248, 0.92);
+  paint-order: stroke fill;
+  filter: drop-shadow(0 4px 30px rgba(255, 90, 145, 0.35)) drop-shadow(0 2px 18px rgba(0, 0, 0, 0.6));
+  opacity: 0;
+  animation: edit-hero-title-in 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.3s;
+}
+@keyframes edit-hero-title-in {
+  from { opacity: 0; transform: translateY(28px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes edit-hero-fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.edit-hero-desc {
+  position: relative;
+  z-index: 2;
+  max-width: 46ch;
+  margin: 22px 0 0;
+  opacity: 0;
+  animation: edit-hero-fade-up 1s ease forwards 1.1s;
+}
+.edit-hero-desc p {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.82);
+  text-align: center;
+  margin: 0 0 12px;
+}
+.edit-hero-desc p:last-child { margin-bottom: 0; }
+.edit-hero-scroll {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  opacity: 0;
+  animation: edit-hero-fade-up 1s ease forwards 1.6s;
+}
+.edit-hero-scroll-line {
+  width: 1px;
+  height: 34px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.6), transparent);
+  animation: edit-hero-scroll-pulse 1.8s ease-in-out infinite;
+}
+@keyframes edit-hero-scroll-pulse {
+  0%, 100% { transform: scaleY(1); opacity: 0.6; }
+  50% { transform: scaleY(1.3); opacity: 1; }
+}
+@media (max-width: 640px) {
+  .edit-hero-title { font-size: clamp(3.4rem, 18vw, 6rem); }
+}
+
+.edit-slide {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+.edit-slide-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.edit-slide-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.02) 30%, rgba(10,6,8,0.45) 75%, rgba(8,4,6,0.82) 100%);
+}
+.edit-slide-idx {
+  position: absolute;
+  top: 28px;
+  right: 32px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.75);
+  z-index: 4;
+}
+.edit-slide-body { position: relative; z-index: 3; width: 100%; padding: 0 6vw 64px; }
+.edit-slide-title {
+  position: relative;
+  font-family: 'Network', var(--font-display);
+  font-size: clamp(2.6rem, 7vw, 4.6rem);
+  margin: 0 0 8px;
+  line-height: 0.95;
+  background-image: var(--slide-photo);
+  background-size: 220% auto;
+  background-position: center 35%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255, 245, 248, 0.92);
+  paint-order: stroke fill;
+  filter: drop-shadow(0 2px 16px rgba(0, 0, 0, 0.6));
+}
+.edit-slide-desc {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  color: rgba(255,255,255,0.8);
+  font-size: 1rem;
+  max-width: 38ch;
+  margin: 0 0 22px;
+}
+.edit-taped-card {
+  position: relative;
+  display: inline-block;
+  background: var(--cream);
+  color: var(--ink);
+  padding: 18px 22px;
+  border-radius: 3px;
+  box-shadow: 0 16px 30px -12px rgba(0,0,0,0.55);
+  transform: rotate(-1.5deg);
+}
+.edit-taped-tape {
+  position: absolute;
+  top: -14px;
+  left: 24px;
+  width: 70px;
+  height: 26px;
+  background: rgba(255, 143, 181, 0.55);
+  border: 1px solid rgba(255,255,255,0.5);
+}
+.edit-taped-price-row { display: flex; align-items: baseline; gap: 10px; font-family: var(--font-mono); margin-bottom: 12px; }
+.edit-taped-was { text-decoration: line-through; color: var(--ink-soft); font-size: 0.85rem; }
+.edit-taped-now { font-weight: 700; color: var(--pink-dark); font-size: 1.2rem; }
+.edit-taped-off { font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); }
+.edit-taped-cta {
+  display: inline-block;
+  background: var(--pink);
+  color: var(--cream);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  padding: 10px 18px;
+  border-radius: 12px 18px 10px 16px;
+  text-decoration: none;
+  transform: rotate(1deg);
+}
+@media (max-width: 640px) {
+  .edit-slide-body { padding: 0 24px 48px; }
+}
+
+/* ---------- Safari toolbar tinting ----------
+   Safari 26 colours its own toolbar/tab-bar chrome by sampling the
+   background of fixed/sticky elements pinned to the viewport edges
+   (theme-color is ignored entirely now). The real header stays cream, so
+   these are separate paper-thin accent bars — pink, fixed to the true top
+   and bottom edges, above everything in z-index — purely so Safari has a
+   pink pixel to read at each edge. iOS often puts its tab bar at the
+   bottom by default, hence covering both edges rather than just the top. */
+.safari-tint {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--pink);
+  z-index: 999999;
+  pointer-events: none;
+}
+.safari-tint--top { top: 0; }
+.safari-tint--bottom { bottom: 0; }
+
+/* ---------- The Edit — Instagram-grid lookbook (presets.html) ---------- */
+  body.the-edit-page { background: #fafafa; }
+
+  /* ---------- Mock "profile" header ---------- */
+  .ig-page { max-width: 940px; margin: 0 auto; padding: 100px 20px 60px; }
+  .ig-header {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(20px, 5vw, 56px);
+    padding-bottom: 28px;
+    border-bottom: 1px solid #efefef;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .ig-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--pink), var(--pink-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 3px #fff, 0 0 0 4px var(--pink-soft);
+  }
+  .ig-avatar img { width: 58%; height: auto; filter: brightness(0) invert(1); }
+  .ig-header-col { flex: 1 1 0; min-width: 0; }
+  .ig-handle-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+  .ig-handle { font-family: var(--font-sans); font-size: 1.3rem; font-weight: 500; color: var(--ink); }
+  .ig-verified {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--pink); color: #fff; display: inline-flex;
+    align-items: center; justify-content: center; font-size: 0.65rem;
+  }
+  .ig-follow-btn {
+    background: var(--pink);
+    color: #fff;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.85rem;
+    padding: 7px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+  }
+  .ig-stats { display: flex; gap: 32px; margin-bottom: 12px; font-family: var(--font-sans); font-size: 0.92rem; }
+  .ig-stats b { color: var(--ink); }
+  .ig-bio-name { font-family: var(--font-display); font-weight: 600; font-size: 0.95rem; color: var(--ink); }
+  .ig-bio-text { font-family: var(--font-sans); font-size: 0.9rem; color: var(--ink-soft); line-height: 1.5; }
+  .ig-bio-link { color: var(--pink-dark); font-weight: 500; text-decoration: none; }
+
+  .ig-divider {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding: 14px 0;
+    border-top: 1px solid #efefef;
+    margin-bottom: 2px;
+  }
+
+  /* ---------- Filter tabs ---------- */
+  .ig-tabs {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    padding: 0 0 22px;
+  }
+  .ig-tab {
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    background: transparent;
+    border: 1px solid rgba(34,20,27,0.15);
+    border-radius: 999px;
+    padding: 7px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ig-tab span { font-family: var(--font-mono); font-size: 0.72rem; opacity: 0.7; }
+  .ig-tab.is-active { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .ig-tab.is-active span { opacity: 0.85; }
+
+  /* ---------- Grid ---------- */
+  .ig-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
+  .ig-tile { position: relative; aspect-ratio: 1; overflow: hidden; cursor: pointer; background: #eee; }
+  .ig-tile img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
+  .ig-tile:hover img { transform: scale(1.04); }
+  .ig-tile.is-filtered-out { display: none; }
+  .ig-tile-veil {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.35);
+    display: flex; align-items: center; justify-content: center;
+    gap: 20px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .ig-tile:hover .ig-tile-veil { opacity: 1; }
+  .ig-tile-stat { color: #fff; font-family: var(--font-sans); font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
+
+  .ig-tile--archived img, .ig-tile--booked img { filter: grayscale(0.6) brightness(0.65); }
+  .ig-tile-archived-caption {
+    position: absolute; inset: 0;
+    background: rgba(20,10,15,0.6);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 8px;
+    text-align: center;
+    padding: 12px;
+    color: #fff;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    line-height: 1.5;
+  }
+  .ig-tile-archived-star { color: var(--pink-soft); font-size: 1rem; }
+  .ig-tile-booked-label {
+    color: var(--pink);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.15rem;
+  }
+  .ig-tile-booked-sub { color: #fff; font-size: 0.72rem; letter-spacing: 0.02em; }
+
+  @media (max-width: 640px) {
+    .ig-grid { gap: 2px; }
+    .ig-header { gap: 20px; }
+    .ig-avatar { width: 72px; height: 72px; }
+    .ig-stats { gap: 20px; font-size: 0.82rem; }
+  }
+
+  /* ---------- Post modal ---------- */
+  .ig-modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    padding: 24px;
+  }
+  .ig-modal-backdrop.is-open { display: flex; }
+  .ig-modal {
+    background: #fff;
+    width: min(940px, 100%);
+    max-height: 88vh;
+    display: flex;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .ig-modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.9);
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    z-index: 5;
+  }
+  /* align-self: flex-start overrides the row's default cross-axis stretch,
+     so this sizes off its own aspect-ratio instead of matching whatever
+     height the side panel's content happens to need — otherwise a longer
+     caption/receipt on one look makes the modal (and this photo box) taller
+     than on another, and the arrows anchored to 50% of it land at a
+     different absolute position look to look. */
+  .ig-modal-photo { flex: 1.2; align-self: flex-start; aspect-ratio: 4 / 5; background: #000; min-width: 0; position: relative; }
+  .ig-modal-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ig-modal-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.45);
+    color: #fff;
+    border: none;
+    font-size: 1.7rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+  }
+  .ig-modal-arrow:hover { background: rgba(0,0,0,0.65); }
+  .ig-modal-arrow--prev { left: 14px; }
+  .ig-modal-arrow--next { right: 14px; }
+  .ig-modal-side { flex: 1; min-width: 320px; display: flex; flex-direction: column; }
+  .ig-modal-head {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 18px;
+    border-bottom: 1px solid #efefef;
+  }
+  .ig-modal-avatar {
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--pink), var(--pink-dark));
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ig-modal-avatar img { width: 58%; height: auto; filter: brightness(0) invert(1); }
+  .ig-modal-head-name { font-family: var(--font-sans); font-weight: 600; font-size: 0.88rem; color: var(--ink); display: flex; align-items: center; gap: 6px; }
+  .ig-modal-body { padding: 16px 18px; flex: 1; overflow-y: auto; }
+  .ig-modal-icons { display: flex; gap: 16px; margin-bottom: 10px; }
+  .ig-modal-icons svg { width: 24px; height: 24px; stroke: var(--ink); fill: none; stroke-width: 1.8; }
+  .ig-modal-likes { font-family: var(--font-sans); font-weight: 600; font-size: 0.88rem; margin: 0 0 8px; }
+  .ig-modal-caption { font-family: var(--font-sans); font-size: 0.9rem; line-height: 1.6; color: var(--ink); margin: 0 0 18px; }
+  .ig-modal-caption b { font-weight: 600; }
+
+  .receipt {
+    background: var(--cream-panel);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 18px;
+  }
+  .receipt-label {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--pink-dark);
+    margin: 0 0 10px;
+  }
+  .receipt-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    padding: 4px 0;
+  }
+  .receipt-line--discount { color: var(--pink-dark); }
+  .receipt-line s { color: var(--ink-faint, rgba(34,20,27,0.4)); margin-right: 6px; }
+  .receipt-line b { color: var(--pink-dark); }
+  .receipt-base-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .receipt-base-select {
+    flex: 1;
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    color: var(--ink);
+    background: #fff;
+    border: 1px solid rgba(34,20,27,0.15);
+    border-radius: 6px;
+    padding: 6px 8px;
+  }
+  .receipt-base-price {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .receipt-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--font-mono);
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(34,20,27,0.2);
+  }
+  .receipt-total-label { font-size: 0.82rem; font-weight: 700; color: var(--ink); text-transform: uppercase; letter-spacing: 0.04em; }
+  .receipt-total-price { font-size: 1.3rem; font-weight: 700; color: var(--pink-dark); }
+
+  .ig-modal-cta {
+    display: block;
+    text-align: center;
+    background: var(--pink);
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    padding: 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    margin: 0 18px 18px;
+  }
+  .ig-modal-cta--archived { background: var(--ink); }
+  .ig-modal-cta[hidden] { display: none; }
+
+  .ig-modal-archived {
+    background: var(--cream-panel);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 18px;
+  }
+  .ig-modal-archived-label {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--pink-dark);
+    margin: 0 0 10px;
+  }
+  .ig-modal-archived-text {
+    font-family: var(--font-sans);
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--ink);
+    margin: 0;
+  }
+
+  @media (max-width: 760px) {
+    .ig-modal { flex-direction: column; max-height: none; height: 100%; border-radius: 0; overflow-y: auto; }
+    /* align-self: flex-start (set for the desktop row layout, to stop this
+       box stretching to match the side panel's variable height) means the
+       opposite thing once .ig-modal switches to a column layout here — it
+       would stop the photo stretching to the modal's full WIDTH instead, so
+       it's reset back to the default stretch. min-height: 0 overrides flex
+       items' automatic content-based minimum size, which otherwise wins
+       over aspect-ratio for any photo whose natural proportions are taller
+       than the square this is meant to force — the exact "different
+       photos land the arrows at different heights" bug. */
+    .ig-modal-photo { flex: none; align-self: stretch; aspect-ratio: 1; min-height: 0; }
+    .ig-modal-side { min-width: 0; }
+  }
+
+/* ---------- The Archive — iPhone camera roll (portfolio.html) ---------- */
+  body.the-archive-page { background: var(--cream); overflow: hidden; }
+
+  /* ============ iPhone frame — fills the whole page, nothing above it ============ */
+  /* box-sizing: border-box so the fixed header's height comes out of this
+     100vh box as top padding, instead of the phone being centered across
+     the full viewport and ending up partly hidden under the header. */
+  .phone-stage { height: 100vh; padding-top: 96px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; }
+  @media (max-width: 760px) {
+    .phone-stage { padding-top: 88px; }
+  }
+  .iphone {
+    position: relative;
+    /* Explicit width AND height (as this used to have) makes aspect-ratio a
+       no-op — it only fills in a dimension left as auto. Deriving width from
+       whichever of the three caps is tightest, then letting height follow
+       from aspect-ratio, is what actually keeps the real iPhone proportions
+       instead of drifting toward a squashed tablet shape on short/wide
+       (desktop) viewports. */
+    width: min(94vw, 430px, calc(82vh * 430 / 882));
+    aspect-ratio: 430 / 882;
+    height: auto;
+    background: #060606;
+    border-radius: clamp(38px, 9vw, 54px);
+    padding: 14px;
+    box-shadow: 0 40px 80px -20px rgba(0,0,0,0.6), 0 0 0 1.5px rgba(255,255,255,0.08) inset;
+  }
+  .iphone::before {
+    /* side buttons */
+    content: ''; position: absolute; left: -3px; top: 128px; width: 3px; height: 28px;
+    background: #1a1a1a; border-radius: 2px 0 0 2px;
+    box-shadow: 0 46px 0 #1a1a1a, 0 92px 0 #1a1a1a;
+  }
+  .iphone::after {
+    content: ''; position: absolute; right: -3px; top: 178px; width: 3px; height: 62px;
+    background: #1a1a1a; border-radius: 0 2px 2px 0;
+  }
+  .iphone-screen {
+    position: relative; width: 100%; height: 100%;
+    background: #fff; border-radius: clamp(26px, 6.4vw, 40px); overflow: hidden;
+    display: flex; flex-direction: column;
+    /* The island and status bar below are sized in cqw (percent of the
+       phone's own rendered width, from its 430px reference design) instead
+       of fixed px — fixed px stayed put while the phone itself shrank on
+       short viewports (.iphone's width is capped by 82vh there), so the
+       status icons and the island drifted into each other. */
+    container-type: inline-size;
+  }
+  .iphone-island {
+    position: absolute; top: 2.8cqw; left: 50%; transform: translateX(-50%);
+    width: 23.3cqw; height: 6cqw; background: #000; border-radius: 16px; z-index: 40;
+  }
+
+  .status-bar {
+    flex-shrink: 0; height: 10.7cqw; padding: 0 6cqw; display: flex; align-items: center; justify-content: space-between;
+    font-family: -apple-system, 'Jost', sans-serif; font-size: 0.85rem; font-weight: 600; color: #000;
+    position: relative; z-index: 30;
+  }
+  .status-icons { display: flex; align-items: center; gap: 5px; }
+
+  /* ============ Library screen ============ */
+  .screen { position: absolute; inset: 0; top: 10.7cqw; display: flex; flex-direction: column; background: #fff; transition: transform 0.4s cubic-bezier(.32,.72,0,1), opacity 0.3s ease; }
+  .screen-library { z-index: 10; }
+  .lib-header { padding: 2px 18px 8px; flex-shrink: 0; }
+  .lib-toprow { display: flex; justify-content: space-between; align-items: baseline; }
+  .lib-select { font-family: 'Jost', sans-serif; font-size: 0.92rem; color: #ff5a91; font-weight: 500; }
+  .lib-title { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 2.1rem; color: #000; margin: 2px 0 0; text-align: left; }
+  .lib-count { font-family: 'Jost', sans-serif; font-size: 0.8rem; color: #8e8e93; text-align: left; margin: 2px 0 8px; }
+
+  .lib-tabs { display: flex; gap: 18px; padding: 6px 18px 10px; border-bottom: 1px solid #ececec; flex-shrink: 0; }
+  .lib-tab { font-family: 'Jost', sans-serif; font-size: 0.85rem; font-weight: 500; color: #b8b8bc; }
+  .lib-tab.is-active { color: #000; font-weight: 600; position: relative; }
+  .lib-tab.is-active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -11px; height: 2px; background: #000; }
+
+  .lib-grid-wrap { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .lib-date-label {
+    font-family: 'Jost', sans-serif; font-size: 0.78rem; font-weight: 600; color: #000;
+    padding: 12px 18px 6px;
+  }
+  .lib-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+  .lib-thumb { position: relative; aspect-ratio: 1; overflow: hidden; background: #eee; cursor: pointer; }
+  .lib-thumb img, .lib-thumb video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .lib-thumb-heart {
+    position: absolute; bottom: 5px; right: 5px; width: 14px; height: 14px; color: #fff;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6));
+  }
+
+  .tab-bar {
+    flex-shrink: 0; display: flex; justify-content: space-around; align-items: center;
+    height: 74px; padding-bottom: 14px; border-top: 1px solid #ececec; background: rgba(255,255,255,0.94);
+  }
+  .tab-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: #b8b8bc; }
+  .tab-item.is-active { color: #ff5a91; }
+  .tab-item span { font-family: 'Jost', sans-serif; font-size: 0.62rem; font-weight: 500; }
+
+  /* ============ Viewer screen ============ */
+  .screen-viewer {
+    z-index: 20; background: #000; transform: translateY(100%); opacity: 0;
+  }
+  .screen-viewer.is-open { transform: translateY(0); opacity: 1; }
+  .viewer-top {
+    flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 16px; color: #fff;
+  }
+  .viewer-back { display: flex; align-items: center; gap: 3px; font-family: 'Jost', sans-serif; font-size: 0.92rem; color: #ff9fbe; }
+  .viewer-info-btn { color: #ff9fbe; }
+
+  .viewer-photo-wrap { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .viewer-track { display: flex; width: 100%; height: 100%; transition: transform 0.35s cubic-bezier(.32,.72,0,1); }
+  .viewer-slide { flex: 0 0 100%; display: flex; align-items: center; justify-content: center; }
+  .viewer-slide img, .viewer-slide video { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+  .viewer-toolbar { flex-shrink: 0; display: flex; justify-content: space-around; align-items: center; padding: 14px 10px 6px; color: #fff; }
+  .viewer-toolbar button { color: #fff; background: none; border: none; padding: 6px; }
+  .viewer-toolbar button.is-fav { color: #ff5a91; }
+
+  .filmstrip-wrap { flex-shrink: 0; padding: 4px 0 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .filmstrip { display: flex; gap: 3px; padding: 0 14px; width: max-content; }
+  .film-thumb { width: 40px; height: 40px; border-radius: 4px; overflow: hidden; opacity: 0.45; flex-shrink: 0; cursor: pointer; transition: opacity 0.2s ease, transform 0.2s ease; }
+  .film-thumb.is-active { opacity: 1; transform: scale(1.15); box-shadow: 0 0 0 1.5px #fff; }
+  .film-thumb img, .film-thumb video { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .home-indicator { flex-shrink: 0; display: flex; justify-content: center; padding: 8px 0 6px; }
+  .home-indicator span { width: 132px; height: 5px; border-radius: 3px; background: currentColor; opacity: 0.9; }
+  .screen-library .home-indicator { color: #000; }
+  .screen-viewer .home-indicator { color: #fff; }
+
+  /* The small status-bar clock/icons only make sense once you're "in" the
+     phone — the lock screen has its own big clock instead, same as a real
+     iPhone. */
+  .status-bar { opacity: 0; transition: opacity 0.5s ease; }
+  .iphone-screen.is-unlocked .status-bar { opacity: 1; }
+
+  /* ============ Lock screen ============ */
+  .screen-lock {
+    /* Covers the full screen (top: 0, not the shared .screen's top offset) and
+       sits above the status bar's own z-index: 30, since the real lock
+       screen's wallpaper runs edge-to-edge with no gap at the very top. */
+    top: 0;
+    z-index: 35;
+    color: #fff;
+    transition: transform 0.55s cubic-bezier(.32,.72,0,1), opacity 0.45s ease;
+  }
+  .screen-lock.is-unlocked { transform: translateY(-100%); opacity: 0.5; pointer-events: none; }
+  .lock-bg { position: absolute; inset: 0; }
+  .lock-bg img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.5) saturate(1.05); }
+  .lock-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.1) 35%, rgba(0,0,0,0.6) 100%); }
+  .lock-content {
+    position: relative; z-index: 2; height: 100%;
+    display: flex; flex-direction: column; align-items: center;
+    padding-top: 15%;
+  }
+  .lock-time {
+    font-family: -apple-system, 'Jost', sans-serif; font-weight: 600; font-size: clamp(3.4rem, 15vw, 4.6rem);
+    line-height: 1; letter-spacing: -0.02em;
+  }
+  .lock-date {
+    font-family: -apple-system, 'Jost', sans-serif; font-weight: 500; font-size: 1rem;
+    color: rgba(255,255,255,0.92); margin-top: 4px;
+  }
+  .lock-welcome { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 24%; text-align: center; }
+  .lock-welcome-sub { font-family: 'Jost', sans-serif; font-weight: 400; font-size: 1.15rem; color: rgba(255,255,255,0.9); }
+  .lock-welcome-title {
+    font-family: 'Network', 'Fredoka', sans-serif; font-size: clamp(2.6rem, 12vw, 3.4rem); line-height: 1; color: #fff;
+    text-shadow:
+      0 0 8px rgba(255,90,145,0.95),
+      0 0 20px rgba(255,90,145,0.8),
+      0 0 40px rgba(255,90,145,0.6),
+      0 0 70px rgba(255,90,145,0.4);
+  }
+  .lock-swipe-hint {
+    position: absolute; bottom: 66px; left: 0; right: 0; z-index: 2;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    font-family: 'Jost', sans-serif; font-size: 0.76rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(255,255,255,0.88); cursor: pointer;
+    animation: lockBob 1.7s ease-in-out infinite;
+  }
+  @keyframes lockBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+  .lock-home-indicator { position: absolute; bottom: 0; left: 0; right: 0; color: #fff; }

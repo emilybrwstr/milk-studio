@@ -73,7 +73,7 @@ const SERVICES = [
   {
     id: 'refill',
     name: 'Refill',
-    price: 40,
+    price: 45,
     duration: 90,
     allowsLengthUpgrade: false,
     allowsNailArt: true,
@@ -122,7 +122,7 @@ const LENGTH_UPGRADES = [
 
 // Flat, stackable nail-art picks — a client can select any combination.
 const FLAT_ART_ITEMS = [
-  { key: 'frenchTip', name: 'French tip', price: 5, duration: 15 },
+  { key: 'frenchTip', name: 'French tip', price: 10, duration: 15 },
   { key: 'catEye', name: 'Cat eye', price: 10, duration: 15 },
 ];
 
@@ -133,10 +133,12 @@ const PER_NAIL_ART_ITEMS = [
   { key: 'chrome', name: 'Isolated chrome', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
   { key: 'fullChrome', name: 'Full chrome', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
   { key: 'aura', name: 'Aura nails', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
-  { key: 'rhinestones', name: 'Rhinestones', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
+  { key: 'ombre', name: 'Ombré nails', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
+  { key: 'rhinestones', name: 'Nail gems', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
   { key: 'threeDElements', name: '3D elements', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
   { key: 'nailPiercing', name: 'Nail piercing', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
-  { key: 'handPainted', name: 'Hand painted designs', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
+  { key: 'handPainted', name: 'Hand painted — simple', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
+  { key: 'handPaintedComplex', name: 'Hand painted — complex', pricePerNail: 4, durationPerNail: 5, allPrice: 35, allDuration: 30 },
 ];
 
 // The first 2 nails in a repair booking are free (within 7 days of the
@@ -172,18 +174,24 @@ const state = {
   chrome: { qty: 0, all: false },
   fullChrome: { qty: 0, all: false },
   aura: { qty: 0, all: false },
+  ombre: { qty: 0, all: false },
   rhinestones: { qty: 0, all: false },
   threeDElements: { qty: 0, all: false },
   nailPiercing: { qty: 0, all: false },
   handPainted: { qty: 0, all: false },
+  handPaintedComplex: { qty: 0, all: false },
   repairQty: 2,
+  repairOver7Days: false,
   removalNeeded: false,
   removalTypeId: 'own',
   removalOnlyTypeId: 'own',
+  editDiscount: null,
+  editLookTitle: null,
 };
 
 function formatPrice(n) {
-  return n === 0 ? 'Free' : `$${n}`;
+  if (n === 0) return 'Free';
+  return n < 0 ? `−$${Math.abs(n)}` : `$${n}`;
 }
 
 function formatDuration(totalMin) {
@@ -212,11 +220,15 @@ function computeSummary() {
       // Replaces the generic base-service line entirely: the first
       // REPAIR_PAID.freeNails are covered by service.duration at no
       // charge, and any nail beyond that adds its own price/time on top.
-      const paidQty = Math.max(0, state.repairQty - REPAIR_PAID.freeNails);
+      // Timing never changes here — only which nails are billable does:
+      // past 7 days, the free tier doesn't apply and every nail is paid,
+      // but the appointment itself still takes the same amount of time.
+      const durationPaidQty = Math.max(0, state.repairQty - REPAIR_PAID.freeNails);
+      const pricePaidQty = state.repairOver7Days ? state.repairQty : durationPaidQty;
       add(
         `Repair — ${state.repairQty} nail${state.repairQty === 1 ? '' : 's'}`,
-        REPAIR_PAID.pricePerNail * paidQty,
-        service.duration + REPAIR_PAID.durationPerNail * paidQty
+        REPAIR_PAID.pricePerNail * pricePaidQty,
+        service.duration + REPAIR_PAID.durationPerNail * durationPaidQty
       );
     } else {
       add(service.name, service.price, service.duration);
@@ -249,6 +261,21 @@ function computeSummary() {
     if (service.isRemovalOnly) {
       const t = REMOVAL_ONLY_TYPES.find((t) => t.id === state.removalOnlyTypeId) || REMOVAL_ONLY_TYPES[0];
       if (t.priceDelta || t.durationDelta) add(t.name, t.priceDelta, t.durationDelta);
+    }
+
+    // "the edit" bookings discount everything past the base service line —
+    // the base itself (lineItems[0]) always stays full price.
+    if (state.editDiscount && lineItems.length > 1) {
+      const designSubtotal = lineItems.slice(1).reduce((sum, item) => sum + item.price, 0);
+      const discountAmt = Math.round(designSubtotal * state.editDiscount);
+      if (discountAmt > 0) {
+        lineItems.push({
+          label: `the edit discount (${Math.round(state.editDiscount * 100)}%)`,
+          price: -discountAmt,
+          duration: 0,
+        });
+        price -= discountAmt;
+      }
     }
   }
 
@@ -284,6 +311,10 @@ const catEyeToggle = document.getElementById('catEyeToggle');
 const repairMinus = document.getElementById('repairMinus');
 const repairPlus = document.getElementById('repairPlus');
 const repairValue = document.getElementById('repairValue');
+const repairOver7Toggle = document.getElementById('repairOver7Toggle');
+const repairStepperNote = document.getElementById('repairStepperNote');
+const reviewEditServer = document.getElementById('reviewEditServer');
+const reviewEditTable = document.getElementById('reviewEditTable');
 const reviewNames = document.getElementById('reviewNames');
 const reviewPrices = document.getElementById('reviewPrices');
 const reviewTotalPrice = document.getElementById('reviewTotalPrice');
@@ -390,6 +421,10 @@ function render() {
   repairValue.textContent = state.repairQty;
   repairMinus.disabled = state.repairQty <= REPAIR_PAID.min;
   repairPlus.disabled = state.repairQty >= REPAIR_PAID.max;
+  repairOver7Toggle.checked = state.repairOver7Days;
+  repairStepperNote.textContent = state.repairOver7Days
+    ? `$${REPAIR_PAID.pricePerNail}/nail — free tier doesn't apply after 7 days`
+    : `first ${REPAIR_PAID.freeNails} free · $${REPAIR_PAID.pricePerNail}/nail after that`;
 
   // Continue/back button state per step
   backBtn.hidden = state.step === 1 || state.step === 4;
@@ -409,6 +444,9 @@ function render() {
   // Review step content — names and prices are two independent lists laid
   // over the guest check's description and price columns.
   if (state.step === 3) {
+    reviewEditServer.hidden = !state.editLookTitle;
+    reviewEditTable.hidden = !state.editLookTitle;
+    reviewEditTable.textContent = state.editLookTitle || '';
     reviewNames.innerHTML = '';
     reviewPrices.innerHTML = '';
     summary.lineItems.forEach((item) => {
@@ -430,7 +468,8 @@ function render() {
   if (state.step === 4) {
     const extras = summary.lineItems.slice(1).map((i) => i.label.replace(/^Removal — /, ''));
     const extrasText = extras.length ? ` with ${extras.join(', ')}` : '';
-    confirmationRecap.textContent = `${summary.service.name}${extrasText} — ${formatDuration(summary.totalDuration)} · ${formatPrice(summary.totalPrice)}`;
+    const editPrefix = state.editLookTitle ? `the edit — ${state.editLookTitle}: ` : '';
+    confirmationRecap.textContent = `${editPrefix}${summary.service.name}${extrasText} — ${formatDuration(summary.totalDuration)} · ${formatPrice(summary.totalPrice)}`;
     confirmationDuration.textContent = formatDuration(summary.totalDuration);
   }
 
@@ -458,7 +497,8 @@ let calendlyLoadedFor = null; // avoid re-initializing the same URL twice
 // confirmation email, not just the duration.
 function buildBookingSummaryText(summary) {
   const parts = summary.lineItems.map((item) => item.label);
-  return `${parts.join(', ')} — Total: ${formatPrice(summary.totalPrice)}`;
+  const editPrefix = state.editLookTitle ? `[the edit: ${state.editLookTitle}] ` : '';
+  return `${editPrefix}${parts.join(', ')} — Total: ${formatPrice(summary.totalPrice)}`;
 }
 
 function loadCalendlyEmbed() {
@@ -642,6 +682,10 @@ repairMinus.addEventListener('click', () => {
 });
 repairPlus.addEventListener('click', () => {
   state.repairQty = Math.min(REPAIR_PAID.max, state.repairQty + 1);
+  render();
+});
+repairOver7Toggle.addEventListener('change', () => {
+  state.repairOver7Days = repairOver7Toggle.checked;
   render();
 });
 
