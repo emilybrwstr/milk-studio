@@ -2352,14 +2352,18 @@ body.no-scroll {
      overflow:hidden, the excess just gets clipped instead of scrollable,
      cutting the bottom of the phone off. dvh always tracks the real,
      currently-visible viewport. */
-  /* --ps-bottom leaves room at the true bottom edge for Safari's floating
-     compact toolbar, which sits OVER page content there rather than
-     reserving its own space (dvh alone doesn't account for it) — without
-     this the phone's bottom edge (and "swipe up to unlock") ended up
-     partly hidden behind it on a real device. */
+  /* --ps-top is a fallback for the no-JS case only — the-archive.js measures
+     the real, currently-rendered .site-header height on load/resize and
+     overrides this inline, because a hardcoded guess didn't reliably match
+     across devices (a header a few px taller than the guess meant the
+     phone's top edge sat under it). --ps-bottom is now just a small
+     cosmetic gap: dvh already excludes whatever space Safari's chrome is
+     actually occupying, so a large manual "clear the toolbar" buffer on
+     top of that was reserving the same space twice, producing a big empty
+     gap above the toolbar instead of fixing anything. */
   .phone-stage {
     --ps-top: 96px;
-    --ps-bottom: 72px;
+    --ps-bottom: 16px;
     height: 100dvh;
     padding: var(--ps-top) 0 var(--ps-bottom);
     box-sizing: border-box;
@@ -2368,7 +2372,7 @@ body.no-scroll {
     justify-content: center;
   }
   @media (max-width: 760px) {
-    .phone-stage { --ps-top: 88px; --ps-bottom: 90px; }
+    .phone-stage { --ps-top: 88px; --ps-bottom: 16px; }
   }
   .iphone {
     position: relative;
@@ -2381,22 +2385,23 @@ body.no-scroll {
     width: min(94vw, 430px, calc((100dvh - var(--ps-top) - var(--ps-bottom)) * 430 / 882));
     aspect-ratio: 430 / 882;
     height: auto;
-    /* Apple "rose gold" rather than brand pink here — a soft brushed-metal
-       gradient, not a flat bright fill. */
-    background: linear-gradient(135deg, #f7ddd4 0%, #e8bfb2 35%, #f2d2c6 65%, #dcac9c 100%);
+    /* Light baby pink (Apple's pastel-pink iPhone finish, not the warmer
+       rose gold this used to be) — still a soft brushed-metal gradient
+       rather than a flat fill. */
+    background: linear-gradient(135deg, #fdf0f2 0%, #f7d4dc 35%, #fce8ec 65%, #eeb8c5 100%);
     border-radius: clamp(38px, 9vw, 54px);
     padding: 14px;
-    box-shadow: 0 40px 80px -20px rgba(0,0,0,0.6), 0 0 0 1.5px rgba(255,255,255,0.35) inset;
+    box-shadow: 0 40px 80px -20px rgba(0,0,0,0.6), 0 0 0 1.5px rgba(255,255,255,0.5) inset;
   }
   .iphone::before {
     /* side buttons */
     content: ''; position: absolute; left: -3px; top: 128px; width: 3px; height: 28px;
-    background: #cd9a89; border-radius: 2px 0 0 2px;
-    box-shadow: 0 46px 0 #cd9a89, 0 92px 0 #cd9a89;
+    background: #dca3b1; border-radius: 2px 0 0 2px;
+    box-shadow: 0 46px 0 #dca3b1, 0 92px 0 #dca3b1;
   }
   .iphone::after {
     content: ''; position: absolute; right: -3px; top: 178px; width: 3px; height: 62px;
-    background: #cd9a89; border-radius: 0 2px 2px 0;
+    background: #dca3b1; border-radius: 0 2px 2px 0;
   }
   .iphone-screen {
     position: relative; width: 100%; height: 100%;
@@ -2475,7 +2480,13 @@ body.no-scroll {
 
   .viewer-toolbar { flex-shrink: 0; display: flex; justify-content: space-around; align-items: center; padding: 14px 10px 6px; color: #fff; }
   .viewer-toolbar button { color: #fff; background: none; border: none; padding: 6px; }
+  /* Just recoloring the stroke on favorite left the heart a thin pink
+     outline — no different in weight from "not favorited," so it never
+     read as actually toggled. Filling it solid (matching the grid's
+     already-filled heart, and how every real photo app shows "liked")
+     makes the state obvious at a glance. */
   .viewer-toolbar button.is-fav { color: #ff5a91; }
+  .viewer-toolbar button.is-fav svg { fill: currentColor; }
 
   .filmstrip-wrap { flex-shrink: 0; padding: 4px 0 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .filmstrip { display: flex; gap: 3px; padding: 0 14px; width: max-content; }

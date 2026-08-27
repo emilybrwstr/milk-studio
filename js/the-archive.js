@@ -1,3 +1,19 @@
+// Measures the real, currently-rendered header height instead of trusting a
+// hardcoded --ps-top guess in CSS — that guess didn't reliably match across
+// devices/font-loading states, leaving the phone's top edge under the fixed
+// header on some screens. Re-measures on resize/orientation change too.
+function syncPhoneStageTop() {
+  const header = document.querySelector('.site-header');
+  const stage = document.querySelector('.phone-stage');
+  if (!header || !stage) return;
+  stage.style.setProperty('--ps-top', `${header.offsetHeight}px`);
+}
+syncPhoneStageTop();
+window.addEventListener('resize', syncPhoneStageTop);
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(syncPhoneStageTop);
+}
+
 // Numbered 1–19 by Emily, oldest to newest — matches the grid's own
 // top-to-bottom order and the "scrolled to newest by default" behaviour
 // below. Type is inferred from each file's real extension (.MOV = video,
@@ -45,7 +61,7 @@ PHOTOS.forEach((p, i) => {
   thumb.className = 'lib-thumb';
   thumb.innerHTML = p.type === 'video'
     ? `${mediaTag(p)}${playBadge()}<span class="lib-thumb-duration"></span>`
-    : `${mediaTag(p)}<svg class="lib-thumb-heart" viewBox="0 0 24 24" fill="currentColor"><path d="M12 20s-7-4.4-9.3-8.8C1.3 8 3 4.8 6.3 4.8c2 0 3.3 1.1 4 2.2.7-1.1 2-2.2 4-2.2 3.3 0 5 3.2 3.6 6.4C19 15.6 12 20 12 20z"/></svg>`;
+    : `${mediaTag(p)}<svg class="lib-thumb-heart" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
   thumb.addEventListener('click', () => openViewer(i));
   if (p.type === 'video') {
     const video = thumb.querySelector('video');
