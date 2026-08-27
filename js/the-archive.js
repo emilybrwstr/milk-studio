@@ -24,10 +24,14 @@ function formatDuration(sec) {
 
 // Video elements are muted/inline/preload=metadata so the grid and filmstrip
 // can use the real first frame as their thumbnail instead of a separate
-// poster image — no extra assets needed for each clip.
-function mediaTag(p, { controls } = {}) {
+// poster image — no extra assets needed for each clip. No native `controls`
+// anywhere: the viewer's tap-to-navigate/swipe zone covers the whole slide,
+// and a visible play button or scrubber sitting in that same zone was
+// getting hit as a swipe instead of a play tap. Autoplay + loop (wired up
+// in renderViewer) sidesteps needing controls at all, same as iOS Photos.
+function mediaTag(p) {
   if (p.type === 'video') {
-    return `<video src="${p.img}" muted playsinline preload="metadata" ${controls ? 'controls' : ''}></video>`;
+    return `<video src="${p.img}" muted playsinline loop preload="metadata"></video>`;
   }
   return `<img src="${p.img}" alt="${p.title}" loading="lazy">`;
 }
@@ -64,7 +68,7 @@ const track = document.getElementById('viewerTrack');
 PHOTOS.forEach((p) => {
   const slide = document.createElement('div');
   slide.className = 'viewer-slide';
-  slide.innerHTML = mediaTag(p, { controls: true });
+  slide.innerHTML = mediaTag(p);
   track.appendChild(slide);
 });
 
@@ -96,7 +100,46 @@ function renderViewer() {
     wrap.scrollTo({ left: target, behavior: 'smooth' });
   }
   document.getElementById('viewerFavBtn').classList.toggle('is-fav', favorited.has(currentIndex));
+
+  // Only the active slide's video plays — every other one gets paused and
+  // rewound so it starts from the top next time it's swiped back into view.
+  // Iterating slides (not `video` elements directly) matters here: querying
+  // videos alone gives a list of just the 3 clips, so comparing its index
+  // against currentIndex (0–18, a slide position) almost never matched.
+  let activeVideo = null;
+  document.querySelectorAll('.viewer-slide').forEach((slide, i) => {
+    const video = slide.querySelector('video');
+    if (!video) return;
+    if (i === currentIndex) {
+      activeVideo = video;
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
+  });
+
+  // Mute toggle only makes sense on a video slide — hidden entirely for
+  // photos rather than left showing with nothing to do.
+  const muteBtn = document.getElementById('viewerMuteBtn');
+  muteBtn.hidden = !activeVideo;
+  if (activeVideo) renderMuteIcon(muteBtn, activeVideo.muted);
 }
+
+function renderMuteIcon(btn, muted) {
+  btn.setAttribute('aria-label', muted ? 'Unmute' : 'Mute');
+  btn.innerHTML = muted
+    ? `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9v6h4l5 4V5L8 9H4z" stroke-linejoin="round"/><path d="M17 9l4 6M21 9l-4 6" stroke-linecap="round"/></svg>`
+    : `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9v6h4l5 4V5L8 9H4z" stroke-linejoin="round"/><path d="M16.5 8.5a5 5 0 010 7" stroke-linecap="round"/><path d="M19 6a8.5 8.5 0 010 12" stroke-linecap="round"/></svg>`;
+}
+
+document.getElementById('viewerMuteBtn').addEventListener('click', () => {
+  const slide = document.querySelectorAll('.viewer-slide')[currentIndex];
+  const video = slide && slide.querySelector('video');
+  if (!video) return;
+  video.muted = !video.muted;
+  renderMuteIcon(document.getElementById('viewerMuteBtn'), video.muted);
+});
 
 function goToPhoto(i) {
   currentIndex = i;
@@ -110,6 +153,8 @@ function openViewer(i) {
 }
 function closeViewer() {
   screenViewer.classList.remove('is-open');
+  const playing = document.querySelectorAll('.viewer-slide')[currentIndex]?.querySelector('video');
+  if (playing) playing.pause();
 }
 document.getElementById('viewerBack').addEventListener('click', closeViewer);
 

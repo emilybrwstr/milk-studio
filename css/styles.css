@@ -609,6 +609,13 @@ section { padding: 100px 0; }
   flex-direction: column;
   gap: 8px;
 }
+/* about.js scrolls each new bubble/typing-indicator to sit flush with the
+   viewport's bottom edge (block: 'end') as it arrives — on real iOS Safari
+   that's exactly where the floating compact toolbar sits, so the newest
+   message kept landing half-hidden behind it. scroll-margin-bottom is
+   honored by scrollIntoView natively, so this leaves that buffer without
+   touching the JS at all. */
+.about-messages > * { scroll-margin-bottom: 90px; }
 .about-msg-time {
   align-self: center;
   font-family: var(--font-mono);
@@ -1994,25 +2001,6 @@ body.no-scroll {
   .edit-slide-body { padding: 0 24px 48px; }
 }
 
-/* ---------- Safari toolbar tinting ----------
-   Safari 26 colours its own toolbar/tab-bar chrome by sampling the
-   background of fixed/sticky elements pinned to the viewport edges
-   (theme-color is ignored entirely now). The real header stays cream, so
-   these are separate paper-thin accent bars — pink, fixed to the true top
-   and bottom edges, above everything in z-index — purely so Safari has a
-   pink pixel to read at each edge. iOS often puts its tab bar at the
-   bottom by default, hence covering both edges rather than just the top. */
-.safari-tint {
-  position: fixed;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--pink);
-  z-index: 999999;
-  pointer-events: none;
-}
-.safari-tint--top { top: 0; }
-.safari-tint--bottom { bottom: 0; }
 
 /* ---------- The Edit — Instagram-grid lookbook (presets.html) ---------- */
   body.the-edit-page { background: #fafafa; }
@@ -2348,15 +2336,39 @@ body.no-scroll {
   }
 
 /* ---------- The Archive — iPhone camera roll (portfolio.html) ---------- */
-  body.the-archive-page { background: var(--cream); overflow: hidden; }
+  /* overflow-y: auto (not hidden) as a safety net — real iOS Safari toolbar
+     states are hard to size against exactly, so if the phone ever ends up
+     taller than the visible area despite the dvh math below, scrolling can
+     still reach the rest of it instead of it being genuinely inaccessible. */
+  body.the-archive-page { background: var(--cream); overflow-x: hidden; overflow-y: auto; }
 
   /* ============ iPhone frame — fills the whole page, nothing above it ============ */
   /* box-sizing: border-box so the fixed header's height comes out of this
-     100vh box as top padding, instead of the phone being centered across
-     the full viewport and ending up partly hidden under the header. */
-  .phone-stage { height: 100vh; padding-top: 96px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; }
+     100dvh box as top padding, instead of the phone being centered across
+     the full viewport and ending up partly hidden under the header. dvh
+     (not vh) matters on a real phone: Safari's address bar comes and goes,
+     and 100vh is sized against the taller "bar hidden" state regardless of
+     which state is actually showing — combined with this page's
+     overflow:hidden, the excess just gets clipped instead of scrollable,
+     cutting the bottom of the phone off. dvh always tracks the real,
+     currently-visible viewport. */
+  /* --ps-bottom leaves room at the true bottom edge for Safari's floating
+     compact toolbar, which sits OVER page content there rather than
+     reserving its own space (dvh alone doesn't account for it) — without
+     this the phone's bottom edge (and "swipe up to unlock") ended up
+     partly hidden behind it on a real device. */
+  .phone-stage {
+    --ps-top: 96px;
+    --ps-bottom: 72px;
+    height: 100dvh;
+    padding: var(--ps-top) 0 var(--ps-bottom);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   @media (max-width: 760px) {
-    .phone-stage { padding-top: 88px; }
+    .phone-stage { --ps-top: 88px; --ps-bottom: 90px; }
   }
   .iphone {
     position: relative;
@@ -2366,23 +2378,25 @@ body.no-scroll {
        from aspect-ratio, is what actually keeps the real iPhone proportions
        instead of drifting toward a squashed tablet shape on short/wide
        (desktop) viewports. */
-    width: min(94vw, 430px, calc(82vh * 430 / 882));
+    width: min(94vw, 430px, calc((100dvh - var(--ps-top) - var(--ps-bottom)) * 430 / 882));
     aspect-ratio: 430 / 882;
     height: auto;
-    background: #060606;
+    /* Apple "rose gold" rather than brand pink here — a soft brushed-metal
+       gradient, not a flat bright fill. */
+    background: linear-gradient(135deg, #f7ddd4 0%, #e8bfb2 35%, #f2d2c6 65%, #dcac9c 100%);
     border-radius: clamp(38px, 9vw, 54px);
     padding: 14px;
-    box-shadow: 0 40px 80px -20px rgba(0,0,0,0.6), 0 0 0 1.5px rgba(255,255,255,0.08) inset;
+    box-shadow: 0 40px 80px -20px rgba(0,0,0,0.6), 0 0 0 1.5px rgba(255,255,255,0.35) inset;
   }
   .iphone::before {
     /* side buttons */
     content: ''; position: absolute; left: -3px; top: 128px; width: 3px; height: 28px;
-    background: #1a1a1a; border-radius: 2px 0 0 2px;
-    box-shadow: 0 46px 0 #1a1a1a, 0 92px 0 #1a1a1a;
+    background: #cd9a89; border-radius: 2px 0 0 2px;
+    box-shadow: 0 46px 0 #cd9a89, 0 92px 0 #cd9a89;
   }
   .iphone::after {
     content: ''; position: absolute; right: -3px; top: 178px; width: 3px; height: 62px;
-    background: #1a1a1a; border-radius: 0 2px 2px 0;
+    background: #cd9a89; border-radius: 0 2px 2px 0;
   }
   .iphone-screen {
     position: relative; width: 100%; height: 100%;
