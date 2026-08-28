@@ -1,19 +1,3 @@
-// Measures the real, currently-rendered header height instead of trusting a
-// hardcoded --ps-top guess in CSS — that guess didn't reliably match across
-// devices/font-loading states, leaving the phone's top edge under the fixed
-// header on some screens. Re-measures on resize/orientation change too.
-function syncPhoneStageTop() {
-  const header = document.querySelector('.site-header');
-  const stage = document.querySelector('.phone-stage');
-  if (!header || !stage) return;
-  stage.style.setProperty('--ps-top', `${header.offsetHeight}px`);
-}
-syncPhoneStageTop();
-window.addEventListener('resize', syncPhoneStageTop);
-if (document.fonts && document.fonts.ready) {
-  document.fonts.ready.then(syncPhoneStageTop);
-}
-
 // Numbered 1–19 by Emily, oldest to newest — matches the grid's own
 // top-to-bottom order and the "scrolled to newest by default" behaviour
 // below. Type is inferred from each file's real extension (.MOV = video,

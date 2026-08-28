@@ -2352,17 +2352,13 @@ body.no-scroll {
      overflow:hidden, the excess just gets clipped instead of scrollable,
      cutting the bottom of the phone off. dvh always tracks the real,
      currently-visible viewport. */
-  /* --ps-top is a fallback for the no-JS case only — the-archive.js measures
-     the real, currently-rendered .site-header height on load/resize and
-     overrides this inline, because a hardcoded guess didn't reliably match
-     across devices (a header a few px taller than the guess meant the
-     phone's top edge sat under it). --ps-bottom is now just a small
-     cosmetic gap: dvh already excludes whatever space Safari's chrome is
-     actually occupying, so a large manual "clear the toolbar" buffer on
-     top of that was reserving the same space twice, producing a big empty
-     gap above the toolbar instead of fixing anything. */
+  /* No site header on this page — it's the whole screen, nothing above it —
+     so --ps-top/--ps-bottom are both just small cosmetic breathing room now,
+     not clearance for anything. dvh already excludes whatever space Safari's
+     own chrome is occupying on its own, so there's no need to reserve extra
+     buffer for it on top of that. */
   .phone-stage {
-    --ps-top: 96px;
+    --ps-top: 16px;
     --ps-bottom: 16px;
     height: 100dvh;
     padding: var(--ps-top) 0 var(--ps-bottom);
@@ -2370,9 +2366,6 @@ body.no-scroll {
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  @media (max-width: 760px) {
-    .phone-stage { --ps-top: 88px; --ps-bottom: 16px; }
   }
   .iphone {
     position: relative;
@@ -2431,7 +2424,7 @@ body.no-scroll {
   .screen-library { z-index: 10; }
   .lib-header { padding: 2px 18px 8px; flex-shrink: 0; }
   .lib-toprow { display: flex; justify-content: space-between; align-items: baseline; }
-  .lib-select { font-family: 'Jost', sans-serif; font-size: 0.92rem; color: #ff5a91; font-weight: 500; }
+  .lib-select { font-family: 'Jost', sans-serif; font-size: 0.92rem; color: #ff5a91; font-weight: 500; text-decoration: none; }
   .lib-title { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 2.1rem; color: #000; margin: 2px 0 0; text-align: left; }
   .lib-count { font-family: 'Jost', sans-serif; font-size: 0.8rem; color: #8e8e93; text-align: left; margin: 2px 0 8px; }
 
