@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Jost:wght@300;400;500;600&family=Pliant:wdth,wght@125,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=120">
+<link rel="stylesheet" href="css/styles.css?v=123">
 </head>
 <body class="the-archive-page">
 
@@ -57,14 +57,12 @@
 
           <div class="screen screen-library" id="screenLibrary">
             <div class="lib-header">
-              <div class="lib-toprow"><span></span><a class="lib-select" href="index.html">Return to Home</a></div>
-              <h1 class="lib-title">Recents</h1>
-              <p class="lib-count" id="libCount"></p>
+              <div class="lib-title-row">
+                <h1 class="lib-title">Recents</h1>
+                <p class="lib-count" id="libCount"></p>
+              </div>
             </div>
             <div class="lib-tabs">
-              <span class="lib-tab">Years</span>
-              <span class="lib-tab">Months</span>
-              <span class="lib-tab">Days</span>
               <span class="lib-tab is-active">All Photos</span>
             </div>
             <div class="lib-grid-wrap">
@@ -72,22 +70,22 @@
               <div class="lib-grid" id="libGrid"></div>
             </div>
             <div class="tab-bar">
-              <div class="tab-item is-active">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="9.5" r="1.5" fill="currentColor" stroke="none"/><path d="M21 15l-5-5-9 9"/></svg>
-                <span>Library</span>
-              </div>
-              <div class="tab-item">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.5-9.5-9C1 8.5 2.5 5 6 5c2 0 3.5 1.2 4.2 2.4C10.9 6.2 12.4 5 14.4 5c3.5 0 5 3.5 3.5 7-2.5 4.5-9.5 9-9.5 9z"/></svg>
-                <span>For You</span>
-              </div>
-              <div class="tab-item">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h5l2 2h11v10H3z"/></svg>
-                <span>Albums</span>
-              </div>
-              <div class="tab-item">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
-                <span>Search</span>
-              </div>
+              <a class="tab-item" href="menu.html">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="4" y1="7" x2="20" y2="7" stroke-linecap="round"/><line x1="4" y1="12" x2="20" y2="12" stroke-linecap="round"/><line x1="4" y1="17" x2="14" y2="17" stroke-linecap="round"/></svg>
+                <span>Menu</span>
+              </a>
+              <a class="tab-item" href="theedit.html">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2.5l2.9 6.8 7.1.6-5.5 4.8 1.7 7.2L12 17.9l-6.2 3.6 1.7-7.2L2 9.9l7.1-.6z" stroke-linejoin="round"/></svg>
+                <span>The Edit</span>
+              </a>
+              <a class="tab-item" href="about.html">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" stroke-linecap="round"/></svg>
+                <span>About</span>
+              </a>
+              <a class="tab-item" href="custom-booking.html">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2.5" x2="8" y2="6.5" stroke-linecap="round"/><line x1="16" y1="2.5" x2="16" y2="6.5" stroke-linecap="round"/><line x1="12" y1="13.5" x2="12" y2="18.5" stroke-linecap="round"/><line x1="9.5" y1="16" x2="14.5" y2="16" stroke-linecap="round"/></svg>
+                <span>Book</span>
+              </a>
             </div>
             <div class="home-indicator"><span></span></div>
           </div>
@@ -118,6 +116,6 @@
       </div>
     </div>
 
-<script src="js/the-archive.js?v=7"></script>
+<script src="js/the-archive.js?v=9"></script>
 </body>
 </html>

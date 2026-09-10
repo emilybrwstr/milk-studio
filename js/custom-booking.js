@@ -7,7 +7,7 @@
 const CALENDLY_GROUPS = {
   'gel-manicure': {
     url: 'https://calendly.com/milkstudio/gelmanicure',
-    durations: [60, 90, 120, 150], // 1 / 1.5 / 2 / 2.5 hr
+    durations: [90, 120, 150, 180], // 1.5 / 2 / 2.5 / 3 hr
   },
   'gel-x': {
     url: 'https://calendly.com/milkstudio/gel-x',
@@ -52,8 +52,8 @@ const SERVICES = [
   },
   {
     id: 'gel-x-full-set',
-    name: 'Gel-X full set',
-    price: 55,
+    name: 'Gel-X full set (with overlay)',
+    price: 60,
     duration: 150,
     allowsLengthUpgrade: true,
     allowsNailArt: true,
@@ -62,7 +62,7 @@ const SERVICES = [
   },
   {
     id: 'gel-x-full-set-no-overlay',
-    name: 'Gel-X full set',
+    name: 'Gel-X full set (no overlay)',
     price: 45,
     duration: 90,
     allowsLengthUpgrade: true,
@@ -153,14 +153,17 @@ const REPAIR_PAID = { pricePerNail: 10, durationPerNail: 15, freeNails: 2, min: 
 const REMOVAL_TYPES = [
   { id: 'own', name: 'Existing set removal — my own soft gel', priceDelta: 5, durationDelta: 20 },
   { id: 'other', name: "Existing set removal — another tech's soft gel", priceDelta: 10, durationDelta: 25 },
+  { id: 'other-hard', name: "Existing set removal — another tech's acrylic or hard gel", priceDelta: 30, durationDelta: 45 },
 ];
 
 // Whose gel is being removed, for a removal-only booking (no new set). The
 // base "removal-only" service price/duration already covers "my own soft
-// gel"; this only adds the delta for the other-tech tier.
+// gel" ($15/25min); each delta below is on top of that base. Acrylic/hard
+// gel from another tech totals $30/45min ($15 base + this $15/20min delta).
 const REMOVAL_ONLY_TYPES = [
   { id: 'own', name: 'My own soft gel', priceDelta: 0, durationDelta: 0 },
   { id: 'other', name: "Another tech's soft gel", priceDelta: 5, durationDelta: 5 },
+  { id: 'other-hard', name: "Another tech's acrylic or hard gel", priceDelta: 15, durationDelta: 20 },
 ];
 
 const STORAGE_KEY = 'cb-state';

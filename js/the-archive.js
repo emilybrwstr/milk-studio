@@ -5,7 +5,8 @@
 const FILES = [
   '1.png', '2.JPG', '3.JPG', '4.jpeg', '5.MOV', '6.jpeg', '7.JPG', '8.JPG',
   '9.MOV', '10.JPG', '11.JPG', '12.MOV', '13.JPG', '14.jpeg', '15.JPG',
-  '16.JPG', '17.JPG', '18.JPG', '19.jpg',
+  '16.JPG', '17.JPG', '18.JPG', '19.jpg', '20.JPG', '21.JPG', '22.JPG',
+  '23.JPG', '24.JPG', '25.JPG', '26.png',
 ];
 const PHOTOS = FILES.map((name, i) => ({
   img: `images/portfolio/${name}`,

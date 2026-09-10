@@ -906,6 +906,19 @@ section { padding: 100px 0; }
   font-size: 0.82rem;
   color: var(--ink-soft);
 }
+.menu-item-note {
+  margin: 6px 0 0 16px;
+  padding-left: 10px;
+  border-left: 2px dotted rgba(34, 20, 27, 0.25);
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+.menu-item-note::before {
+  content: '★ ';
+  color: var(--pink-dark);
+}
 .menu-item--sub .menu-item-name {
   color: var(--ink-soft);
   font-size: 0.82rem;
@@ -2422,16 +2435,17 @@ body.no-scroll {
   /* ============ Library screen ============ */
   .screen { position: absolute; inset: 0; top: 10.7cqw; display: flex; flex-direction: column; background: #fff; transition: transform 0.4s cubic-bezier(.32,.72,0,1), opacity 0.3s ease; }
   .screen-library { z-index: 10; }
-  .lib-header { padding: 2px 18px 8px; flex-shrink: 0; }
+  .lib-header { padding: 2px 18px 4px; flex-shrink: 0; }
   .lib-toprow { display: flex; justify-content: space-between; align-items: baseline; }
   .lib-select { font-family: 'Jost', sans-serif; font-size: 0.92rem; color: #ff5a91; font-weight: 500; text-decoration: none; }
-  .lib-title { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 2.1rem; color: #000; margin: 2px 0 0; text-align: left; }
-  .lib-count { font-family: 'Jost', sans-serif; font-size: 0.8rem; color: #8e8e93; text-align: left; margin: 2px 0 8px; }
+  .lib-title-row { display: flex; align-items: baseline; gap: 8px; }
+  .lib-title { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 1.6rem; color: #000; margin: 2px 0 0; text-align: left; }
+  .lib-count { font-family: 'Jost', sans-serif; font-size: 0.78rem; color: #8e8e93; text-align: left; margin: 2px 0 0; }
 
-  .lib-tabs { display: flex; gap: 18px; padding: 6px 18px 10px; border-bottom: 1px solid #ececec; flex-shrink: 0; }
+  .lib-tabs { display: flex; gap: 10px; padding: 4px 18px 6px; border-bottom: 1px solid #ececec; flex-shrink: 0; }
   .lib-tab { font-family: 'Jost', sans-serif; font-size: 0.85rem; font-weight: 500; color: #b8b8bc; }
   .lib-tab.is-active { color: #000; font-weight: 600; position: relative; }
-  .lib-tab.is-active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -11px; height: 2px; background: #000; }
+  .lib-tab.is-active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -7px; height: 2px; background: #000; }
 
   .lib-grid-wrap { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
   .lib-date-label {
@@ -2448,9 +2462,10 @@ body.no-scroll {
 
   .tab-bar {
     flex-shrink: 0; display: flex; justify-content: space-around; align-items: center;
-    height: 74px; padding-bottom: 14px; border-top: 1px solid #ececec; background: rgba(255,255,255,0.94);
+    height: 52px; padding-bottom: 2px; border-top: 1px solid #ececec; background: rgba(255,255,255,0.94);
   }
-  .tab-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: #b8b8bc; }
+  .tab-item { display: flex; flex-direction: column; align-items: center; gap: 2px; color: #b8b8bc; text-decoration: none; cursor: pointer; }
+  .tab-item svg { width: 21px; height: 21px; }
   .tab-item.is-active { color: #ff5a91; }
   .tab-item span { font-family: 'Jost', sans-serif; font-size: 0.62rem; font-weight: 500; }
 

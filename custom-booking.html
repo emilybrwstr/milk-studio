@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Jost:wght@300;400;500;600&family=Pliant:wdth,wght@125,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=120">
+<link rel="stylesheet" href="css/styles.css?v=123">
 </head>
 <body>
 
@@ -29,14 +29,14 @@
   <div class="wrap header-inner">
     <nav class="main-nav" id="mainNav" aria-label="Primary">
       <div class="nav-group">
-        <a href="pricing.html">Menu</a>
-        <a href="presets.html">The Edit</a>
+        <a href="menu.html">Menu</a>
+        <a href="theedit.html">The Edit</a>
       </div>
       <a href="index.html#top" class="logo" aria-label="milk studio home">
         <img src="images/milk-logo.png?v=2" alt="milk studio" class="logo-img">
       </a>
       <div class="nav-group">
-        <a href="portfolio.html">The Archive</a>
+        <a href="thearchive.html">The Archive</a>
         <a href="about.html">About</a>
       </div>
     </nav>
@@ -86,7 +86,7 @@
             <input type="radio" name="service" value="gel-x-full-set">
             <span class="cb-card-name">Gel-X full set</span>
             <span class="cb-card-desc">with builder gel overlay</span>
-            <span class="cb-card-meta">$55 · 2 hr</span>
+            <span class="cb-card-meta">$60 · 2 hr</span>
           </label>
 
           <label class="cb-card">
@@ -144,6 +144,11 @@
                 <span class="cb-card-name">Another tech's soft gel</span>
                 <span class="cb-card-meta">+$10 · +25 min</span>
               </label>
+              <label class="cb-card cb-card--sm">
+                <input type="radio" name="removal-type" value="other-hard">
+                <span class="cb-card-name">Another tech's acrylic or hard gel</span>
+                <span class="cb-card-meta">+$30 · +45 min</span>
+              </label>
             </fieldset>
           </div>
         </div>
@@ -154,12 +159,17 @@
             <label class="cb-card cb-card--sm">
               <input type="radio" name="removal-only-type" value="own" checked>
               <span class="cb-card-name">My own soft gel</span>
-              <span class="cb-card-meta">Included</span>
+              <span class="cb-card-meta">$15 · 25 min</span>
             </label>
             <label class="cb-card cb-card--sm">
               <input type="radio" name="removal-only-type" value="other">
               <span class="cb-card-name">Another tech's soft gel</span>
               <span class="cb-card-meta">+$5 · +5 min</span>
+            </label>
+            <label class="cb-card cb-card--sm">
+              <input type="radio" name="removal-only-type" value="other-hard">
+              <span class="cb-card-name">Another tech's acrylic or hard gel</span>
+              <span class="cb-card-meta">+$15 · +20 min</span>
             </label>
           </fieldset>
         </div>
@@ -406,6 +416,6 @@
 
 <script src="js/main.js"></script>
 <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
-<script src="js/custom-booking.js?v=28"></script>
+<script src="js/custom-booking.js?v=31"></script>
 </body>
 </html>
