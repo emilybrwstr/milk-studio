@@ -429,7 +429,12 @@ p { line-height: 1.7; color: var(--ink-soft); }
   gap: clamp(10px, 2vw, 22px);
   text-decoration: none;
   color: var(--ink);
-  width: 100%;
+  /* No width:100% — the link's clickable box should hug the number+word
+     it actually shows, not stretch edge-to-edge. That stretch used to
+     swallow clicks meant for the sequin star sticker sitting in the empty
+     space to the right, since this list stacks above the stickers. */
+  width: fit-content;
+  max-width: 100%;
 }
 .flip-link::before {
   content: '0' counter(flip);
