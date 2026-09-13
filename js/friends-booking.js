@@ -1,22 +1,16 @@
-// Custom booking builder — service + add-on picker with a live price/duration
-// total. Step 4 hands off to the real Calendly event for whichever group the
-// chosen service belongs to (see CALENDLY_GROUPS and each service's
-// `calendlyGroup`), picking whichever of that event's configured durations
-// is closest to the calculated total — actual scheduling, availability,
-// confirmation emails, and reminders are all handled by Calendly from there.
-const CALENDLY_GROUPS = {
-  'gel-manicure': {
-    url: 'https://calendly.com/milkstudio/gelmanicure',
-    durations: [90, 120, 150, 180], // 1.5 / 2 / 2.5 / 3 hr
-  },
-  'gel-x': {
-    url: 'https://calendly.com/milkstudio/gel-x',
-    durations: [150, 210, 270, 330], // 2.5 / 3.5 / 4.5 / 5.5 hr
-  },
-  'repair-removal': {
-    url: 'https://calendly.com/milkstudio/repairremoval',
-    durations: [30, 45, 75, 90], // 30 / 45 / 75 min, 1.5 hr
-  },
+// Fork of custom-booking.js for the discreet friends & family flow — only
+// reachable via the hidden sticker link on the home page (see index.html),
+// never linked anywhere else. Kept as a separate file on purpose so this
+// page can be tweaked (copy, services, whatever) without any risk of
+// touching the real paid booking flow, and vice versa.
+//
+// Steps 1-3 (service + add-ons + review) work exactly like the real
+// builder, so the appointment still books the right amount of time — the
+// only difference is step 4, which always hands off to the complimentary,
+// no-deposit event below instead of a paid one.
+const FRIENDS_CALENDLY = {
+  url: 'https://calendly.com/milkstudio/friendsonly',
+  durations: [90, 150, 210, 270], // 1.5 / 2.5 / 3.5 / 4.5 hr
 };
 
 function nearestCalendlyDuration(totalMinutes, durations) {
@@ -172,7 +166,9 @@ const REMOVAL_ONLY_TYPES = [
   { id: 'other-hard', name: "Another tech's acrylic or hard gel", priceDelta: 15, durationDelta: 20 },
 ];
 
-const STORAGE_KEY = 'cb-state';
+// Separate storage key from the real booking flow's — kept isolated so
+// having both open in the same browser tab can't mix up either one's state.
+const STORAGE_KEY = 'cb-friend-state';
 
 const state = {
   step: 1,
@@ -191,18 +187,12 @@ const state = {
   handPainted: { qty: 0, all: false },
   handPaintedComplex: { qty: 0, all: false },
   repairQty: 2,
-  repairOver7Days: false,
   removalNeeded: false,
   removalTypeId: 'own',
   removalOnlyTypeId: 'own',
   editDiscount: null,
   editLookTitle: null,
 };
-
-function formatPrice(n) {
-  if (n === 0) return 'Free';
-  return n < 0 ? `−$${Math.abs(n)}` : `$${n}`;
-}
 
 function formatDuration(totalMin) {
   if (totalMin <= 0) return '0 min';
@@ -228,17 +218,13 @@ function computeSummary() {
   if (service) {
     if (service.isRepair) {
       // Replaces the generic base-service line entirely: the first
-      // REPAIR_PAID.freeNails are covered by service.duration at no
-      // charge, and any nail beyond that adds its own price/time on top.
-      // Timing never changes here — only which nails are billable does:
-      // past 7 days, the free tier doesn't apply and every nail is paid,
-      // but the appointment itself still takes the same amount of time.
-      const durationPaidQty = Math.max(0, state.repairQty - REPAIR_PAID.freeNails);
-      const pricePaidQty = state.repairOver7Days ? state.repairQty : durationPaidQty;
+      // REPAIR_PAID.freeNails are covered by service.duration alone, and
+      // any nail beyond that adds its own time on top.
+      const extraQty = Math.max(0, state.repairQty - REPAIR_PAID.freeNails);
       add(
         `Repair — ${state.repairQty} nail${state.repairQty === 1 ? '' : 's'}`,
-        REPAIR_PAID.pricePerNail * pricePaidQty,
-        service.duration + REPAIR_PAID.durationPerNail * durationPaidQty
+        0,
+        service.duration + REPAIR_PAID.durationPerNail * extraQty
       );
     } else {
       add(service.name, service.price, service.duration);
@@ -303,7 +289,6 @@ const steps = {
 };
 const progress = document.getElementById('cbProgress');
 const summaryBar = document.getElementById('summaryBar');
-const summaryPrice = document.getElementById('summaryPrice');
 const summaryDuration = document.getElementById('summaryDuration');
 const backBtn = document.getElementById('backBtn');
 const nextBtn = document.getElementById('nextBtn');
@@ -321,12 +306,10 @@ const catEyeToggle = document.getElementById('catEyeToggle');
 const repairMinus = document.getElementById('repairMinus');
 const repairPlus = document.getElementById('repairPlus');
 const repairValue = document.getElementById('repairValue');
-const repairOver7Toggle = document.getElementById('repairOver7Toggle');
 const repairStepperNote = document.getElementById('repairStepperNote');
 const reviewEditServer = document.getElementById('reviewEditServer');
 const reviewEditTable = document.getElementById('reviewEditTable');
 const reviewNames = document.getElementById('reviewNames');
-const reviewPrices = document.getElementById('reviewPrices');
 const reviewTotalPrice = document.getElementById('reviewTotalPrice');
 const reviewTotalDuration = document.getElementById('reviewTotalDuration');
 const confirmationRecap = document.getElementById('confirmationRecap');
@@ -413,7 +396,6 @@ function render() {
   const service = summary.service;
 
   // Summary bar
-  summaryPrice.textContent = service ? formatPrice(summary.totalPrice) : '$0';
   summaryDuration.textContent = service ? formatDuration(summary.totalDuration) : 'Select a service to start';
 
   // Conditional sections
@@ -431,10 +413,6 @@ function render() {
   repairValue.textContent = state.repairQty;
   repairMinus.disabled = state.repairQty <= REPAIR_PAID.min;
   repairPlus.disabled = state.repairQty >= REPAIR_PAID.max;
-  repairOver7Toggle.checked = state.repairOver7Days;
-  repairStepperNote.textContent = state.repairOver7Days
-    ? `$${REPAIR_PAID.pricePerNail}/nail — free tier doesn't apply after 7 days`
-    : `first ${REPAIR_PAID.freeNails} free · $${REPAIR_PAID.pricePerNail}/nail after that`;
 
   // Continue/back button state per step
   backBtn.hidden = state.step === 1 || state.step === 4;
@@ -447,30 +425,38 @@ function render() {
     nextBtn.textContent = 'Continue';
     nextBtn.disabled = false;
   } else if (state.step === 3) {
-    nextBtn.textContent = 'Reserve This Look';
+    nextBtn.textContent = 'Lock It In';
     nextBtn.disabled = false;
   }
 
-  // Review step content — names and prices are two independent lists laid
-  // over the guest check's description and price columns.
+  // Review step content — each line item is one dotted-leader row (name,
+  // then time), styled after the site's own menu rows (see
+  // .menu-item-leader) rather than the paid flow's photographed receipt.
   if (state.step === 3) {
     reviewEditServer.hidden = !state.editLookTitle;
     reviewEditTable.hidden = !state.editLookTitle;
     reviewEditTable.textContent = state.editLookTitle || '';
     reviewNames.innerHTML = '';
-    reviewPrices.innerHTML = '';
     summary.lineItems.forEach((item) => {
-      const name = document.createElement('span');
-      name.className = 'cb-receipt-name-line';
-      name.textContent = item.label;
-      reviewNames.appendChild(name);
+      const row = document.createElement('div');
+      row.className = 'fb-tab-row';
 
-      const price = document.createElement('span');
-      price.className = 'cb-receipt-price-line';
-      price.textContent = `${item.price > 0 ? '+' : ''}${formatPrice(item.price)}`;
-      reviewPrices.appendChild(price);
+      const name = document.createElement('span');
+      name.className = 'fb-tab-name';
+      name.textContent = item.label;
+
+      const leader = document.createElement('span');
+      leader.className = 'fb-tab-leader';
+      leader.setAttribute('aria-hidden', 'true');
+
+      const time = document.createElement('span');
+      time.className = 'fb-tab-time';
+      time.textContent = item.duration > 0 ? `+${formatDuration(item.duration)}` : '—';
+
+      row.append(name, leader, time);
+      reviewNames.appendChild(row);
     });
-    reviewTotalPrice.textContent = formatPrice(summary.totalPrice);
+    reviewTotalPrice.textContent = formatDuration(summary.totalDuration);
     reviewTotalDuration.textContent = formatDuration(summary.totalDuration);
   }
 
@@ -479,7 +465,7 @@ function render() {
     const extras = summary.lineItems.slice(1).map((i) => i.label.replace(/^Removal — /, ''));
     const extrasText = extras.length ? ` with ${extras.join(', ')}` : '';
     const editPrefix = state.editLookTitle ? `the edit — ${state.editLookTitle}: ` : '';
-    confirmationRecap.textContent = `${editPrefix}${summary.service.name}${extrasText} — ${formatDuration(summary.totalDuration)} · ${formatPrice(summary.totalPrice)}`;
+    confirmationRecap.textContent = `${editPrefix}${summary.service.name}${extrasText} — ${formatDuration(summary.totalDuration)}`;
     confirmationDuration.textContent = formatDuration(summary.totalDuration);
   }
 
@@ -502,20 +488,20 @@ function render() {
 // ---------------------------------------------------------------------------
 let calendlyLoadedFor = null; // avoid re-initializing the same URL twice
 
-// Builds the plain-text line "Gel-X full set, French tip — Total: $65" so
-// the exact set + price chosen shows up on Calendly's own event page and
-// confirmation email, not just the duration.
+// Builds the plain-text line "Gel-X full set, French tip — Total time: 2h
+// 45m" so the exact set chosen shows up on Calendly's own event page and
+// confirmation email, with no pricing anywhere on this complimentary flow.
 function buildBookingSummaryText(summary) {
   const parts = summary.lineItems.map((item) => item.label);
   const editPrefix = state.editLookTitle ? `[the edit: ${state.editLookTitle}] ` : '';
-  return `${editPrefix}${parts.join(', ')} — Total: ${formatPrice(summary.totalPrice)}`;
+  return `${editPrefix}${parts.join(', ')} — Total time: ${formatDuration(summary.totalDuration)}`;
 }
 
 function loadCalendlyEmbed() {
   const summary = computeSummary();
   if (!summary.service) return;
 
-  const group = CALENDLY_GROUPS[summary.service.calendlyGroup];
+  const group = FRIENDS_CALENDLY;
   const duration = nearestCalendlyDuration(summary.totalDuration, group.durations);
   const summaryText = buildBookingSummaryText(summary);
   const url = `${group.url}?duration=${duration}&a2=${encodeURIComponent(summaryText)}`;
@@ -548,44 +534,6 @@ function loadCalendlyEmbed() {
   }, 150);
 }
 
-// Fits the receipt to whatever room #step-3 actually has, preserving its
-// aspect ratio — see the long comment on .cb-receipt in styles.css for
-// why this is done in JS rather than CSS aspect-ratio/max-height alone.
-const RECEIPT_RATIO = 942 / 1413;
-const receiptEl = document.querySelector('.cb-receipt');
-const step3El = document.getElementById('step-3');
-// No fixed max-width — the receipt scales with whatever room is actually
-// available, always keeping this much breathing room on the tighter axis
-// rather than either a hard-capped size (leaves a big unused gap on
-// tall/wide viewports) or filling edge-to-edge (leaves none). Both the
-// size AND the vertical position are measured against the bar's real
-// position — not step-3's padding-bottom reserve, which is sized
-// generously as a safety margin and rarely matches the bar's actual
-// rendered height, so letting CSS grid centering use that padding-defined
-// box (a different box than "step-3's top to the bar's real top") landed
-// the receipt off-center by that same mismatch. Horizontal centering is
-// still left to CSS (see place-items on #step-3) since there's no
-// equivalent horizontal mismatch.
-const RECEIPT_GAP = 30;
-function sizeReceipt() {
-  if (!receiptEl || !step3El || step3El.hidden) return;
-  const step3Rect = step3El.getBoundingClientRect();
-  const barRect = summaryBar.getBoundingClientRect();
-  const trueAvailH = barRect.top - step3Rect.top;
-  const availW = step3Rect.width - RECEIPT_GAP * 2;
-  const availH = trueAvailH - RECEIPT_GAP * 2;
-  let w = availW;
-  let h = w / RECEIPT_RATIO;
-  if (h > availH) {
-    h = availH;
-    w = h * RECEIPT_RATIO;
-  }
-  receiptEl.style.width = `${w}px`;
-  receiptEl.style.height = `${h}px`;
-  receiptEl.style.marginTop = `${(trueAvailH - h) / 2}px`;
-}
-window.addEventListener('resize', () => { if (state.step === 3) sizeReceipt(); });
-
 // ---------------------------------------------------------------------------
 // Step navigation
 // ---------------------------------------------------------------------------
@@ -593,25 +541,14 @@ function goToStep(n) {
   state.step = n;
   Object.values(steps).forEach((el) => { el.hidden = true; });
   steps[n].hidden = false;
-  // Only the review step needs its column height-capped to the viewport
-  // (so the receipt shrinks to fit instead of scrolling) — the other
-  // steps have real, sometimes-long content and need to scroll normally.
-  document.querySelector('.cb-builder').classList.toggle('cb-builder--capped', n === 3);
   render();
 
-  const heading = steps[n].querySelector('.cb-step-heading, .cb-receipt');
+  const heading = steps[n].querySelector('.cb-step-heading, .fb-tab');
   if (heading) {
     heading.setAttribute('tabindex', '-1');
     heading.focus({ preventScroll: true });
   }
-  // sizeReceipt() measures step-3's gap to the fixed summary bar, which
-  // depends on scroll position (step-3 is normal-flow, the bar isn't) —
-  // so it has to run after the scroll actually lands, not before. A smooth
-  // scroll animates over the next several frames, so step 3 forces an
-  // instant one instead: it's already applied by the time the next line
-  // runs, where a smooth scroll wouldn't be yet.
-  steps[n].scrollIntoView({ block: 'start', behavior: n === 3 ? 'auto' : (reducesMotion ? 'auto' : 'smooth') });
-  if (n === 3) sizeReceipt();
+  steps[n].scrollIntoView({ block: 'start', behavior: reducesMotion ? 'auto' : 'smooth' });
 
   if (n === 4) {
     try { sessionStorage.removeItem(STORAGE_KEY); } catch (_) {}
@@ -696,11 +633,6 @@ repairPlus.addEventListener('click', () => {
   state.repairQty = Math.min(REPAIR_PAID.max, state.repairQty + 1);
   render();
 });
-repairOver7Toggle.addEventListener('change', () => {
-  state.repairOver7Days = repairOver7Toggle.checked;
-  render();
-});
-
 removalToggle.addEventListener('change', () => {
   state.removalNeeded = removalToggle.checked;
   render();
@@ -720,6 +652,4 @@ loadState();
 applyStateToInputs();
 Object.values(steps).forEach((el) => { el.hidden = true; });
 steps[state.step].hidden = false;
-document.querySelector('.cb-builder').classList.toggle('cb-builder--capped', state.step === 3);
 render();
-if (state.step === 3) sizeReceipt();

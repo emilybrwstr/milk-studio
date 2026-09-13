@@ -330,6 +330,13 @@ p { line-height: 1.7; color: var(--ink-soft); }
   .menu-sticker { transition: none; opacity: 1; transform: rotate(var(--rot, 0deg)); }
 }
 
+/* The one sticker that's also a real link (discreet friends & family
+   booking entry point — see index.html and friends-booking.html). The
+   `<a>` itself carries `.menu-sticker`'s positioning/animation so it has
+   the star's actual clickable area, not just the img inside it. */
+.menu-sticker-link { display: block; }
+.menu-sticker-img { width: 100%; display: block; }
+
 .ms-1  { top: 3%;  left: 1%;  width: clamp(64px, 9vw, 140px); --rot: -8deg; --delay: 0.05s; }
 .ms-2  { top: 30%; left: -2%; width: clamp(56px, 7.5vw, 120px); --rot: 6deg; --delay: 0.15s; }
 .ms-3  { top: 66%; left: 4%;  width: clamp(36px, 4.5vw, 70px);  --rot: -10deg; --delay: 0.25s; }
@@ -1166,6 +1173,13 @@ section { padding: 100px 0; }
   font-size: clamp(1.8rem, 4vw, 2.4rem);
   outline: none;
 }
+.cb-friends-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--pink-dark);
+  margin: 0 0 8px;
+}
 .cb-step-sub {
   font-family: var(--font-mono);
   font-size: 0.85rem;
@@ -1525,7 +1539,8 @@ section { padding: 100px 0; }
   padding: 14px clamp(20px, 5vw, 32px) calc(14px + env(safe-area-inset-bottom));
 }
 .cb-summary-bar-total { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.cb-summary-price {
+.cb-summary-price,
+.cb-summary-highlight {
   font-family: var(--font-display);
   font-weight: 700;
   color: var(--pink-dark);
@@ -2559,3 +2574,306 @@ body.no-scroll {
   }
   @keyframes lockBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
   .lock-home-indicator { position: absolute; bottom: 0; left: 0; right: 0; color: #fff; }
+
+/* ---------- Booking confirmation ---------- */
+.confirm {
+  position: relative;
+  min-height: 82vh;
+  display: flex;
+  align-items: center;
+  padding: 160px 0 100px;
+}
+.confirm-wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.confirm-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--pink-dark);
+  margin: 0 0 10px;
+}
+.confirm-title {
+  font-family: var(--font-title);
+  font-weight: 400;
+  font-size: clamp(3rem, 11vw, 5.5rem);
+  line-height: 0.92;
+  margin: 0;
+  color: var(--ink);
+}
+.confirm-title-dot { color: var(--pink); }
+.confirm-when {
+  display: inline-flex;
+  align-items: center;
+  margin: 18px 0 0;
+  padding: 8px 20px;
+  border-radius: 999px;
+  background: var(--pink-pale);
+  color: var(--pink-dark);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+}
+.confirm-sub {
+  max-width: 44ch;
+  margin: 18px 0 0;
+  font-size: 1.02rem;
+}
+.confirm-receipt {
+  position: relative;
+  width: min(64vw, 280px);
+  margin: 44px auto 4px;
+  transform: rotate(-2.5deg);
+  filter: drop-shadow(0 18px 30px rgba(34, 20, 27, 0.22));
+}
+.confirm-receipt-bg { width: 100%; display: block; }
+.confirm-receipt-stamp {
+  position: absolute;
+  top: 27%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-16deg);
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: clamp(1.2rem, 5vw, 1.7rem);
+  letter-spacing: 0.06em;
+  color: var(--pink);
+  border: 3px solid var(--pink);
+  border-radius: 10px;
+  padding: 5px 16px;
+  opacity: 0.82;
+  mix-blend-mode: multiply;
+  white-space: nowrap;
+}
+.confirm-receipt-line {
+  position: absolute;
+  bottom: 15%;
+  left: 9%;
+  right: 9%;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  line-height: 1.5;
+  color: var(--ink);
+  text-align: left;
+}
+.confirm-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 44px;
+}
+.confirm-note {
+  max-width: 40ch;
+  margin: 26px 0 0;
+  font-size: 0.85rem;
+}
+@media (max-width: 640px) {
+  .confirm { padding: 130px 0 70px; }
+  .confirm-receipt { width: min(78vw, 260px); }
+}
+
+/* ==========================================================================
+   Friends & Family booking — "speakeasy" theme
+   Nearly every cb-* booking component already reads its colors from the
+   shared tokens (--cream, --ink, --pink, etc.) rather than hardcoding them,
+   so re-theming this one page is mostly a matter of overriding those
+   tokens' values here — every card, button, and progress step reskins on
+   its own. A handful of spots hardcode a literal color instead of a var()
+   and need patching individually below; everything else is free.
+   ========================================================================== */
+.friends-booking-page {
+  /* Deep crimson velvet and gilt — a tufted booth under a low light,
+     not a flat dark mode. */
+  --cream: #240709;
+  --cream-panel: #3d0f14;
+  --ink: #f4e4d8;
+  --ink-soft: rgba(244, 228, 216, 0.62);
+  --pink: #c9a24a;
+  --pink-dark: #9c7a34;
+  --pink-soft: #e2c179;
+  --pink-pale: #4a141a;
+  --line: rgba(244, 228, 216, 0.14);
+  --shadow-color: rgba(0, 0, 0, 0.6);
+  position: relative;
+}
+
+/* A dim glow overhead, fading into the dark at the edges — not a flat
+   dark mode. Fixed so it stays put while the page scrolls under it. */
+.friends-booking-page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(201, 162, 74, 0.1), transparent 60%),
+    radial-gradient(ellipse 90% 70% at 50% 105%, rgba(0, 0, 0, 0.55), transparent 70%);
+  pointer-events: none;
+}
+
+/* The header and footer normally use --cream/--ink as light-page-with-a-
+   dark-band; both need pinning to real tones here rather than inheriting
+   the token flip. Header matches the card panel color (not the page
+   background) so the wordmark and nav sit on the same "velvet" surface
+   as everything else, and the wordmark swaps to its white asset (see
+   friends-booking.html) instead of trying to recolor the pink one. */
+.friends-booking-page .site-header { background: var(--cream-panel); }
+.friends-booking-page .site-footer { background: #1a0507; }
+
+/* Two hardcoded (non-token) colors assume a light "selected" card
+   background; the selected state here is gold instead, so this secondary
+   text needs to go dark to stay legible rather than washing out. */
+/* The selected state here keeps the same dark panel (a gilt frame gets
+   added below, not a fill), unlike the base rules' assumption of a light
+   fill needing dark text — so all three flip back to a light/gold read
+   instead of the near-invisible dark-on-dark those rules would produce. */
+.friends-booking-page .cb-card.is-selected .cb-card-name,
+.friends-booking-page .cb-toggle-card.is-selected .cb-card-name,
+.friends-booking-page .cb-card--sm.is-selected .cb-card-meta,
+.friends-booking-page .cb-toggle-card--sm.is-selected .cb-card-meta {
+  color: var(--pink-soft);
+}
+.friends-booking-page .cb-card.is-selected .cb-card-desc,
+.friends-booking-page .cb-toggle-card.is-selected .cb-card-desc {
+  color: var(--ink-soft);
+}
+.friends-booking-page .cb-card.is-selected .cb-card-meta,
+.friends-booking-page .cb-toggle-card.is-selected .cb-card-meta {
+  color: var(--pink-dark);
+}
+/* Cards get a faint tufted-velvet dot texture, and the selected state
+   becomes a gilt picture-frame (a second inset border) rather than just
+   a color swap — like the mirror frame this whole direction is built on. */
+.friends-booking-page .cb-card,
+.friends-booking-page .cb-toggle-card,
+.friends-booking-page .cb-nailart-item {
+  background-color: var(--cream-panel);
+  background-image:
+    radial-gradient(circle at 22% 28%, rgba(0, 0, 0, 0.28) 0, transparent 3.5px),
+    radial-gradient(circle at 78% 28%, rgba(0, 0, 0, 0.28) 0, transparent 3.5px),
+    radial-gradient(circle at 22% 78%, rgba(0, 0, 0, 0.28) 0, transparent 3.5px),
+    radial-gradient(circle at 78% 78%, rgba(0, 0, 0, 0.28) 0, transparent 3.5px);
+}
+.friends-booking-page .cb-card.is-selected,
+.friends-booking-page .cb-toggle-card.is-selected {
+  position: relative;
+  box-shadow: 0 0 0 1px var(--pink), 0 0 22px -2px rgba(201, 162, 74, 0.55);
+}
+.friends-booking-page .cb-card.is-selected::after,
+.friends-booking-page .cb-toggle-card.is-selected::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 1px solid rgba(201, 162, 74, 0.55);
+  border-radius: 6px;
+  pointer-events: none;
+}
+.friends-booking-page .btn-primary { box-shadow: 0 10px 22px -10px rgba(201, 162, 74, 0.6); }
+
+/* The welcome line reads like an engraved invitation card. */
+.friends-booking-page .cb-friends-eyebrow {
+  font-family: var(--font-title);
+  font-style: italic;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  color: var(--pink-soft);
+  margin: 0 0 24px;
+}
+/* Headings stay solid and calm — the shout above already owns the one
+   gold-foil moment on the page. */
+.friends-booking-page .cb-step-heading { color: var(--ink); }
+
+/* ---------- "The Tab" — review step ----------
+   The paid flow's review step lays its line items over a photographed
+   pink guest-check — a bright, cheerful prop that would fight this page's
+   whole mood. This gets its own dark tab instead, with dotted-leader rows
+   styled after the site's own menu (see .menu-item-leader) rather than a
+   physical receipt. */
+.fb-tab {
+  width: min(560px, 100%);
+  margin: 0 auto;
+  background: var(--cream-panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: clamp(24px, 5vw, 40px);
+  box-shadow: 0 24px 50px -20px rgba(0, 0, 0, 0.7);
+  outline: none;
+}
+/* A thin gilt frame around the tab, echoing the mirror/painting frames
+   this whole direction is built on. */
+.friends-booking-page .fb-tab {
+  border-color: rgba(201, 162, 74, 0.25);
+  border-radius: 4px;
+  box-shadow:
+    0 0 0 6px #33090d,
+    0 0 0 7px rgba(201, 162, 74, 0.3),
+    0 24px 50px -20px rgba(0, 0, 0, 0.8);
+}
+.friends-booking-page .fb-tab-total-value { color: var(--pink-soft); }
+.fb-tab-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+}
+.fb-tab-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pink);
+}
+.fb-tab-num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+}
+.fb-tab-rule { border-top: 1px dashed var(--line); margin: 18px 0; }
+.fb-tab-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 0;
+}
+.fb-tab-name {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+.fb-tab-leader {
+  flex: 1 1 auto;
+  min-width: 10px;
+  border-bottom: 2px dotted var(--line);
+  transform: translateY(-3px);
+}
+.fb-tab-time {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--pink-soft);
+  white-space: nowrap;
+}
+.fb-tab-total-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.fb-tab-total-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.fb-tab-total-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: var(--pink);
+}
