@@ -10,7 +10,7 @@ const LOOKS = [
   { img: 'images/the-edit/IMG_7952.JPG', title: 'chrome reverie', status: 'available', caption: 'blushed pink melting into mirrored chrome, slay', design: 30, addons: { fullChrome: 'all', aura: 'all' }, likes: 342 },
   { img: 'images/the-edit/IMG_7954.JPG', title: 'molten gold', status: 'queued', caption: '3D gold wire poured straight onto bare nail. it\'s basically jewelry 🫧', design: 30, addons: { chrome: 'all', handPainted: 'all' }, likes: 198 },
   { img: 'images/the-edit/IMG_7955.JPG', title: 'lilac static', status: 'queued', caption: 'hand-painted lilac static over milky white. felt cute, might still book it 💜', design: 35, addons: { length: 'long', aura: 'all', handPainted: 'all' }, likes: 167 },
-  { img: 'images/the-edit/IMG_7956.JPG', title: 'wild card', status: 'booked', caption: 'tortoiseshell, chrome marble, and a french tip that didn\'t get the memo. chaos, curated 🐆', design: 32, addons: { length: 'long', handPainted: 'all', aura: 2, rhinestones: 2, chrome: 2 }, likes: 224 },
+  { img: 'images/the-edit/IMG_7956.JPG', title: 'wild card', status: 'archived', archiveImage: 31, caption: 'tortoiseshell, chrome marble, and a french tip that didn\'t get the memo. chaos, curated 🐆', design: 32, addons: { length: 'long', handPainted: 'all', aura: 2, rhinestones: 2, chrome: 2 }, likes: 224 },
   { img: 'images/the-edit/IMG_7957.JPG', title: 'star charm', status: 'available', caption: 'stars, dots, marble, pearls — every ring on my hand had a say in this one ⭐', design: 38, addons: { chrome: 1, aura: 3, handPainted: 'all', rhinestones: 'all' }, likes: 311 },
   { img: 'images/the-edit/IMG_7960.JPG', title: 'midnight merlot', status: 'available', caption: 'wine-stained french tips 🍷', design: 47, addons: { length: 'long', aura: 'all', chrome: 'all', threeDElements: 6 }, likes: 156 },
   { img: 'images/the-edit/IMG_7961.JPG', title: 'bruised petal', status: 'available', caption: 'airbrushed red-violet blush with little pearl drops. looks bitten, not bad 🩸', design: 45, addons: { aura: 'all', handPainted: 'all', rhinestones: 'all' }, likes: 229 },
@@ -158,7 +158,9 @@ function openPost(i) {
   document.getElementById('igModalBooking').hidden = isTaken;
   document.getElementById('igModalCta').hidden = isTaken;
   document.getElementById('igModalArchived').hidden = !isTaken;
-  document.getElementById('igModalArchivedCta').hidden = look.status !== 'archived';
+  const archivedCta = document.getElementById('igModalArchivedCta');
+  archivedCta.hidden = look.status !== 'archived';
+  archivedCta.href = look.archiveImage ? `thearchive.html?photo=${look.archiveImage}` : 'thearchive.html';
   if (isTaken) {
     const label = document.getElementById('igModalArchivedLabel');
     const text = document.getElementById('igModalArchivedText');

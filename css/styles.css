@@ -281,6 +281,11 @@ p { line-height: 1.7; color: var(--ink-soft); }
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-soft);
+  /* Purely decorative (aria-hidden, no links) — but as a full-width flex
+     bar its empty middle/right space still intercepted clicks meant for
+     the sequin star sticker underneath. Click-through fixes that without
+     affecting how it looks. */
+  pointer-events: none;
 }
 .intro-stage {
   position: relative;
@@ -421,6 +426,13 @@ p { line-height: 1.7; color: var(--ink-soft); }
   gap: clamp(4px, 1.6vh, 18px);
   width: 100%;
   padding: 0 clamp(24px, 6vw, 80px);
+  /* This container's own box spans the full row width and height even
+     though each link only visually fills its own word — at wide desktop
+     viewports the huge responsive text makes that empty space tall enough
+     to sit right over the corner stickers, swallowing clicks meant for
+     them the same way width:100% on the links themselves used to.
+     Click-through here, re-enabled on the actual links below. */
+  pointer-events: none;
 }
 .flip-link {
   counter-increment: flip;
@@ -429,6 +441,9 @@ p { line-height: 1.7; color: var(--ink-soft); }
   gap: clamp(10px, 2vw, 22px);
   text-decoration: none;
   color: var(--ink);
+  /* Re-enables clicks after .flip-menu-list above turns them off for
+     itself — this is the actual clickable element. */
+  pointer-events: auto;
   /* No width:100% — the link's clickable box should hug the number+word
      it actually shows, not stretch edge-to-edge. That stretch used to
      swallow clicks meant for the sequin star sticker sitting in the empty
@@ -654,6 +669,7 @@ section { padding: 100px 0; }
   font-family: var(--font-display);
   font-weight: 600;
 }
+.about-bubble a { color: var(--pink-dark); font-weight: 600; text-decoration: underline; }
 .about-bubble-img {
   align-self: flex-start;
   padding: 6px;
@@ -1602,6 +1618,14 @@ section { padding: 100px 0; }
   font-style: normal;
   font-display: swap;
 }
+@font-face {
+  font-family: 'Biro Script';
+  src: url('../fonts/biro_script/Biro_Script_reduced.ttf') format('truetype'),
+       url('../fonts/biro_script/Biro_Script_reduced.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 .coming-soon-page {
   position: relative;
   min-height: 100dvh;
@@ -2086,6 +2110,10 @@ body.no-scroll {
   .ig-bio-name { font-family: var(--font-display); font-weight: 600; font-size: 0.95rem; color: var(--ink); }
   .ig-bio-text { font-family: var(--font-sans); font-size: 0.9rem; color: var(--ink-soft); line-height: 1.5; }
   .ig-bio-link { color: var(--pink-dark); font-weight: 500; text-decoration: none; }
+  .ig-bio-link-row { display: flex; align-items: center; gap: 5px; margin-bottom: 8px; }
+  .ig-bio-link-row svg { width: 13px; height: 13px; flex-shrink: 0; color: var(--ink-soft); }
+  .ig-bio-link-row a { font-family: var(--font-sans); font-size: 0.88rem; font-weight: 600; color: var(--pink-dark); text-decoration: none; }
+  .ig-bio-link-row a:hover { text-decoration: underline; }
 
   .ig-divider {
     display: flex;
@@ -2881,4 +2909,257 @@ body.no-scroll {
   font-weight: 700;
   font-size: 1.8rem;
   color: var(--pink);
+}
+
+/* ==========================================================================
+   Wall of Love — split across two real pages:
+     - wall-of-love.html (public): the title + the pinned reviews board.
+     - love-note.html (private, unlisted, sent directly to clients after
+       their appointment): just the "add your love note" pinned blank form.
+   Both share this styling and the same tiled cork background image.
+   ========================================================================== */
+.wol-page-bg {
+  background-image: url('../images/wall-of-love-bg.jpg?v=5');
+  background-repeat: repeat;
+  background-size: 340px auto;
+}
+
+/* ---- Handwritten headings — written straight onto the wall, in the same
+   hand as every note pinned to it, not a printed sign sitting on top. ---- */
+.wol-heading-wrap { position: relative; text-align: center; }
+.wol-heading {
+  display: inline-block;
+  font-family: 'Biro Script', cursive; font-weight: 400;
+  line-height: 1;
+  margin: 0;
+  color: #7a1f42;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
+}
+.wol-heading--lg { font-size: clamp(2.8rem, 8vw, 4.6rem); transform: rotate(-2deg); }
+.wol-heading--sm { font-size: clamp(2rem, 5.5vw, 3rem); transform: rotate(-1.5deg); }
+.wol-heading-heart {
+  position: absolute;
+  transform: rotate(14deg);
+}
+.wol-heading-heart--lg {
+  width: clamp(28px, 5vw, 40px); height: auto;
+  top: -6px; right: calc(50% - clamp(120px, 30vw, 210px));
+  transform: rotate(12deg);
+}
+.wol-heading-heart--sm {
+  width: clamp(22px, 4vw, 30px); height: auto;
+  top: -10px; right: calc(50% - clamp(90px, 20vw, 150px));
+}
+.wol-heading-swash {
+  display: block;
+  width: clamp(200px, 40vw, 320px);
+  height: auto;
+  margin: 2px auto 0;
+}
+
+/* ---- The board (wall-of-love.html): a literal corkboard, pinned notes ---- */
+.wol-board {
+  padding: clamp(100px, 16vw, 130px) 0 100px;
+  box-shadow: inset 0 12px 24px -18px rgba(34, 20, 27, 0.25);
+}
+.wol-title-wrap { margin: 0 0 32px; padding: 0 24px; }
+.wol-wall {
+  max-width: 1040px; margin: 0 auto; padding: 0 24px;
+  column-count: 3; column-gap: 22px;
+}
+@media (max-width: 860px) { .wol-wall { column-count: 2; } }
+@media (max-width: 560px) { .wol-wall { column-count: 1; } }
+
+/* Each note is its own scrap of paper — a pushpin up top, a slightly
+   uneven tilt, and a shadow that lifts it off the board rather than
+   sitting flush like a UI card. */
+.wol-card {
+  position: relative;
+  break-inside: avoid; margin: 22px 0 18px;
+  background: #fffdf8;
+  border-radius: 3px;
+  padding: clamp(20px, 3.5vw, 26px) clamp(16px, 3.5vw, 22px) clamp(16px, 3vw, 20px);
+  box-shadow: 0 18px 30px -16px rgba(34, 20, 27, 0.4);
+  transform: rotate(var(--tilt, -1deg));
+}
+.wol-card:nth-child(4n+1) { --tilt: -1.4deg; background: #fffdf8; }
+.wol-card:nth-child(4n+2) { --tilt: 1.1deg; background: #fdeaf1; }
+.wol-card:nth-child(4n+3) { --tilt: -0.7deg; background: #fff8e6; }
+.wol-card:nth-child(4n+4) { --tilt: 1.6deg; background: #fffdf8; }
+.wol-card::before,
+.wol-form::before,
+.wol-empty::before {
+  content: '';
+  position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+  width: 16px; height: 16px; border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #ffb3cd, var(--pink-dark) 65%, #9c2f5c);
+  box-shadow: 0 3px 5px rgba(34, 20, 27, 0.45);
+}
+.wol-card-stars { color: var(--pink); font-size: clamp(0.76rem, 2vw, 0.85rem); letter-spacing: 2px; margin-bottom: 10px; }
+.wol-card-quote {
+  font-family: 'Biro Script', cursive; font-weight: 400;
+  font-size: clamp(1.5rem, 4vw, 1.8rem); line-height: 1.35; color: #33241c;
+  margin: 0 0 8px;
+}
+.wol-card-sign {
+  font-family: 'Biro Script', cursive; font-weight: 400;
+  font-size: clamp(1.25rem, 3.4vw, 1.45rem); color: var(--pink-dark);
+  margin: 0 0 10px; text-align: right;
+}
+.wol-card-tag {
+  display: inline-block; font-family: var(--font-mono); font-size: clamp(0.62rem, 1.7vw, 0.68rem);
+  letter-spacing: 0.03em; color: var(--ink-soft);
+  background: rgba(34, 20, 27, 0.06); border-radius: 999px; padding: 3px 10px;
+}
+/* Empty-state note, shown until the first real review comes in. */
+.wol-empty {
+  break-inside: avoid; margin: 22px auto 18px; max-width: 320px;
+  background: #fffdf8; border-radius: 3px;
+  padding: clamp(24px, 5vw, 32px) clamp(20px, 4vw, 26px);
+  box-shadow: 0 18px 30px -16px rgba(34, 20, 27, 0.4);
+  transform: rotate(-1deg);
+  text-align: center;
+  position: relative;
+}
+.wol-empty-text {
+  font-family: 'Biro Script', cursive; font-size: clamp(1.3rem, 3.6vw, 1.5rem);
+  color: #33241c; margin: 0; line-height: 1.4;
+}
+
+/* ---- The love note form (love-note.html): styled exactly like the paper
+   notes above — same tone, same pin, same tilt — an obviously blank one
+   waiting to be filled out and sent in. ---- */
+.wol-note-section { padding: clamp(40px, 8vw, 70px) 24px 100px; text-align: center; }
+.wol-note-sub { max-width: 42ch; margin: 12px auto 32px; font-size: clamp(0.92rem, 2.4vw, 1.02rem); }
+.wol-form-wrap { max-width: 480px; margin: 0 auto; text-align: left; }
+.wol-form {
+  position: relative;
+  background: #fffdf8;
+  border-radius: 3px;
+  padding: clamp(22px, 4vw, 30px) clamp(18px, 4vw, 26px) clamp(20px, 4vw, 28px);
+  box-shadow: 0 18px 34px -16px rgba(34, 20, 27, 0.45);
+  transform: rotate(0.8deg);
+}
+.wol-stars-row { text-align: center; margin-bottom: 18px; }
+.wol-stars { display: flex; flex-direction: row-reverse; justify-content: center; gap: 6px; }
+.wol-stars input { position: absolute; opacity: 0; pointer-events: none; }
+.wol-stars label { font-size: clamp(1.5rem, 5vw, 1.9rem); line-height: 1; color: var(--line); cursor: pointer; }
+.wol-stars label:hover,
+.wol-stars label:hover ~ label,
+.wol-stars input:checked ~ label { color: var(--pink); }
+.wol-stars-caption {
+  font-family: var(--font-mono); font-size: clamp(0.68rem, 1.8vw, 0.76rem);
+  color: var(--ink-soft); margin: 6px 0 0;
+}
+.wol-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+@media (max-width: 480px) { .wol-form-row { grid-template-columns: 1fr; } }
+.wol-form input,
+.wol-form select,
+.wol-form textarea {
+  width: 100%; border: none; border-radius: 10px; padding: 12px 14px;
+  font-family: var(--font-sans); font-size: clamp(0.88rem, 2.4vw, 0.98rem); color: var(--ink);
+  background: var(--cream); box-shadow: inset 0 0 0 1px var(--line);
+}
+/* Lined like a page from a notebook, and set in the same handwriting as
+   the pinned notes — so writing a review already looks like writing one. */
+.wol-form textarea {
+  resize: vertical; min-height: 90px; margin-bottom: 14px;
+  font-family: 'Biro Script', cursive; font-size: clamp(1.15rem, 3vw, 1.3rem); line-height: 28px;
+  padding-top: 8px;
+  background-image: repeating-linear-gradient(
+    to bottom, transparent 0, transparent 27px, var(--line) 27px, var(--line) 28px
+  );
+  background-attachment: local;
+}
+.wol-form textarea::placeholder { font-family: var(--font-sans); font-size: 0.9rem; opacity: 0.6; }
+.wol-form input:focus,
+.wol-form select:focus,
+.wol-form textarea:focus { outline: 2px solid var(--pink); outline-offset: 1px; }
+.wol-submit { width: 100%; justify-content: center; padding: 14px 26px; font-size: clamp(0.72rem, 2vw, 0.82rem); }
+.wol-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.wol-form-note {
+  font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-soft);
+  text-align: center; margin: 14px 0 0;
+}
+.wol-thanks {
+  display: none;
+  text-align: center;
+  padding: 10px 0 4px;
+}
+.wol-thanks.is-visible { display: block; }
+.wol-thanks-heading {
+  font-family: 'Biro Script', cursive; font-size: clamp(1.8rem, 5vw, 2.3rem);
+  color: #7a1f42; margin: 0 0 8px;
+}
+.wol-thanks-sub { font-size: 0.95rem; margin: 0; }
+
+/* ==========================================================================
+   Archive lock/library push notification — a fake iOS banner that drops in
+   a while after unlocking, pointing at the wall of love. If it isn't
+   tapped, it collapses down into a small badge in the top-right corner
+   (below the status bar) instead of disappearing — tapping the badge
+   re-opens the banner rather than navigating straight off, so a visitor
+   who missed it the first time can still read it. Sized in cqw like the
+   rest of the phone chrome so both scale with it.
+   ========================================================================== */
+.archive-notif {
+  position: absolute;
+  left: 3.2cqw; right: 3.2cqw; top: 13.5cqw;
+  z-index: 60;
+  display: flex; align-items: flex-start; gap: 2.4cqw;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 4.2cqw;
+  padding: 2.6cqw 3cqw;
+  box-shadow: 0 10px 26px -8px rgba(0,0,0,0.35);
+  cursor: pointer;
+  text-align: left;
+  transform: translateY(-30%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.5s cubic-bezier(.32,.9,.24,1.2), opacity 0.35s ease;
+}
+.archive-notif.is-visible { transform: translateY(0); opacity: 1; pointer-events: auto; }
+.archive-notif-icon {
+  width: 8.5cqw; height: 8.5cqw; border-radius: 2.2cqw; flex-shrink: 0;
+  background: #fff0f4; display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.archive-notif-icon img { width: 68%; height: 68%; object-fit: contain; }
+.archive-notif-body { flex: 1; min-width: 0; }
+.archive-notif-title-row { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.archive-notif-app {
+  font-family: -apple-system, 'Jost', sans-serif; font-weight: 600; font-size: 0.78rem;
+  color: #000; letter-spacing: 0.02em;
+}
+.archive-notif-time { font-family: -apple-system, 'Jost', sans-serif; font-size: 0.72rem; color: #8e8e93; flex-shrink: 0; }
+.archive-notif-text {
+  font-family: -apple-system, 'Jost', sans-serif; font-size: 0.82rem; color: #1c1c1e;
+  line-height: 1.35; margin: 1px 0 0;
+}
+
+.archive-notif-badge {
+  position: absolute;
+  top: 13.5cqw; right: 3.2cqw;
+  z-index: 60;
+  width: 9cqw; height: 9cqw;
+  min-width: 30px; min-height: 30px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #ff9fbe, var(--pink-dark) 70%, #9c2f5c);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 16px -4px rgba(0,0,0,0.45);
+  cursor: pointer;
+  transform: scale(0);
+  opacity: 0;
+  transition: transform 0.45s cubic-bezier(.34,1.56,.64,1), opacity 0.3s ease;
+}
+.archive-notif-badge.is-visible { transform: scale(1); opacity: 1; }
+.archive-notif-badge svg { width: 46%; height: 46%; }
+.archive-notif-dot {
+  position: absolute; top: -2px; right: -2px;
+  width: 22%; height: 22%; min-width: 9px; min-height: 9px;
+  border-radius: 50%;
+  background: #ff3b30;
+  border: 2px solid #fff;
 }

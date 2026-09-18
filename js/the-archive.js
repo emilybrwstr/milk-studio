@@ -6,7 +6,9 @@ const FILES = [
   '1.png', '2.JPG', '3.JPG', '4.jpeg', '5.MOV', '6.jpeg', '7.JPG', '8.JPG',
   '9.MOV', '10.JPG', '11.JPG', '12.MOV', '13.JPG', '14.jpeg', '15.JPG',
   '16.JPG', '17.JPG', '18.JPG', '19.jpg', '20.JPG', '21.JPG', '22.JPG',
-  '23.JPG', '24.JPG', '25.JPG', '26.png',
+  '23.JPG', '24.JPG', '25.JPG', '26.png', '27.JPG', '28.JPG', '29.JPG',
+  '30.JPG', '31.JPG', '32.JPG', '33.MOV', '34.JPG', '35.JPG', '36.JPG',
+  '37.JPG', '38.JPG',
 ];
 const PHOTOS = FILES.map((name, i) => ({
   img: `images/portfolio/${name}`,
@@ -185,6 +187,26 @@ photoWrap.addEventListener('click', (e) => {
   else if (clickX <= rect.width / 2 && currentIndex > 0) goToPhoto(currentIndex - 1);
 });
 
+// Real, live clock — both the lock screen and status bar mirror the
+// visitor's own device time/date, refreshed every 30s so it can't drift
+// stale on a phone left open on this screen. No AM/PM shown, matching
+// iOS's own lock screen and status bar clocks.
+const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const lockTimeEl = document.getElementById('lockTime');
+const lockDateEl = document.getElementById('lockDate');
+const statusBarTimeEl = document.getElementById('statusBarTime');
+function updateClock() {
+  const now = new Date();
+  const hour12 = now.getHours() % 12 || 12;
+  const time = `${hour12}:${String(now.getMinutes()).padStart(2, '0')}`;
+  lockTimeEl.textContent = time;
+  statusBarTimeEl.textContent = time;
+  lockDateEl.textContent = `${WEEKDAYS[now.getDay()]}, ${MONTHS[now.getMonth()]} ${now.getDate()}`;
+}
+updateClock();
+setInterval(updateClock, 30000);
+
 // Lock screen — swipe up (touch or mouse-drag, for desktop testing) to unlock.
 const screenLock = document.getElementById('screenLock');
 const iphoneScreen = document.querySelector('.iphone-screen');
@@ -194,8 +216,35 @@ function unlock() {
   screenLock.style.transform = '';
   screenLock.classList.add('is-unlocked');
   iphoneScreen.classList.add('is-unlocked');
-  scrollLibraryToNewest();
+  const deepLinkPhoto = Number(new URLSearchParams(window.location.search).get('photo'));
+  if (deepLinkPhoto && deepLinkPhoto >= 1 && deepLinkPhoto <= PHOTOS.length) {
+    openViewer(deepLinkPhoto - 1);
+  } else {
+    scrollLibraryToNewest();
+  }
+  setTimeout(showArchiveNotifBanner, 15000);
 }
+
+// Banner shows first; if it's not tapped within a few seconds it collapses
+// into a small badge instead of disappearing. Tapping the badge re-opens
+// the banner (rather than navigating straight off) so a visitor who missed
+// it the first time can still read it before deciding to tap through.
+const archiveNotifBanner = document.getElementById('archiveNotifBanner');
+const archiveNotifBadge = document.getElementById('archiveNotifBadge');
+let archiveNotifCollapseTimer = null;
+function showArchiveNotifBanner() {
+  archiveNotifBadge.classList.remove('is-visible');
+  archiveNotifBanner.classList.add('is-visible');
+  clearTimeout(archiveNotifCollapseTimer);
+  archiveNotifCollapseTimer = setTimeout(() => {
+    archiveNotifBanner.classList.remove('is-visible');
+    archiveNotifBadge.classList.add('is-visible');
+  }, 6000);
+}
+archiveNotifBadge.addEventListener('click', (e) => {
+  e.preventDefault();
+  showArchiveNotifBanner();
+});
 
 let dragStartY = null;
 function dragMove(y) {
