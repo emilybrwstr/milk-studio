@@ -5,9 +5,9 @@
 // should be 'available' at once; promote the next queued look by hand when
 // one of the 6 gets booked, rather than moving anything else's position.
 const LOOKS = [
-  { img: 'images/the-edit/IMG_7950.JPG', title: 'emerald cage', status: 'available', caption: 'stiletto claws wrapped in liquid chrome.', design: 65, addons: { length: 'long', fullChrome: 'all', chrome: 'all', rhinestones: 'all', handPainted: 'all' }, likes: 289 },
+  { img: 'images/the-edit/IMG_7950.JPG', title: 'emerald cage', status: 'available', caption: 'stiletto claws wrapped in liquid chrome.', design: 65, addons: { length: 'long', fullChrome: true, chrome: 'all', rhinestones: 'all', handPainted: 'all' }, likes: 289 },
   { img: 'images/the-edit/IMG_7951.JPG', title: 'gilded whisper', status: 'queued', caption: 'barely-there nude with a gold cuff at the base. quiet luxury, loud nails 🤎', design: 35, addons: { length: 'long', chrome: 'all', rhinestones: 'all' }, likes: 241 },
-  { img: 'images/the-edit/IMG_7952.JPG', title: 'chrome reverie', status: 'available', caption: 'blushed pink melting into mirrored chrome, slay', design: 30, addons: { fullChrome: 'all', aura: 'all' }, likes: 342 },
+  { img: 'images/the-edit/IMG_7952.JPG', title: 'chrome reverie', status: 'available', caption: 'blushed pink melting into mirrored chrome, slay', design: 30, addons: { fullChrome: true, aura: 'all' }, likes: 342 },
   { img: 'images/the-edit/IMG_7954.JPG', title: 'molten gold', status: 'queued', caption: '3D gold wire poured straight onto bare nail. it\'s basically jewelry 🫧', design: 30, addons: { chrome: 'all', handPainted: 'all' }, likes: 198 },
   { img: 'images/the-edit/IMG_7955.JPG', title: 'lilac static', status: 'queued', caption: 'hand-painted lilac static over milky white. felt cute, might still book it 💜', design: 35, addons: { length: 'long', aura: 'all', handPainted: 'all' }, likes: 167 },
   { img: 'images/the-edit/IMG_7956.JPG', title: 'wild card', status: 'archived', archiveImage: 31, caption: 'tortoiseshell, chrome marble, and a french tip that didn\'t get the memo. chaos, curated 🐆', design: 32, addons: { length: 'long', handPainted: 'all', aura: 2, rhinestones: 2, chrome: 2 }, likes: 224 },
@@ -19,7 +19,7 @@ const LOOKS = [
   { img: 'images/the-edit/IMG_7965.JPG', title: 'armoured ombre', status: 'available', caption: 'armoured ombre ⛓️ 🍐', design: 50, addons: { length: 'long', aura: 'all', chrome: 'all', rhinestones: 'all' }, likes: 205 },
   { img: 'images/the-edit/IMG_7967.JPG', title: 'honey chrome', status: 'available', caption: 'ombré gold chrome, need i say more?', design: 35, addons: { length: 'long', aura: 'all', chrome: 'all' }, likes: 163 },
   { img: 'images/the-edit/IMG_7969.JPG', title: 'renegade', status: 'queued', caption: 'rhinestones, a real nail piercing, snakeskin — this one\'s not for the faint of heart ⚡', design: 40, addons: { length: 'long', rhinestones: 4, handPainted: 'all', threeDElements: 4, nailPiercing: 2 }, likes: 372 },
-  { img: 'images/the-edit/IMG_7970.JPG', title: 'tidal pattern', status: 'queued', caption: 'teal, chrome, and little glass bubbles on repeat. giving mermaidcore 🌊', design: 32, addons: { fullChrome: 4, aura: 4, handPainted: 2, threeDElements: 6 }, likes: 194 },
+  { img: 'images/the-edit/IMG_7970.JPG', title: 'tidal pattern', status: 'queued', caption: 'teal, chrome, and little glass bubbles on repeat. giving mermaidcore 🌊', design: 32, addons: { fullChrome: true, aura: 4, handPainted: 2, threeDElements: 6 }, likes: 194 },
   { img: 'images/the-edit/IMG_7971.JPG', title: 'gilded muse', status: 'available', caption: 'hand-laid gold filigree over warm cream. old money, new nails ✨', design: 47, addons: { length: 'long', frenchTip: true, chrome: 6, rhinestones: 4, handPainted: 6 }, likes: 276 },
 ];
 
@@ -89,7 +89,7 @@ const BASE_OPTIONS = [
   { label: 'Refill — existing long set', price: 45, serviceId: 'refill' },
 ];
 
-const ART_KEYS = ['chrome', 'fullChrome', 'aura', 'ombre', 'rhinestones', 'threeDElements', 'nailPiercing', 'handPainted', 'handPaintedComplex'];
+const ART_KEYS = ['chrome', 'aura', 'ombre', 'rhinestones', 'rhinestonesLarge', 'threeDElements', 'nailPiercing', 'handPainted', 'handPaintedComplex'];
 
 function buildBookingState(look, base) {
   const state = {
@@ -98,6 +98,7 @@ function buildBookingState(look, base) {
     lengthId: look.addons.length || 'standard',
     frenchTip: !!look.addons.frenchTip,
     catEye: !!look.addons.catEye,
+    fullChrome: !!look.addons.fullChrome,
     repairQty: 2,
     repairOver7Days: false,
     removalNeeded: false,

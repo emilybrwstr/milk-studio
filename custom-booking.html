@@ -209,6 +209,11 @@
               <span class="cb-card-name">Cat eye</span>
               <span class="cb-card-meta">$10 · 15 min</span>
             </label>
+            <label class="cb-toggle-card cb-toggle-card--sm">
+              <input type="checkbox" id="fullChromeToggle">
+              <span class="cb-card-name">Full chrome</span>
+              <span class="cb-card-meta">$10 · 15 min</span>
+            </label>
           </div>
 
           <div class="cb-nailart-item">
@@ -222,22 +227,6 @@
               <button type="button" class="cb-stepper-btn" data-addon="chrome" data-dir="1" aria-label="Increase isolated chrome nail count">+</button>
               <label class="cb-all-toggle">
                 <input type="checkbox" data-addon-all="chrome">
-                <span>All nails · $15 · +30 min</span>
-              </label>
-            </div>
-          </div>
-
-          <div class="cb-nailart-item">
-            <div class="cb-nailart-item-head">
-              <span class="cb-card-name">Full chrome</span>
-              <span class="cb-card-meta">$2/nail · +5 min each</span>
-            </div>
-            <div class="cb-stepper">
-              <button type="button" class="cb-stepper-btn" data-addon="fullChrome" data-dir="-1" aria-label="Decrease full chrome nail count" disabled>−</button>
-              <span class="cb-stepper-value" data-addon-value="fullChrome" aria-live="polite">0</span>
-              <button type="button" class="cb-stepper-btn" data-addon="fullChrome" data-dir="1" aria-label="Increase full chrome nail count">+</button>
-              <label class="cb-all-toggle">
-                <input type="checkbox" data-addon-all="fullChrome">
                 <span>All nails · $15 · +30 min</span>
               </label>
             </div>
@@ -277,13 +266,13 @@
 
           <div class="cb-nailart-item">
             <div class="cb-nailart-item-head">
-              <span class="cb-card-name">Nail gems — up to 6 per nail</span>
+              <span class="cb-card-name">Gemstones — up to 3 per nail</span>
               <span class="cb-card-meta">$2/nail · +5 min each</span>
             </div>
             <div class="cb-stepper">
-              <button type="button" class="cb-stepper-btn" data-addon="rhinestones" data-dir="-1" aria-label="Decrease nail gems nail count" disabled>−</button>
+              <button type="button" class="cb-stepper-btn" data-addon="rhinestones" data-dir="-1" aria-label="Decrease gemstones nail count" disabled>−</button>
               <span class="cb-stepper-value" data-addon-value="rhinestones" aria-live="polite">0</span>
-              <button type="button" class="cb-stepper-btn" data-addon="rhinestones" data-dir="1" aria-label="Increase nail gems nail count">+</button>
+              <button type="button" class="cb-stepper-btn" data-addon="rhinestones" data-dir="1" aria-label="Increase gemstones nail count">+</button>
               <label class="cb-all-toggle">
                 <input type="checkbox" data-addon-all="rhinestones">
                 <span>All nails · $15 · +30 min</span>
@@ -293,13 +282,25 @@
 
           <div class="cb-nailart-item">
             <div class="cb-nailart-item-head">
-              <span class="cb-card-name">Nail gems — more than 6 per nail</span>
-              <span class="cb-card-meta">$3/nail · +8 min each</span>
+              <span class="cb-card-name">Gemstones — more than 3 per nail</span>
+              <span class="cb-card-meta">$4/nail · +8 min each</span>
             </div>
             <div class="cb-stepper">
-              <button type="button" class="cb-stepper-btn" data-addon="rhinestonesHeavy" data-dir="-1" aria-label="Decrease heavy nail gems nail count" disabled>−</button>
+              <button type="button" class="cb-stepper-btn" data-addon="rhinestonesHeavy" data-dir="-1" aria-label="Decrease heavy gemstones nail count" disabled>−</button>
               <span class="cb-stepper-value" data-addon-value="rhinestonesHeavy" aria-live="polite">0</span>
-              <button type="button" class="cb-stepper-btn" data-addon="rhinestonesHeavy" data-dir="1" aria-label="Increase heavy nail gems nail count">+</button>
+              <button type="button" class="cb-stepper-btn" data-addon="rhinestonesHeavy" data-dir="1" aria-label="Increase heavy gemstones nail count">+</button>
+            </div>
+          </div>
+
+          <div class="cb-nailart-item">
+            <div class="cb-nailart-item-head">
+              <span class="cb-card-name">Large nail gems</span>
+              <span class="cb-card-meta">$2 each · +5 min each</span>
+            </div>
+            <div class="cb-stepper">
+              <button type="button" class="cb-stepper-btn" data-addon="rhinestonesLarge" data-dir="-1" aria-label="Decrease large nail gems count" disabled>−</button>
+              <span class="cb-stepper-value" data-addon-value="rhinestonesLarge" aria-live="polite">0</span>
+              <button type="button" class="cb-stepper-btn" data-addon="rhinestonesLarge" data-dir="1" aria-label="Increase large nail gems count">+</button>
             </div>
           </div>
 
@@ -428,6 +429,6 @@
 
 <script src="js/main.js"></script>
 <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
-<script src="js/custom-booking.js?v=33"></script>
+<script src="js/custom-booking.js?v=34"></script>
 </body>
 </html>

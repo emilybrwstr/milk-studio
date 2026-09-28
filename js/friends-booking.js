@@ -118,6 +118,7 @@ const LENGTH_UPGRADES = [
 const FLAT_ART_ITEMS = [
   { key: 'frenchTip', name: 'French tip', price: 10, duration: 15 },
   { key: 'catEye', name: 'Cat eye', price: 10, duration: 15 },
+  { key: 'fullChrome', name: 'Full chrome', price: 10, duration: 15 },
 ];
 
 // Per-nail nail-art add-ons — each can either be a specific nail count, or
@@ -125,13 +126,15 @@ const FLAT_ART_ITEMS = [
 // since doing every nail at once is faster per-nail in practice).
 const PER_NAIL_ART_ITEMS = [
   { key: 'chrome', name: 'Isolated chrome', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
-  { key: 'fullChrome', name: 'Full chrome', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
   { key: 'aura', name: 'Aura nails', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
   { key: 'ombre', name: 'Ombré nails', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
-  { key: 'rhinestones', name: 'Nail gems — up to 6 per nail', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
+  { key: 'rhinestones', name: 'Gemstones — up to 3 per nail', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
   // No "all nails" flat rate here — heavier gem work doesn't get a bulk
   // option, just a straight per-nail count.
-  { key: 'rhinestonesHeavy', name: 'Nail gems — more than 6 per nail', pricePerNail: 3, durationPerNail: 8 },
+  { key: 'rhinestonesHeavy', name: 'Gemstones — more than 3 per nail', pricePerNail: 4, durationPerNail: 8 },
+  // Large gems are their own size/price tier, counted individually rather
+  // than folded into the small-gem per-nail counts above.
+  { key: 'rhinestonesLarge', name: 'Large nail gems', pricePerNail: 2, durationPerNail: 5 },
   { key: 'threeDElements', name: '3D elements', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
   { key: 'nailPiercing', name: 'Nail piercing', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
   { key: 'handPainted', name: 'Hand painted — simple', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
@@ -176,12 +179,13 @@ const state = {
   lengthId: 'standard',
   frenchTip: false,
   catEye: false,
+  fullChrome: false,
   chrome: { qty: 0, all: false },
-  fullChrome: { qty: 0, all: false },
   aura: { qty: 0, all: false },
   ombre: { qty: 0, all: false },
   rhinestones: { qty: 0, all: false },
   rhinestonesHeavy: { qty: 0, all: false },
+  rhinestonesLarge: { qty: 0, all: false },
   threeDElements: { qty: 0, all: false },
   nailPiercing: { qty: 0, all: false },
   handPainted: { qty: 0, all: false },
@@ -303,6 +307,7 @@ const removalToggle = document.getElementById('removalToggle');
 const removalSubchoices = document.getElementById('removalSubchoices');
 const frenchTipToggle = document.getElementById('frenchTipToggle');
 const catEyeToggle = document.getElementById('catEyeToggle');
+const fullChromeToggle = document.getElementById('fullChromeToggle');
 const repairMinus = document.getElementById('repairMinus');
 const repairPlus = document.getElementById('repairPlus');
 const repairValue = document.getElementById('repairValue');
@@ -347,6 +352,7 @@ function applyStateToInputs() {
 
   frenchTipToggle.checked = state.frenchTip;
   catEyeToggle.checked = state.catEye;
+  fullChromeToggle.checked = state.fullChrome;
 
   PER_NAIL_ART_ITEMS.forEach((item) => {
     const addonState = state[item.key];
@@ -604,6 +610,10 @@ frenchTipToggle.addEventListener('change', () => {
 });
 catEyeToggle.addEventListener('change', () => {
   state.catEye = catEyeToggle.checked;
+  render();
+});
+fullChromeToggle.addEventListener('change', () => {
+  state.fullChrome = fullChromeToggle.checked;
   render();
 });
 
