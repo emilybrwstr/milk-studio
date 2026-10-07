@@ -127,27 +127,20 @@ const FLAT_ART_ITEMS = [
   { key: 'fullChrome', name: 'Full chrome', price: 10, duration: 15 },
 ];
 
-// Per-nail nail-art add-ons — each can either be a specific nail count, or
-// the flat "all nails" rate (cheaper in time than 10x the per-nail rate,
-// since doing every nail at once is faster per-nail in practice).
+// Per-nail nail-art add-ons — priced by nail count, no bulk "all nails" rate.
 const PER_NAIL_ART_ITEMS = [
-  { key: 'chrome', name: 'Isolated chrome', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
-  { key: 'aura', name: 'Aura nails', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
-  { key: 'ombre', name: 'Ombré nails', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
-  { key: 'rhinestones', name: 'Gemstones — up to 3 per nail', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
-  // No "all nails" flat rate here — heavier gem work doesn't get a bulk
-  // option, just a straight per-nail count.
+  { key: 'chrome', name: 'Isolated chrome', pricePerNail: 2, durationPerNail: 5 },
+  { key: 'aura', name: 'Aura nails', pricePerNail: 2, durationPerNail: 5 },
+  { key: 'ombre', name: 'Ombré nails', pricePerNail: 2, durationPerNail: 5 },
+  { key: 'rhinestones', name: 'Gemstones — up to 3 per nail', pricePerNail: 2, durationPerNail: 5 },
   { key: 'rhinestonesHeavy', name: 'Gemstones — more than 3 per nail', pricePerNail: 4, durationPerNail: 8 },
   // Large gems are their own size/price tier, counted individually rather
   // than folded into the small-gem per-nail counts above.
   { key: 'rhinestonesLarge', name: 'Large nail gems', pricePerNail: 2, durationPerNail: 5 },
-  { key: 'threeDElements', name: '3D elements', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
-  { key: 'nailPiercing', name: 'Nail piercing', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
-  { key: 'handPainted', name: 'Hand painted — simple', pricePerNail: 2, durationPerNail: 5, allPrice: 15, allDuration: 30 },
-  // Complex hand painted is priced at the full per-nail rate with no bulk
-  // discount when every nail is selected — it's involved enough work that
-  // doing all 10 doesn't save time the way the simpler add-ons do.
-  { key: 'handPaintedComplex', name: 'Hand painted — complex', pricePerNail: 4, durationPerNail: 8, allPrice: 40, allDuration: 90 },
+  { key: 'threeDElements', name: '3D elements', pricePerNail: 2, durationPerNail: 5 },
+  { key: 'nailPiercing', name: 'Nail piercing', pricePerNail: 2, durationPerNail: 5 },
+  { key: 'handPainted', name: 'Hand painted — simple', pricePerNail: 2, durationPerNail: 5 },
+  { key: 'handPaintedComplex', name: 'Hand painted — complex', pricePerNail: 4, durationPerNail: 8 },
 ];
 
 // The first 2 nails in a repair booking are free (within 7 days of the
@@ -184,16 +177,16 @@ const state = {
   frenchTip: false,
   catEye: false,
   fullChrome: false,
-  chrome: { qty: 0, all: false },
-  aura: { qty: 0, all: false },
-  ombre: { qty: 0, all: false },
-  rhinestones: { qty: 0, all: false },
-  rhinestonesHeavy: { qty: 0, all: false },
-  rhinestonesLarge: { qty: 0, all: false },
-  threeDElements: { qty: 0, all: false },
-  nailPiercing: { qty: 0, all: false },
-  handPainted: { qty: 0, all: false },
-  handPaintedComplex: { qty: 0, all: false },
+  chrome: { qty: 0 },
+  aura: { qty: 0 },
+  ombre: { qty: 0 },
+  rhinestones: { qty: 0 },
+  rhinestonesHeavy: { qty: 0 },
+  rhinestonesLarge: { qty: 0 },
+  threeDElements: { qty: 0 },
+  nailPiercing: { qty: 0 },
+  handPainted: { qty: 0 },
+  handPaintedComplex: { qty: 0 },
   repairQty: 2,
   repairOver7Days: false,
   removalNeeded: false,
@@ -259,9 +252,7 @@ function computeSummary() {
       });
       PER_NAIL_ART_ITEMS.forEach((item) => {
         const addonState = state[item.key];
-        if (addonState.all) {
-          add(`${item.name} — all nails`, item.allPrice, item.allDuration);
-        } else if (addonState.qty > 0) {
+        if (addonState.qty > 0) {
           add(`${item.name} × ${addonState.qty}`, item.pricePerNail * addonState.qty, item.durationPerNail * addonState.qty);
         }
       });
@@ -372,9 +363,6 @@ function applyStateToInputs() {
   fullChromeToggle.checked = state.fullChrome;
 
   PER_NAIL_ART_ITEMS.forEach((item) => {
-    const addonState = state[item.key];
-    const allBox = document.querySelector(`[data-addon-all="${item.key}"]`);
-    if (allBox) allBox.checked = addonState.all;
   });
 
   repairValue.textContent = state.repairQty;
@@ -408,9 +396,9 @@ function updatePerNailStepperUI() {
     const minusBtn = document.querySelector(`[data-addon="${item.key}"][data-dir="-1"]`);
     const plusBtn = document.querySelector(`[data-addon="${item.key}"][data-dir="1"]`);
     if (!valueEl) return;
-    valueEl.textContent = addonState.all ? 'All' : addonState.qty;
-    minusBtn.disabled = addonState.all || addonState.qty <= 0;
-    plusBtn.disabled = addonState.all || addonState.qty >= 10;
+    valueEl.textContent = addonState.qty;
+    minusBtn.disabled = addonState.qty <= 0;
+    plusBtn.disabled = addonState.qty >= 10;
   });
 }
 
@@ -689,13 +677,6 @@ PER_NAIL_ART_ITEMS.forEach((item) => {
       render();
     });
   });
-  const allBox = document.querySelector(`[data-addon-all="${item.key}"]`);
-  if (allBox) {
-    allBox.addEventListener('change', () => {
-      state[item.key].all = allBox.checked;
-      render();
-    });
-  }
 });
 
 repairMinus.addEventListener('click', () => {

@@ -1378,18 +1378,6 @@ section { padding: 100px 0; }
   font-size: 0.82rem;
   color: var(--ink-soft);
 }
-.cb-all-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  color: var(--ink-soft);
-  cursor: pointer;
-  margin-left: auto;
-}
-.cb-all-toggle input { width: 18px; height: 18px; accent-color: var(--pink); cursor: pointer; }
-
 .cb-subchoice-group {
   margin-top: 14px;
   padding-left: 18px;

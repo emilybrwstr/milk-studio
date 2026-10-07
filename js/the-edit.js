@@ -5,22 +5,22 @@
 // should be 'available' at once; promote the next queued look by hand when
 // one of the 6 gets booked, rather than moving anything else's position.
 const LOOKS = [
-  { img: 'images/the-edit/IMG_7950.JPG', title: 'emerald cage', status: 'available', caption: 'stiletto claws wrapped in liquid chrome.', design: 65, addons: { length: 'long', fullChrome: true, chrome: 'all', rhinestones: 'all', handPainted: 'all' }, likes: 289 },
-  { img: 'images/the-edit/IMG_7951.JPG', title: 'gilded whisper', status: 'queued', caption: 'barely-there nude with a gold cuff at the base. quiet luxury, loud nails 🤎', design: 35, addons: { length: 'long', chrome: 'all', rhinestones: 'all' }, likes: 241 },
-  { img: 'images/the-edit/IMG_7952.JPG', title: 'chrome reverie', status: 'available', caption: 'blushed pink melting into mirrored chrome, slay', design: 30, addons: { fullChrome: true, aura: 'all' }, likes: 342 },
-  { img: 'images/the-edit/IMG_7954.JPG', title: 'molten gold', status: 'queued', caption: '3D gold wire poured straight onto bare nail. it\'s basically jewelry 🫧', design: 30, addons: { chrome: 'all', handPainted: 'all' }, likes: 198 },
-  { img: 'images/the-edit/IMG_7955.JPG', title: 'lilac static', status: 'queued', caption: 'hand-painted lilac static over milky white. felt cute, might still book it 💜', design: 35, addons: { length: 'long', aura: 'all', handPainted: 'all' }, likes: 167 },
-  { img: 'images/the-edit/IMG_7956.JPG', title: 'wild card', status: 'archived', archiveImage: 31, caption: 'tortoiseshell, chrome marble, and a french tip that didn\'t get the memo. chaos, curated 🐆', design: 32, addons: { length: 'long', handPainted: 'all', aura: 2, rhinestones: 2, chrome: 2 }, likes: 224 },
-  { img: 'images/the-edit/IMG_7957.JPG', title: 'star charm', status: 'available', caption: 'stars, dots, marble, pearls — every ring on my hand had a say in this one ⭐', design: 38, addons: { chrome: 1, aura: 3, handPainted: 'all', rhinestones: 'all' }, likes: 311 },
-  { img: 'images/the-edit/IMG_7960.JPG', title: 'midnight merlot', status: 'available', caption: 'wine-stained french tips 🍷', design: 47, addons: { length: 'long', aura: 'all', chrome: 'all', threeDElements: 6 }, likes: 156 },
-  { img: 'images/the-edit/IMG_7961.JPG', title: 'bruised petal', status: 'available', caption: 'airbrushed red-violet blush with little pearl drops. looks bitten, not bad 🩸', design: 45, addons: { aura: 'all', handPainted: 'all', rhinestones: 'all' }, likes: 229 },
-  { img: 'images/the-edit/IMG_7962.JPG', title: 'liquid mercury', status: 'available', caption: 'basically a mirror at this point 🪞', design: 50, addons: { length: 'long', chrome: 'all', aura: 'all', handPainted: 'all' }, likes: 267 },
-  { img: 'images/the-edit/IMG_7964.JPG', title: 'jade current', status: 'queued', caption: 'jade ombré with molten chrome swirls running through it 🌿', design: 50, addons: { length: 'long', chrome: 'all', aura: 'all', handPainted: 'all' }, likes: 182 },
-  { img: 'images/the-edit/IMG_7965.JPG', title: 'armoured ombre', status: 'available', caption: 'armoured ombre ⛓️ 🍐', design: 50, addons: { length: 'long', aura: 'all', chrome: 'all', rhinestones: 'all' }, likes: 205 },
-  { img: 'images/the-edit/IMG_7967.JPG', title: 'honey chrome', status: 'available', caption: 'ombré gold chrome, need i say more?', design: 35, addons: { length: 'long', aura: 'all', chrome: 'all' }, likes: 163 },
-  { img: 'images/the-edit/IMG_7969.JPG', title: 'renegade', status: 'queued', caption: 'rhinestones, a real nail piercing, snakeskin — this one\'s not for the faint of heart ⚡', design: 40, addons: { length: 'long', rhinestones: 4, handPainted: 'all', threeDElements: 4, nailPiercing: 2 }, likes: 372 },
-  { img: 'images/the-edit/IMG_7970.JPG', title: 'tidal pattern', status: 'queued', caption: 'teal, chrome, and little glass bubbles on repeat. giving mermaidcore 🌊', design: 32, addons: { fullChrome: true, aura: 4, handPainted: 2, threeDElements: 6 }, likes: 194 },
-  { img: 'images/the-edit/IMG_7971.JPG', title: 'gilded muse', status: 'available', caption: 'hand-laid gold filigree over warm cream. old money, new nails ✨', design: 47, addons: { length: 'long', frenchTip: true, chrome: 6, rhinestones: 4, handPainted: 6 }, likes: 276 },
+  { img: 'images/the-edit/IMG_7950.JPG', title: 'emerald cage', status: 'available', caption: 'stiletto claws wrapped in liquid chrome.', addons: { length: 'long', fullChrome: true, chrome: 'all', rhinestones: 'all', handPainted: 'all' }, likes: 289 },
+  { img: 'images/the-edit/IMG_7951.JPG', title: 'gilded whisper', status: 'queued', caption: 'barely-there nude with a gold cuff at the base. quiet luxury, loud nails 🤎', addons: { length: 'long', chrome: 'all', rhinestones: 'all' }, likes: 241 },
+  { img: 'images/the-edit/IMG_7952.JPG', title: 'chrome reverie', status: 'available', caption: 'blushed pink melting into mirrored chrome, slay', addons: { fullChrome: true, aura: 'all' }, likes: 342 },
+  { img: 'images/the-edit/IMG_7954.JPG', title: 'molten gold', status: 'queued', caption: '3D gold wire poured straight onto bare nail. it\'s basically jewelry 🫧', addons: { chrome: 'all', handPainted: 'all' }, likes: 198 },
+  { img: 'images/the-edit/IMG_7955.JPG', title: 'lilac static', status: 'queued', caption: 'hand-painted lilac static over milky white. felt cute, might still book it 💜', addons: { length: 'long', aura: 'all', handPainted: 'all' }, likes: 167 },
+  { img: 'images/the-edit/IMG_7956.JPG', title: 'wild card', status: 'archived', archiveImage: 31, caption: 'tortoiseshell, chrome marble, and a french tip that didn\'t get the memo. chaos, curated 🐆', addons: { length: 'long', handPainted: 'all', aura: 2, rhinestones: 2, chrome: 2 }, likes: 224 },
+  { img: 'images/the-edit/IMG_7957.JPG', title: 'star charm', status: 'available', caption: 'stars, dots, marble, pearls — every ring on my hand had a say in this one ⭐', addons: { chrome: 1, aura: 3, handPainted: 'all', rhinestones: 'all' }, likes: 311 },
+  { img: 'images/the-edit/IMG_7960.JPG', title: 'midnight merlot', status: 'available', caption: 'wine-stained french tips 🍷', addons: { length: 'long', aura: 'all', chrome: 'all', threeDElements: 6 }, likes: 156 },
+  { img: 'images/the-edit/IMG_7961.JPG', title: 'bruised petal', status: 'available', caption: 'airbrushed red-violet blush with little pearl drops. looks bitten, not bad 🩸', addons: { aura: 'all', handPainted: 'all', rhinestones: 'all' }, likes: 229 },
+  { img: 'images/the-edit/IMG_7962.JPG', title: 'liquid mercury', status: 'available', caption: 'basically a mirror at this point 🪞', addons: { length: 'long', chrome: 'all', aura: 'all', handPainted: 'all' }, likes: 267 },
+  { img: 'images/the-edit/IMG_7964.JPG', title: 'jade current', status: 'queued', caption: 'jade ombré with molten chrome swirls running through it 🌿', addons: { length: 'long', chrome: 'all', aura: 'all', handPainted: 'all' }, likes: 182 },
+  { img: 'images/the-edit/IMG_7965.JPG', title: 'armoured ombre', status: 'available', caption: 'armoured ombre ⛓️ 🍐', addons: { length: 'long', aura: 'all', chrome: 'all', rhinestones: 'all' }, likes: 205 },
+  { img: 'images/the-edit/IMG_7967.JPG', title: 'honey chrome', status: 'available', caption: 'ombré gold chrome, need i say more?', addons: { length: 'long', aura: 'all', chrome: 'all' }, likes: 163 },
+  { img: 'images/the-edit/IMG_7969.JPG', title: 'renegade', status: 'queued', caption: 'rhinestones, a real nail piercing, snakeskin — this one\'s not for the faint of heart ⚡', addons: { length: 'long', rhinestones: 4, handPainted: 'all', threeDElements: 4, nailPiercing: 2 }, likes: 372 },
+  { img: 'images/the-edit/IMG_7970.JPG', title: 'tidal pattern', status: 'queued', caption: 'teal, chrome, and little glass bubbles on repeat. giving mermaidcore 🌊', addons: { fullChrome: true, aura: 4, handPainted: 2, threeDElements: 6 }, likes: 194 },
+  { img: 'images/the-edit/IMG_7971.JPG', title: 'gilded muse', status: 'available', caption: 'hand-laid gold filigree over warm cream. old money, new nails ✨', addons: { length: 'long', frenchTip: true, chrome: 6, rhinestones: 4, handPainted: 6 }, likes: 276 },
 ];
 
 const TILE_CAPTION_BODY = {
@@ -83,9 +83,32 @@ tabs.forEach(tab => {
   });
 });
 
+// Design price per look is computed from its add-ons using the same rates as
+// the booking calculator (js/custom-booking.js) — keep these in sync with it.
+const FLAT_ART_PRICE = 10;
+const PER_NAIL_PRICE = { handPaintedComplex: 4 };
+const DEFAULT_PER_NAIL_PRICE = 2;
+const LENGTH_PRICE = { long: 5, 'extra-long': 10 };
+const ALL_NAILS = 10;
+const EDIT_DISCOUNT = 0.5;
+
+function designPrice(look, base) {
+  let total = 0;
+  if (base.allowsLength && look.addons.length) total += LENGTH_PRICE[look.addons.length] || 0;
+  ['frenchTip', 'catEye', 'fullChrome'].forEach((key) => {
+    if (look.addons[key]) total += FLAT_ART_PRICE;
+  });
+  ART_KEYS.forEach((key) => {
+    const v = look.addons[key];
+    const qty = v === 'all' ? ALL_NAILS : v || 0;
+    total += qty * (PER_NAIL_PRICE[key] || DEFAULT_PER_NAIL_PRICE);
+  });
+  return total;
+}
+
 const BASE_OPTIONS = [
-  { label: 'Gel-X full set — with overlay', price: 60, serviceId: 'gel-x-full-set' },
-  { label: 'Gel-X full set — no overlay', price: 45, serviceId: 'gel-x-full-set-no-overlay' },
+  { label: 'Gel-X full set — with overlay', price: 60, serviceId: 'gel-x-full-set', allowsLength: true },
+  { label: 'Gel-X full set — no overlay', price: 45, serviceId: 'gel-x-full-set-no-overlay', allowsLength: true },
   { label: 'Refill — existing long set', price: 45, serviceId: 'refill' },
 ];
 
@@ -104,12 +127,12 @@ function buildBookingState(look, base) {
     removalNeeded: false,
     removalTypeId: 'own',
     removalOnlyTypeId: 'own',
-    editDiscount: 0.5,
+    editDiscount: EDIT_DISCOUNT,
     editLookTitle: look.title,
   };
   ART_KEYS.forEach((key) => {
     const v = look.addons[key];
-    state[key] = v === 'all' ? { qty: 0, all: true } : { qty: v || 0, all: false };
+    state[key] = { qty: v === 'all' ? 10 : v || 0 };
   });
   return state;
 }
@@ -136,9 +159,10 @@ function showAdjacent(direction) {
 function updateModalPricing() {
   if (!currentLook) return;
   const base = BASE_OPTIONS[baseSelect.value];
-  const designNow = Math.round(currentLook.design * 0.5);
+  const designFull = designPrice(currentLook, base);
+  const designNow = designFull - Math.round(designFull * EDIT_DISCOUNT);
   document.getElementById('igBasePrice').textContent = `$${base.price}`;
-  document.getElementById('igDesignFull').textContent = `$${currentLook.design}`;
+  document.getElementById('igDesignFull').textContent = `$${designFull}`;
   document.getElementById('igDesignNow').textContent = `$${designNow}`;
   document.getElementById('igModalTotal').textContent = `$${base.price + designNow}`;
 }
