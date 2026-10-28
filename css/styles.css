@@ -3163,3 +3163,59 @@ body.no-scroll {
   background: #ff3b30;
   border: 2px solid #fff;
 }
+
+/* ==========================================================================
+   Add-on examples — a little photo button next to each add-on on the menu,
+   linking to its own page (add-ons/*.html) of example photos. The pages
+   reuse the menu's ticket-stub card, so only the pieces below are new.
+   ========================================================================== */
+.menu-item-examples {
+  position: relative;
+  box-sizing: border-box;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 10px; height: 10px; margin-left: 3px;
+  border: 1.25px solid var(--ink); border-radius: 50%;
+  background: transparent; color: var(--ink);
+  vertical-align: super;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.menu-item-examples svg { width: 5px; height: 5px; }
+.menu-item-examples::after { content: ''; position: absolute; inset: -12px; }
+.menu-item-examples:hover,
+.menu-item-examples:focus-visible { background: var(--pink-dark); border-color: var(--pink-dark); color: var(--cream); }
+
+.ex-title {
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: clamp(1.15rem, 4vw, 1.5rem);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--ink); margin: 0;
+}
+.ex-intro {
+  font-family: var(--font-sans); font-size: 0.98rem; line-height: 1.55;
+  color: var(--ink-soft); margin: 18px 0 0;
+}
+.ex-section { margin-top: 26px; }
+.ex-section-title {
+  font-family: var(--font-mono); font-weight: 400; font-size: 0.72rem;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--pink-dark); margin: 0 0 12px;
+}
+.ex-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.ex-tile {
+  margin: 0; aspect-ratio: 4 / 5; overflow: hidden;
+  border-radius: 6px; background: var(--cream-panel);
+  box-shadow: 0 10px 22px -14px rgba(34, 20, 27, 0.35);
+}
+.ex-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ex-tile--empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; padding: 12px; text-align: center; box-shadow: none;
+  border: 2px dashed rgba(224, 68, 124, 0.35); color: var(--pink-dark);
+  font-family: var(--font-mono); font-size: 0.66rem;
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.ex-tile--empty svg { width: 26px; height: 26px; opacity: 0.7; }
+.ex-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+@media (max-width: 640px) {
+  .menu-category-body:has(.ex-title) { padding: 26px 22px 28px; }
+}

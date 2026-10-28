@@ -85,7 +85,7 @@ tabs.forEach(tab => {
 
 // Design price per look is computed from its add-ons using the same rates as
 // the booking calculator (js/custom-booking.js) — keep these in sync with it.
-const FLAT_ART_PRICE = 10;
+const FLAT_ART_PRICE = { frenchTip: 10, fullChrome: 10, catEye: 15 };
 const PER_NAIL_PRICE = { handPaintedComplex: 4 };
 const DEFAULT_PER_NAIL_PRICE = 2;
 const LENGTH_PRICE = { long: 5, 'extra-long': 10 };
@@ -95,8 +95,8 @@ const EDIT_DISCOUNT = 0.5;
 function designPrice(look, base) {
   let total = 0;
   if (base.allowsLength && look.addons.length) total += LENGTH_PRICE[look.addons.length] || 0;
-  ['frenchTip', 'catEye', 'fullChrome'].forEach((key) => {
-    if (look.addons[key]) total += FLAT_ART_PRICE;
+  Object.keys(FLAT_ART_PRICE).forEach((key) => {
+    if (look.addons[key]) total += FLAT_ART_PRICE[key];
   });
   ART_KEYS.forEach((key) => {
     const v = look.addons[key];

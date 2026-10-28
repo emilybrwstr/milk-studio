@@ -123,8 +123,8 @@ const LENGTH_UPGRADES = [
 // Flat, stackable nail-art picks — a client can select any combination.
 const FLAT_ART_ITEMS = [
   { key: 'frenchTip', name: 'French tip', price: 10, duration: 15 },
-  { key: 'catEye', name: 'Cat eye', price: 10, duration: 15 },
   { key: 'fullChrome', name: 'Full chrome', price: 10, duration: 15 },
+  { key: 'catEye', name: 'Cat eye', price: 15, duration: 15 },
 ];
 
 // Per-nail nail-art add-ons — priced by nail count, no bulk "all nails" rate.
